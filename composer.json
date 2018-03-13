@@ -1,4 +1,6 @@
 {
     "name": "jonathan/my-first-blog-oc",
-    "require": {}
+    "require": {
+        "symfony/dotenv": "^4.0"
+    }
 }
