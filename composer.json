@@ -1,6 +1,7 @@
 {
     "name": "jonathan/my-first-blog-oc",
     "require": {
-        "symfony/dotenv": "^4.0"
+        "symfony/dotenv": "^4.0",
+        "symfony/http-foundation": "^4.0"
     }
 }
