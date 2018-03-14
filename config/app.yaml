@@ -1,3 +1,5 @@
-prefix:
-    dev: /MyFirstBlogOC
-    production: /
+dev:
+    prefix:
+
+production:
+    prefix: /monPrefix
