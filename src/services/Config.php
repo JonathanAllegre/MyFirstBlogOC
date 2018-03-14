@@ -36,6 +36,11 @@ class Config
         $this->dbUser = getenv('DB_USER');
         $this->dbPass = getenv('DB_PASS');
 
+        $this->setPrefix();
+    }
+
+    private function setPrefix()
+    {
         // load .yaml
         $config = Yaml::parseFile(__DIR__.'/../../config/app.yaml');
 
