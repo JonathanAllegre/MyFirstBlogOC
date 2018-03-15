@@ -7,3 +7,10 @@ Accueil:
     bundle: frontend
     controller: HomeController
     action: index
+
+Articles:
+    method: GET
+    url: /home/index
+    bundle: frontend
+    controller: HomeController
+    action: index

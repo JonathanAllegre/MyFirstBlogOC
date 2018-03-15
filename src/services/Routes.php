@@ -10,25 +10,67 @@ use Symfony\Component\Yaml\Yaml;
 class Routes
 {
     private $routes;
+    private $prefix;
 
-    public function __construct()
+    public function __construct(Config $config)
+    {
+        $this->prefix = $config->getPrefix();
+        $this->setRoutes();
+    }
+
+    private function setRoutes()
     {
         $this->routes = Yaml::parseFile(__DIR__.'/../../config/Routes.yaml');
         $this->dispatcher();
-
     }
 
-    public function dispatcher()
+    private function dispatcher()
     {
+        foreach ($this->routes as $value) {
+            if ($value['url'] == "/") {
+                $value['url'] = "";
+            }
+            if ($value['url'] !== "/" && $this->prefix == "/") {
+                $value['url'] = substr($value['url'], 1);
+            }
+        }
+
         $dispatcher = \FastRoute\simpleDispatcher(function (Collector $routes) {
             foreach ($this->routes as $value) {
                 $routes->addRoute(
                     $value['method'],
-                    AppFactory::getPrefix().$value['url'],
+                    $this->prefix.$value['url'],
                     ['controller' => $value['controller'],
                         'action' => $value['action'], 'bundle' => $value['bundle'] ]
                 );
             }
         });
+
+
+        $request = Request::createFromGlobals();
+
+        $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getBasePath().$request->getPathInfo());
+
+
+        switch ($routeInfo[0]) {
+            case \FastRoute\Dispatcher::NOT_FOUND:
+                $controller = "ErrorController";
+                $action = "notFound";
+                $bundle = "SiteBundle";
+                $vars = "";
+
+                $this->initController($bundle, $controller, $action, $vars);
+                break;
+
+            case \FastRoute\Dispatcher::FOUND:
+                $controller = ucwords($routeInfo[1]['controller']);
+                $action = $routeInfo[1]['action'];
+                $bundle = $routeInfo[1]['bundle'];
+                $vars = $routeInfo[2];
+
+                $this->initController($bundle, $controller, $action, $vars);
+
+                break;
+        }
     }
 }
