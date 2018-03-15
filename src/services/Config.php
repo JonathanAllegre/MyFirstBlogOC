@@ -39,7 +39,7 @@ class Config
         $this->setPrefix();
     }
 
-    
+
     private function setPrefix()
     {
         // load .yaml

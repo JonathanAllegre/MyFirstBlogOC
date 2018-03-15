@@ -26,17 +26,14 @@ class Routes
 
     private function dispatcher()
     {
-        foreach ($this->routes as $value) {
-            if ($value['url'] == "/") {
-                $value['url'] = "";
-            }
-            if ($value['url'] !== "/" && $this->prefix == "/") {
-                $value['url'] = substr($value['url'], 1);
-            }
-        }
-
         $dispatcher = \FastRoute\simpleDispatcher(function (Collector $routes) {
             foreach ($this->routes as $value) {
+                if ($value['url'] == "/") {
+                    $value['url'] = "";
+                }
+                if ($value['url'] !== "/" && $this->prefix == "/") {
+                    $value['url'] = substr($value['url'], 1);
+                }
                 $routes->addRoute(
                     $value['method'],
                     $this->prefix.$value['url'],
