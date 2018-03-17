@@ -53,7 +53,7 @@ class Routes
             case \FastRoute\Dispatcher::NOT_FOUND:
                 $controller = "ErrorController";
                 $action = "notFound";
-                $bundle = "SiteBundle";
+                $bundle = "error";
                 $vars = "";
 
                 $this->initController($bundle, $controller, $action, $vars);
