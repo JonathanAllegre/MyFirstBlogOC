@@ -19,15 +19,20 @@ class Config
     private $dbUser;
     private $dbPass;
     private $prefix;
+    private $twigCache;
+    private $twigTemplates;
+    private $rootPath;
+
 
     /**
      * Config constructor.
+     * @param $root
      */
-    public function __construct()
+    public function __construct($root)
     {
         // load .env
         $dotenv = new Dotenv();
-        $dotenv->load(__DIR__.'/../../.env');
+        $dotenv->load($root.'/.env');
 
         // load var .env
         $this->env    = getenv('APP_ENV');
@@ -36,17 +41,22 @@ class Config
         $this->dbUser = getenv('DB_USER');
         $this->dbPass = getenv('DB_PASS');
 
-        $this->setPrefix();
+        // rootPath
+        $this->rootPath = $root;
+        $this->setYaml();
     }
 
 
-    private function setPrefix()
+    private function setYaml()
     {
         // load .yaml
-        $config = Yaml::parseFile(__DIR__.'/../../config/app.yaml');
+        $config = Yaml::parseFile($this->rootPath.'/config/app.yaml');
+        $twig =  Yaml::parseFile($this->rootPath.'/config/twig.yaml');
 
         // load var .yaml
         $this->prefix = $config[$this->env]['prefix'];
+        $this->twigCache = $twig[$this->env]['cache'];
+        $this->twigTemplates = $twig[$this->env]['templates'];
     }
 
     /**
@@ -95,5 +105,29 @@ class Config
     public function getPrefix()
     {
         return $this->prefix;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwigCache()
+    {
+        return $this->twigCache;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTwigTemplates()
+    {
+        return $this->twigTemplates;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRootPath()
+    {
+        return $this->rootPath;
     }
 }

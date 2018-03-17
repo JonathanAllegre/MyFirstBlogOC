@@ -11,9 +11,11 @@ class Routes
 {
     private $routes;
     private $prefix;
+    private $config;
 
     public function __construct(Config $config)
     {
+        $this->config = $config;
         $this->prefix = $config->getPrefix();
         $this->setRoutes();
     }
@@ -75,6 +77,7 @@ class Routes
     {
         $class = "App\\controller\\".$bundle."\\".$controller;
         $cont = new $class;
-        $cont->$action($vars);
+        $twig = new Twig($this->config);
+        $cont->$action($twig, $vars);
     }
 }

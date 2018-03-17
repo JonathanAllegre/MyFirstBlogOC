@@ -10,7 +10,7 @@ Accueil:
 
 Articles:
     method: GET
-    url: /home/index
+    url: /home/index/{article}
     bundle: frontend
     controller: HomeController
     action: index
