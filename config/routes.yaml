@@ -1,0 +1,16 @@
+### Inserer les routes ici ###
+#### SITE BUNDLE #####
+
+Accueil:
+    method: GET
+    url: /
+    bundle: frontend
+    controller: HomeController
+    action: index
+
+Articles:
+    method: GET
+    url: /home/index/{article}
+    bundle: frontend
+    controller: HomeController
+    action: index

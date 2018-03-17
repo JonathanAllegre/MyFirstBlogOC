@@ -1,0 +1,7 @@
+dev:
+    cache: false
+    templates: /templates
+
+production:
+    cache: false/var/cache/twig
+    templates: /templates
