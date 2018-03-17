@@ -70,4 +70,11 @@ class Routes
                 break;
         }
     }
+
+    public function initController($bundle, $controller, $action, $vars)
+    {
+        $class = "App\\controller\\".$bundle."\\".$controller;
+        $cont = new $class;
+        $cont->$action($vars);
+    }
 }
