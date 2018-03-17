@@ -25,10 +25,10 @@ class Twig
 
         $this->loader = new Twig_Loader_Filesystem($config->getRootPath() . $config->getTwigTemplates());
 
+        $this->cache = false;
+
         if ($config->getTwigCache()) {
-            $this->cache = $config->getRootPath().$config->getTwigCache();
-        } else {
-            $this->cache = false;
+            $this->cache = $config->getRootPath() . $config->getTwigCache();
         }
     }
 

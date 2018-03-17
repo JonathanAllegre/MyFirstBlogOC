@@ -50,8 +50,9 @@ class Config
     private function setYaml()
     {
         // load .yaml
-        $config = Yaml::parseFile($this->rootPath.'/config/app.yaml');
-        $twig =  Yaml::parseFile($this->rootPath.'/config/twig.yaml');
+        $yaml = new Yaml();
+        $config = $yaml->parseFile($this->rootPath.'/config/app.yaml');
+        $twig =  $yaml->parseFile($this->rootPath.'/config/twig.yaml');
 
         // load var .yaml
         $this->prefix = $config[$this->env]['prefix'];

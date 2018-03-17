@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FastRoute\RouteCollector as Collector;
 use Symfony\Component\Yaml\Yaml;
 
+
 class Routes
 {
     private $routes;
@@ -22,7 +23,9 @@ class Routes
 
     private function setRoutes()
     {
-        $this->routes = Yaml::parseFile(__DIR__.'/../../config/Routes.yaml');
+
+        $yaml = new Yaml();
+        $this->routes = $yaml->parseFile(__DIR__.'/../../config/Routes.yaml');
         $this->dispatcher();
     }
 
@@ -46,7 +49,8 @@ class Routes
         });
 
 
-        $request = Request::createFromGlobals();
+        $http = new Request();
+        $request = $http->createFromGlobals();
 
         $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getBasePath().$request->getPathInfo());
 
