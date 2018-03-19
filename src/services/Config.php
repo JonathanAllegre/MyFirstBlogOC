@@ -26,13 +26,16 @@ class Config
 
     /**
      * Config constructor.
-     * @param $root
      */
-    public function __construct($root)
+    public function __construct()
     {
+
+        // rootPath
+        $this->rootPath = __DIR__.'/../../';
+
         // load .env
         $dotenv = new Dotenv();
-        $dotenv->load($root.'/.env');
+        $dotenv->load($this->rootPath.'/.env');
 
         // load var .env
         $this->env    = getenv('APP_ENV');
@@ -41,8 +44,6 @@ class Config
         $this->dbUser = getenv('DB_USER');
         $this->dbPass = getenv('DB_PASS');
 
-        // rootPath
-        $this->rootPath = $root;
         $this->setYaml();
     }
 

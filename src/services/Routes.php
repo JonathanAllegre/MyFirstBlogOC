@@ -7,23 +7,21 @@ use Symfony\Component\HttpFoundation\Request;
 use FastRoute\RouteCollector as Collector;
 use Symfony\Component\Yaml\Yaml;
 
-
-class Routes
+class Routes extends AppFactory
 {
     private $routes;
     private $prefix;
     private $config;
 
-    public function __construct(Config $config)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->prefix = $config->getPrefix();
+        $this->config = $this->getConfig();
+        $this->prefix = $this->config->getPrefix();
         $this->setRoutes();
     }
 
     private function setRoutes()
     {
-
         $yaml = new Yaml();
         $this->routes = $yaml->parseFile(__DIR__.'/../../config/Routes.yaml');
         $this->dispatcher();
@@ -81,7 +79,6 @@ class Routes
     {
         $class = "App\\controller\\".$bundle."\\".$controller;
         $cont = new $class;
-        $twig = new Twig($this->config);
-        $cont->$action($twig, $vars);
+        $cont->$action($vars);
     }
 }

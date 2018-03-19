@@ -3,14 +3,14 @@
 
 namespace App\controller\frontend;
 
+use App\controller\AppController;
 use Symfony\Component\HttpFoundation\Response;
-use App\services\Twig;
 
-class HomeController
+class HomeController extends AppController
 {
-    public function index(Twig $twig)
+    public function index($vars = null)
     {
-        $reponse = new Response($twig->renderView('/front/Home/index.html.twig', [
+        $reponse = new Response($this->render('/front/Home/index.html.twig', [
             'name' => "Jonjon"
         ]));
         $reponse->send();
