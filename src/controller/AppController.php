@@ -9,29 +9,27 @@
 namespace App\controller;
 
 use App\services\AppFactory;
-use App\services\Config;
-use App\services\Twig;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
 class AppController extends AppFactory
 {
+
     public function render($path, $var = null)
     {
         $config = $this->getConfig();
-        $this->cache = $config->getTwigCache();
-        $this->templatesFolder = $config->getTwigTemplates();
+        $templatesFolder = $config->getTwigTemplates();
 
-        $this->loader = new Twig_Loader_Filesystem($config->getRootPath() . $config->getTwigTemplates());
+        $loader = new Twig_Loader_Filesystem($config->getRootPath() . $templatesFolder);
 
-        $this->cache = false;
-
+        $cache = false;
         if ($config->getTwigCache()) {
-            $this->cache = $config->getRootPath() . $config->getTwigCache();
+            $cache = $config->getRootPath() . $config->getTwigCache();
         }
 
-        $twig = new Twig_Environment($this->loader, array(
-            'cache' => $this->cache,
+
+        $twig = new Twig_Environment($loader, array(
+            'cache' => $cache,
         ));
 
 
