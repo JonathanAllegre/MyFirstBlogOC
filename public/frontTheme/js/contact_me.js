@@ -12,13 +12,14 @@ $(function() {
             var email = $("input#email").val();
             var message = $("textarea#message").val();
             var stop =$("input#adresse").val();
+            var prefix=$("input#prefix").val();
             var firstName = name; // For Success/Failure Message
             // Check for white space in name for Success/Fail message
             if (firstName.indexOf(' ') >= 0) {
                 firstName = name.split(' ').slice(0, -1).join(' ');
             }
             jQuery.ajax({
-                url: "/contact/sendMailContact",
+                url: prefix + "/contact/sendMailContact",
                 type: "POST",
                 data: {
                     name: name,

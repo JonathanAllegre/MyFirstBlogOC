@@ -21,7 +21,6 @@ class HomeController extends AppController
     {
         $request = $this->getRequest();
 
-
         $email = $request->request->get('email');
         $name = $request->request->get('name');
         $message = $request->request->get('message');
