@@ -3,3 +3,4 @@
 /vendor/
 /var/
 .php_cs.cache
+/public/frontTheme/img/

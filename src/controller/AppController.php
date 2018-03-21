@@ -9,6 +9,7 @@
 namespace App\controller;
 
 use App\services\AppFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
@@ -31,9 +32,25 @@ class AppController extends AppFactory
             'cache' => $cache,
         ));
 
-        if ($var) {
-            return $twig->render($path, $var);
+        $prefix = $config->getPrefix();
+        if ($config->getPrefix() !== '/') {
+            $prefix = $config->getPrefix().'/';
         }
-        return $twig->render($path);
+
+        $http = new Request();
+        $request = $http->createFromGlobals();
+        $httpHost = $request->server->get('HTTP_HOST');
+
+        // DEFAULT VARIABLES
+        $variables  = array(
+            'publicFolder' => 'http://' . $httpHost  . $prefix
+        );
+
+        // MERGE VAR IF NOT EMPTY $VAR
+        if ($var) {
+            $variables = array_merge($variables, $var);
+        }
+
+        return $twig->render($path, $variables);
     }
 }
