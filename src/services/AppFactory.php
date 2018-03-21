@@ -8,9 +8,12 @@
 
 namespace App\services;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class AppFactory
 {
     private static $config;
+    private static $request;
 
 
     public function getConfig()
@@ -19,5 +22,14 @@ class AppFactory
             self::$config = new Config();
         }
         return self::$config;
+    }
+
+    public function getRequest()
+    {
+        if (self::$request === null) {
+            $http = new Request();
+            self::$request = $http->createFromGlobals();
+        }
+        return self::$request;
     }
 }

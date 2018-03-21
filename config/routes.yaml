@@ -14,3 +14,10 @@ Articles:
     bundle: frontend
     controller: HomeController
     action: index
+
+SendMessContact:
+    method: POST
+    url: /contact/sendMailContact
+    bundle: frontend
+    controller: HomeController
+    action: sendMailContact

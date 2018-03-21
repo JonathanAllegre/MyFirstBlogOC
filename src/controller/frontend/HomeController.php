@@ -16,4 +16,21 @@ class HomeController extends AppController
         ]));
         $reponse->send();
     }
+
+    public function sendMailContact()
+    {
+        $request = $this->getRequest();
+
+
+        $email = $request->request->get('email');
+        $name = $request->request->get('name');
+        $message = $request->request->get('message');
+
+        $response = "Une erreur est survenue";
+        if (mail('jonathan.allegre258@orange.fr', 'Nouveau Contact '. $name, $message. $email)) {
+            $response = "Message bien envoyé";
+        }
+
+        echo $response;
+    }
 }

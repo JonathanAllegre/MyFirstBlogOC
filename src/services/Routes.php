@@ -23,7 +23,7 @@ class Routes extends AppFactory
     private function setRoutes()
     {
         $yaml = new Yaml();
-        $this->routes = $yaml->parseFile(__DIR__.'/../../config/Routes.yaml');
+        $this->routes = $yaml->parseFile(__DIR__.'/../../config/routes.yaml');
         $this->dispatcher();
     }
 
@@ -31,12 +31,6 @@ class Routes extends AppFactory
     {
         $dispatcher = \FastRoute\simpleDispatcher(function (Collector $routes) {
             foreach ($this->routes as $value) {
-                if ($value['url'] == "/") {
-                    $value['url'] = "";
-                }
-                if ($value['url'] !== "/" && $this->prefix == "/") {
-                    $value['url'] = substr($value['url'], 1);
-                }
                 $routes->addRoute(
                     $value['method'],
                     $this->prefix.$value['url'],
