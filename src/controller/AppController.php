@@ -14,7 +14,6 @@ use Twig_Loader_Filesystem;
 
 class AppController extends AppFactory
 {
-
     public function render($path, $var = null)
     {
         $config = $this->getConfig();
@@ -32,11 +31,9 @@ class AppController extends AppFactory
             'cache' => $cache,
         ));
 
-
-        if ($var === null) {
-            return $twig->render($path);
-        } else {
+        if ($var) {
             return $twig->render($path, $var);
         }
+        return $twig->render($path);
     }
 }

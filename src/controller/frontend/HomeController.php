@@ -11,7 +11,8 @@ class HomeController extends AppController
     public function index($vars = null)
     {
         $reponse = new Response($this->render('/front/Home/index.html.twig', [
-            'name' => "Jonjon"
+            'name' => "Jonjon",
+            'var'  => $vars
         ]));
         $reponse->send();
     }

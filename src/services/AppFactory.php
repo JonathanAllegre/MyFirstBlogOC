@@ -17,9 +17,7 @@ class AppFactory
     {
         if (self::$config === null) {
             self::$config = new Config();
-            return self::$config;
-        } else {
-            return self::$config;
         }
+        return self::$config;
     }
 }
