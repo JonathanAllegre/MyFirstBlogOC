@@ -22,6 +22,7 @@ class Config
     private $twigCache;
     private $twigTemplates;
     private $rootPath;
+    private $mail;
 
 
     /**
@@ -43,6 +44,7 @@ class Config
         $this->dbName = getenv('DB_NAME');
         $this->dbUser = getenv('DB_USER');
         $this->dbPass = getenv('DB_PASS');
+        $this->mail = getenv('MAIL_ADRESS');
 
         $this->setYaml();
     }
@@ -131,5 +133,13 @@ class Config
     public function getRootPath()
     {
         return $this->rootPath;
+    }
+
+    /**
+     * @return array|false|string
+     */
+    public function getMail()
+    {
+        return $this->mail;
     }
 }
