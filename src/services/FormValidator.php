@@ -10,7 +10,7 @@ namespace App\services;
 
 class FormValidator
 {
-    public static function validateEmailField($email)
+    public function validateEmailField($email)
     {
         $error = 1;
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -25,7 +25,7 @@ class FormValidator
         return $var;
     }
 
-    public static function sanitizeString($string)
+    public function sanitizeString($string)
     {
         $newstr = filter_var($string, FILTER_SANITIZE_STRING);
 

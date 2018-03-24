@@ -22,11 +22,13 @@ class HomeController extends AppController
     public function sendMailContact()
     {
         $request = $this->getRequest();
-        $response = new Response();
+
+        $response      = new Response();
+        $formValidator = new FormValidator();
+
         $response->headers->set('Content-Type', 'application/json');
 
         $error = 0;
-
         // Stop Robots
         $adresse = $request->request->get('adresse');
         if (!empty($adresse)) {
@@ -37,9 +39,8 @@ class HomeController extends AppController
             )));
         }
 
-
         // Validate email
-        $email = FormValidator::validateEmailField($request->request->get('email'));
+        $email = $formValidator->validateEmailField($request->request->get('email'));
         if ($email['statut'] == 1 && empty($adresse)) {
             $error = 1;
             $response->setContent(json_encode(array(
@@ -52,8 +53,8 @@ class HomeController extends AppController
         // If No errors
         if ($error == 0 && empty($adresse)) {
             // Get Datas and filter
-            $name = FormValidator::sanitizeString($request->request->get('name'));
-            $message = FormValidator::sanitizeString($request->request->get('message'));
+            $name = $formValidator->sanitizeString($request->request->get('name'));
+            $message = $formValidator->sanitizeString($request->request->get('message'));
             $subject = "Contact MyFirstBlogOc";
 
             // Format message
