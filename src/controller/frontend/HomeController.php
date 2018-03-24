@@ -28,30 +28,21 @@ class HomeController extends AppController
 
         $response->headers->set('Content-Type', 'application/json');
 
-        $error = 0;
-        // Stop Robots
-        $adresse = $request->request->get('adresse');
-        if (!empty($adresse)) {
-            $error = 1;
-            $response->setContent(json_encode(array(
-               'error' => 1,
-               'errorTitle' => "Vous êtes un robot !",
-            )));
-        }
 
-        // Validate email
-        $email = $formValidator->validateEmailField($request->request->get('email'));
-        if ($email['statut'] == 1 && empty($adresse)) {
-            $error = 1;
+        // Validate Form
+        $retour = $formValidator->validateContactForm();
+        $error = $retour['error'];
+
+        // If Errors
+        if ($error == 1) {
             $response->setContent(json_encode(array(
                 'error' => 1,
-                'errorTitle' => "Erreur dans la validation du mail"
+                'errorTitle' => $retour['errorTitle'],
             )));
         }
 
-
         // If No errors
-        if ($error == 0 && empty($adresse)) {
+        if ($error == 0) {
             // Get Datas and filter
             $name = $formValidator->sanitizeString($request->request->get('name'));
             $message = $formValidator->sanitizeString($request->request->get('message'));
@@ -61,7 +52,7 @@ class HomeController extends AppController
             $text = " Message de ".$name."\r\n\r\n".$message;
 
             // Call mailer class
-            $mail = new Mailer($email['email'], $subject, $text);
+            $mail = new Mailer($request->request->get('email'), $subject, $text);
 
             // Get Errors
             $sendError = $mail->getError();
