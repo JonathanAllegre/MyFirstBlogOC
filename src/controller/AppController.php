@@ -9,6 +9,7 @@
 namespace App\controller;
 
 use App\services\AppFactory;
+use App\services\LinkBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
@@ -31,6 +32,9 @@ class AppController extends AppFactory
         $twig = new Twig_Environment($loader, array(
             'cache' => $cache,
         ));
+
+        // Add Global Objet LinkBuilder
+        $twig->addGlobal('LinkBuilder', new LinkBuilder());
 
         $prefix = $config->getPrefix();
         if ($config->getPrefix() !== '/') {
