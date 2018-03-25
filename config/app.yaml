@@ -1,5 +1,5 @@
 dev:
-    prefix: /MyFirstBlogOC/public
+    prefix: /MyFirstBlogOC
 
 production:
     prefix: /monPrefix

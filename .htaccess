@@ -1,5 +1,2 @@
-Options -Indexes
-
-<Files *>
-Deny from all
-</Files>
+RewriteEngine On
+RewriteRule ^ public/index.php [L]

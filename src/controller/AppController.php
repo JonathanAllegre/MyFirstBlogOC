@@ -43,7 +43,7 @@ class AppController extends AppFactory
 
         // DEFAULT VARIABLES
         $variables  = array(
-            'publicFolder' => 'http://' . $httpHost  . $prefix,
+            'publicFolder' => 'http://' . $httpHost  . $prefix . "public",
             'rootPath' => $config->getPrefix()
         );
 
