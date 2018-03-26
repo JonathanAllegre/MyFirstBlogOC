@@ -10,12 +10,17 @@ namespace App\services;
 
 class RequestParameters
 {
+
     private $controller;
     private $action;
     private $bundle;
     private $parameters;
 
 
+    /**
+     * RequestParameters constructor.
+     * @param $parameters
+     */
     public function __construct($parameters)
     {
         if (!empty($parameters[2])) {
@@ -25,7 +30,6 @@ class RequestParameters
         $this->controller = $parameters[1]['controller'];
         $this->action = $parameters[1]['action'];
         $this->bundle = $parameters[1]['bundle'];
-
     }
 
     /**
@@ -55,8 +59,8 @@ class RequestParameters
     /**
      * @return string
      */
-    public function getParameters():string
+    public function getParameters($key):string
     {
-        return $this->parameters;
+        return $this->parameters[$key];
     }
 }

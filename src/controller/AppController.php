@@ -9,23 +9,33 @@
 namespace App\controller;
 
 use App\services\AppFactory;
+
 use App\services\LinkBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
-class AppController extends AppFactory
+class AppController
 {
+    private $config;
+    private $http;
+
+
+    public function __construct(AppFactory $app, Request $http)
+    {
+        $this->config = $app->getConfig();
+        $this->http = $http;
+    }
+
     public function render($path, $var = null)
     {
-        $config = $this->getConfig();
-        $templatesFolder = $config->getTwigTemplates();
+        $templatesFolder = $this->config->getTwigTemplates();
 
-        $loader = new Twig_Loader_Filesystem($config->getRootPath() . $templatesFolder);
+        $loader = new Twig_Loader_Filesystem($this->config->getRootPath() . $templatesFolder);
 
         $cache = false;
-        if ($config->getTwigCache()) {
-            $cache = $config->getRootPath() . $config->getTwigCache();
+        if ($this->config->getTwigCache()) {
+            $cache = $this->config->getRootPath() . $this->config->getTwigCache();
         }
 
 
@@ -36,19 +46,18 @@ class AppController extends AppFactory
         // Add Global Objet LinkBuilder
         $twig->addGlobal('LinkBuilder', new LinkBuilder());
 
-        $prefix = $config->getPrefix();
-        if ($config->getPrefix() !== '/') {
-            $prefix = $config->getPrefix().'/';
+        $prefix = $this->config->getPrefix();
+        if ($this->config->getPrefix() !== '/') {
+            $prefix = $this->config->getPrefix().'/';
         }
 
-        $http = new Request();
-        $request = $http->createFromGlobals();
+        $request = $this->http->createFromGlobals();
         $httpHost = $request->server->get('HTTP_HOST');
 
         // DEFAULT VARIABLES
         $variables  = array(
             'publicFolder' => 'http://' . $httpHost  . $prefix . "public",
-            'rootPath' => $config->getPrefix()
+            'rootPath' => $this->config->getPrefix()
         );
 
         // MERGE VAR IF NOT EMPTY $VAR

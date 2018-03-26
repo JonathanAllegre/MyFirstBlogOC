@@ -73,6 +73,7 @@ class Routes extends AppFactory
         $container = new Container();
         $cont = $container->createConfig($routeInfo);
         $class = "App\\controller\\".$bundle."\\".$controller;
+
         $cont->call([$class,$action]);
     }
 }

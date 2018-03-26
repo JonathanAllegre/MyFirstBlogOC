@@ -10,7 +10,7 @@ namespace App\services;
 
 use DI\ContainerBuilder;
 
-class Container extends Config
+class Container extends AppFactory
 {
     public function createConfig($requestParameters)
     {

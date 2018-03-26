@@ -12,11 +12,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AppFactory
 {
+    /**
+     * @var object Config
+     */
     private static $config;
+    /**
+     * @var object Request
+     */
     private static $request;
 
 
-    public function getConfig()
+    public function getConfig():Config
     {
         if (self::$config === null) {
             self::$config = new Config();
@@ -24,7 +30,7 @@ class AppFactory
         return self::$config;
     }
 
-    public function getRequest()
+    public function getRequest():Request
     {
         if (self::$request === null) {
             $http = new Request();

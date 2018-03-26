@@ -50,7 +50,7 @@ class Config
     }
 
 
-    private function setYaml()
+    private function setYaml():void
     {
         // load .yaml
         $yaml = new Yaml();
@@ -66,7 +66,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getEnv()
+    public function getEnv():string
     {
         return $this->env;
     }
@@ -74,7 +74,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbHost()
+    public function getDbHost():string
     {
         return $this->dbHost;
     }
@@ -82,7 +82,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbName()
+    public function getDbName():string
     {
         return $this->dbName;
     }
@@ -90,7 +90,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbUser()
+    public function getDbUser():string
     {
         return $this->dbUser;
     }
@@ -98,7 +98,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbPass()
+    public function getDbPass():string
     {
         return $this->dbPass;
     }
@@ -106,7 +106,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getPrefix()
+    public function getPrefix():string
     {
         return $this->prefix;
     }
@@ -114,7 +114,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getTwigCache()
+    public function getTwigCache():string
     {
         return $this->twigCache;
     }
@@ -122,7 +122,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getTwigTemplates()
+    public function getTwigTemplates():string
     {
         return $this->twigTemplates;
     }
@@ -130,7 +130,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getRootPath()
+    public function getRootPath():string
     {
         return $this->rootPath;
     }
@@ -138,7 +138,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getMail()
+    public function getMail():string
     {
         return $this->mail;
     }
