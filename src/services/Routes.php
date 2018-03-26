@@ -46,7 +46,6 @@ class Routes extends AppFactory
 
         $routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getBasePath().$request->getPathInfo());
 
-
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
                 $controller = "ErrorController";
@@ -54,7 +53,7 @@ class Routes extends AppFactory
                 $bundle = "error";
                 $vars = "";
 
-                $this->initController($bundle, $controller, $action, $vars);
+                $this->initController($routeInfo, $bundle, $controller, $action);
                 break;
 
             case \FastRoute\Dispatcher::FOUND:
@@ -63,16 +62,17 @@ class Routes extends AppFactory
                 $bundle = $routeInfo[1]['bundle'];
                 $vars = $routeInfo[2];
 
-                $this->initController($bundle, $controller, $action, $vars);
+                $this->initController($routeInfo, $bundle, $controller, $action);
 
                 break;
         }
     }
 
-    public function initController($bundle, $controller, $action, $vars)
+    public function initController($routeInfo, $bundle, $controller, $action)
     {
+        $container = new Container();
+        $cont = $container->createConfig($routeInfo);
         $class = "App\\controller\\".$bundle."\\".$controller;
-        $cont = new $class;
-        $cont->$action($vars);
+        $cont->call([$class,$action]);
     }
 }

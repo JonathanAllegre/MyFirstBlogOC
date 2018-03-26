@@ -6,15 +6,16 @@ namespace App\controller\frontend;
 use App\controller\AppController;
 use App\services\FormValidator;
 use App\services\Mailer;
+use App\services\RequestParameters;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
 {
-    public function index($vars = null)
+    public function index()
     {
+
         $reponse = new Response($this->render('/front/Home/index.html.twig', [
-            'name' => "Jonjon",
-            'var'  => $vars
+            'name' => "Jonjon"
         ]));
         $reponse->send();
     }

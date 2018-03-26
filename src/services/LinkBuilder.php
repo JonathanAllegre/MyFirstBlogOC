@@ -8,8 +8,6 @@
 
 namespace App\services;
 
-
-
 use Symfony\Component\Yaml\Yaml;
 
 class LinkBuilder extends AppFactory

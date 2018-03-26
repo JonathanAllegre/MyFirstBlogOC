@@ -21,3 +21,10 @@ SendMessContact:
     bundle: frontend
     controller: HomeController
     action: sendMailContact
+
+test:
+    method: GET
+    url: /home/index/{article_id}/{annee}
+    bundle: frontend
+    controller: HomeController
+    action: index
