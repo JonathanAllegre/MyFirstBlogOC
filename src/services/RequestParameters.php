@@ -10,7 +10,6 @@ namespace App\services;
 
 class RequestParameters
 {
-
     private $controller;
     private $action;
     private $bundle;
