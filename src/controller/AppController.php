@@ -11,7 +11,9 @@ namespace App\controller;
 use App\services\AppFactory;
 
 use App\services\LinkBuilder;
+use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
@@ -19,12 +21,14 @@ class AppController
 {
     private $config;
     private $http;
+    private $session;
 
 
-    public function __construct(AppFactory $app, Request $http)
+    public function __construct(AppFactory $app, Request $http, Session $session)
     {
         $this->config = $app->getConfig();
         $this->http = $http;
+        $this->session = $session;
     }
 
     public function render($path, $var = null)
@@ -45,6 +49,7 @@ class AppController
 
         // Add Global Objet LinkBuilder
         $twig->addGlobal('LinkBuilder', new LinkBuilder());
+        $twig->addGlobal('Flash', new Flash($this->session));
 
         $prefix = $this->config->getPrefix();
         if ($this->config->getPrefix() !== '/') {

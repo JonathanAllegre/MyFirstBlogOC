@@ -16,6 +16,16 @@
     <h1 class="display-3">Jonathan Allègre</h1>
     <p class="lead">DÉVELOPPEUR D'APPLICATION - PHP / SYMFONY</p>
 </div>
+{% for success in Flash.get('success') %}
+    <div class="alert alert-success" role="alert">
+        <strong>Well Done !</strong> {{ success }}.
+    </div>
+{% endfor %}
+{% for warning in Flash.get('warning') %}
+    <div class="alert alert-danger" role="alert">
+        <strong>Attention !!</strong> {{ warning }}.
+    </div>
+{% endfor %}
 {% block content %}{% endblock %}
 {% include 'front/footer.html.twig' %}
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

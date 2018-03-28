@@ -6,7 +6,6 @@ namespace App\controller\frontend;
 use App\controller\AppController;
 use App\services\FormValidator;
 use App\services\Mailer;
-use App\services\RequestParameters;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
@@ -25,7 +24,6 @@ class HomeController extends AppController
 
         $response      = new Response();
         $formValidator = new FormValidator();
-
         $response->headers->set('Content-Type', 'application/json');
 
 

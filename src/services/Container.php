@@ -8,7 +8,9 @@
 
 namespace App\services;
 
+use App\services\Sessions\Flash;
 use DI\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class Container extends AppFactory
 {
@@ -17,7 +19,8 @@ class Container extends AppFactory
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->useAutowiring(true);
         $containerBuilder->addDefinitions([
-            RequestParameters::class => \DI\create()->constructor($requestParameters)
+            RequestParameters::class => \DI\create()->constructor($requestParameters),
+            Flash::class => \DI\create()->constructor(\DI\get(Session::class)),
         ]);
 
         return $containerBuilder->build();
