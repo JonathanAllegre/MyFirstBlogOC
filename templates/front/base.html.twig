@@ -18,12 +18,12 @@
 </div>
 {% for success in Flash.get('success') %}
     <div class="alert alert-success" role="alert">
-        <strong>Well Done !</strong> {{ success }}.
+        <strong>Félicitation !</strong> {{ success }}.
     </div>
 {% endfor %}
 {% for warning in Flash.get('warning') %}
     <div class="alert alert-danger" role="alert">
-        <strong>Attention !!</strong> {{ warning }}.
+        <strong>Attention !</strong> {{ warning }}.
     </div>
 {% endfor %}
 {% block content %}{% endblock %}

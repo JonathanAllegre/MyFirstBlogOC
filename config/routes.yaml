@@ -32,6 +32,13 @@ NewUserRegister:
     controller: ActionsController
     action: registerUser
 
+UserLogin:
+    method: POST
+    url: /user/login
+    bundle: frontend
+    controller: ActionsController
+    action: loginUser
+
 test:
     method: GET
     url: /home/index/{article_id}/{annee}

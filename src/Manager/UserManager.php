@@ -9,13 +9,14 @@
 namespace App\Manager;
 
 use App\Entity\UserEntity;
+use \PDO as PDO;
 
 class UserManager
 {
     private $pdo;
 
 
-    public function __construct(\PDO $pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -53,5 +54,23 @@ class UserManager
         }
 
         return array("error" => $error, "errorTitle" => $errorTitle);
+    }
+
+
+    public function login($mail)
+    {
+        $request = $this->pdo->prepare('	SELECT *
+									FROM user
+									WHERE mail_adress = :mail');
+
+        $request->bindValue(':mail', $mail);
+        $request->execute();
+
+        $donnees = $request->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($donnees)) {
+            $data = new UserEntity($donnees);
+            return $data;
+        }
     }
 }

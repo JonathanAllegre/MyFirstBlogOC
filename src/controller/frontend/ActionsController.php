@@ -27,7 +27,6 @@ class ActionsController extends AppController
         FormValidator $validator,
         AppManager $manager
     ) {
-
         $request = $appFactory->getRequest();
 
         // CHECK ALL FIELDS
@@ -90,10 +89,9 @@ class ActionsController extends AppController
 
             // IF NO ERROS AT ALL WE REDIRECT ON USER/MY_ACCOUNT
             echo "GREAT";
-            /*
+
             $response = new RedirectResponse($linkBuilder->getLink('MyAccount'));
             $response->send();
-            */
         }
 
 
@@ -107,8 +105,43 @@ class ActionsController extends AppController
 
             $reponse->send();
         }
+    }
+
+    public function loginUser(AppFactory $appFactory, AppManager $manager, Flash $flash)
+    {
+        // GET $POST
+        $mail = $appFactory->getRequest()->get('email');
+        $pass = $appFactory->getRequest()->get('password');
 
 
+        // GET USER IN DB
+        $userManager = $manager->getManager('UserManager');
+        $user = $userManager->login($mail);
 
+        // GET HTTPREFERER
+        $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
+
+        if ($user === null) {
+            $error = 1;
+            $flash->set('warning', 'Aucune adresse e-mail n\'a été trouvée');
+        }
+
+        // CHECK PASSWORD // ADD DATA IN SESSION
+        if (!isset($error)) {
+            if (password_verify($pass, $user->getPassword())) {
+                $flash->set('success', 'Vous êtes maintenant connecté');
+                $response = new RedirectResponse($ref);
+                $response->send();
+            } else {
+                $error = 1;
+                $flash->set('warning', 'Le mot de passe saisie ne correspond pas');
+            }
+        }
+
+        // IF ERRORS
+        if (isset($error)) {
+            $response = new RedirectResponse($ref);
+            $response->send();
+        }
     }
 }

@@ -37,7 +37,7 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form action="{{ LinkBuilder.getLink("NewUserRegister") }}" method="POST" novalidate>
+                    <form action="{{ LinkBuilder.getLink("NewUserRegister") }}" method="POST">
                         <div class="row">
                             <div class="col-md-12">
                                 <h5>Nom / Prénom</h5>
@@ -94,12 +94,32 @@
                 </button>
             </div>
             <div class="modal-body">
-                ...
+                <div class="container-fluid">
+                    <form action="{{ LinkBuilder.getLink("UserLogin") }}" method="POST">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-envelope"></i></div>
+                                    </div>
+                                    <input type="email" class="form-control" name="email" id="inlineFormInputGroup" placeholder="Votre adresse email" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fas fa-key"></i></div>
+                                    </div>
+                                    <input type="password" name="password" class="form-control" id="inlineFormInputGroup" placeholder="mot de passe" required>
+                                </div>
+                            </div>
+                        </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-outline-secondary sendContactButton">Se connecter</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
