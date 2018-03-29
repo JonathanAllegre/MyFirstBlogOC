@@ -14,7 +14,11 @@ class UserController extends AppController
 {
     public function myAccount()
     {
-        return var_dump('mlkj');
-        die();
+        $pass = "Bonjour";
+        $hash = password_hash($pass, PASSWORD_DEFAULT);
+
+        if (password_verify('Bnjour', $hash)) {
+            echo "lkjhkjh";
+        }
     }
 }
