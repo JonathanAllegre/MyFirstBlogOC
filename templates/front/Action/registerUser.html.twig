@@ -5,5 +5,56 @@
 {% endblock %}
 
 {%block content %}
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="offset-4 col-4 text-center">
+            <h2 class="h2Accueil">Créer mon compte</h2>
+            <hr class="hrAccueil">
+            <form action="{{ LinkBuilder.getLink("NewUserRegister") }}" method="POST">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Nom / Prénom</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" id="last_name" class="form-control" name="last_name" required placeholder="Votre Nom" value = "{{ lastName }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" id="first_name" class="form-control" name="first_name" required placeholder="Votre Prénom" value="{{ firstName }}" required>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>EMail / Mot de Passe</h5>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fas fa-envelope"></i></div>
+                            </div>
+                            <input type="email" class="form-control" name="email" id="inlineFormInputGroup" placeholder="Votre adresse email" value="{{ email }}"required>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fas fa-key"></i></div>
+                            </div>
+                            <input type="password" class="form-control" name="password" id="inlineFormInputGroup" placeholder="mot de passe" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-outline-secondary sendContactButton">Créer un compte</button>
+                    </div>
+                </div>
+                <div class="footerSpacer"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}

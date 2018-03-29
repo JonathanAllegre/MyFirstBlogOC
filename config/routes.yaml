@@ -1,6 +1,7 @@
 ### Inserer les routes ici ###
 #### SITE BUNDLE #####
 
+### HOME CONTROLLER ######
 Home:
     method: GET
     url: /
@@ -8,12 +9,13 @@ Home:
     controller: HomeController
     action: index
 
-ArticlesList:
+### USER CONTROLLER ######
+MyAccount:
     method: GET
-    url: /blog/article/all
+    url: /user/my-account
     bundle: frontend
-    controller: HomeController
-    action: index
+    controller: UserController
+    action: myAccount
 
 ### ACTIONS CONTROLLER ######
 SendMessContact:

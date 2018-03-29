@@ -55,25 +55,69 @@ class FormValidator extends AppFactory
     }
 
 
-    public function validateEmailField($email)
+    public function validateEmailField($email, $required)
     {
-        $error = 1;
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = 0;
+        if ($required) {
+            if (empty($email)) {
+                $error = 1;
+                $errorTitle = "Le Champ e-mail ne doit pas être vide";
+                $data = $email;
+
+                return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+            } else {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $error = 0;
+                    $errorTitle = "";
+                    $data = $email;
+
+                    return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+                } else {
+                    $error = 1;
+                    $errorTitle = "Erreur dans l'adresse e-mail";
+                    $data = $email;
+
+                    return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+                }
+            }
         }
 
-        $var = array(
-            'email' => $email,
-            'statut' => $error,
-        );
+        if (!$required) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = 0;
+                $errorTitle = "";
+                $data = $email;
 
-        return $var;
+                return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+            } else {
+                $error = 1;
+                $errorTitle = "Erreur dans l'adresse e-mail";
+                $data = $email;
+
+                return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+            }
+        }
     }
 
-    public function sanitizeString($string)
+    public function sanitizeString($string, $fieldName, $required = null)
     {
-        $newstr = filter_var($string, FILTER_SANITIZE_STRING);
+        if ($required) {
+            if (empty($string)) {
+                $error = 1;
+                $errorTitle = "Le champ ".$fieldName." ne doit pas etre vide";
+                $data = $string;
+            } else {
+                $error = 0;
+                $errorTitle = "";
+                $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING);
+            }
+        }
 
-        return $newstr;
+        if (!$required) {
+            $error = 0;
+            $errorTitle = "";
+            $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING);
+        }
+
+        return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
     }
 }
