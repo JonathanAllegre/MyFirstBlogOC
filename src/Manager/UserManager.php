@@ -73,4 +73,19 @@ class UserManager
             return $data;
         }
     }
+
+
+    /**
+     * @param string $mail
+     * @return integer
+     */
+    public function checkExistMail(string $mail)
+    {
+        $request = $this->pdo->prepare('SELECT COUNT(id_user) AS nb FROM user WHERE mail_adress = :mail');
+        $request->bindValue('mail', $mail);
+        $request->execute();
+
+        $donnees = $request->fetch();
+        return $donnees['nb'];
+    }
 }

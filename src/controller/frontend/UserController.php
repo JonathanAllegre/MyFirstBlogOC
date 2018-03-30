@@ -14,6 +14,8 @@ class UserController extends AppController
 {
     public function myAccount()
     {
+
+        //TODO: FAIRE LA PAGE MY ACCOUNT UNE FOIS LUSER CONNECTE
         $pass = "Bonjour";
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
