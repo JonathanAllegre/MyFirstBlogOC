@@ -57,13 +57,41 @@ class UserManager
     }
 
 
-    public function login($mail)
+    /**
+     * @param $mail
+     * @return UserEntity
+     */
+    public function getUserByMail($mail):UserEntity
     {
         $request = $this->pdo->prepare('	SELECT *
 									FROM user
-									WHERE mail_adress = :mail');
+									WHERE mail_adress = :mail
+									');
 
         $request->bindValue(':mail', $mail);
+        $request->execute();
+
+        $donnees = $request->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($donnees)) {
+            $data = new UserEntity($donnees);
+            return $data;
+        }
+    }
+
+
+    /**
+     * @param $idUser
+     * @return UserEntity
+     */
+    public function getUser($idUser):UserEntity
+    {
+        $request = $this->pdo->prepare('	SELECT *
+									FROM user
+									WHERE id_user = :idUser
+									');
+
+        $request->bindValue(':idUser', $idUser);
         $request->execute();
 
         $donnees = $request->fetch(PDO::FETCH_ASSOC);

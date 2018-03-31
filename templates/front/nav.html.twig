@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark navCustom">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navCustom fixed-top">
     <a class="navbar-brand" href="#"><i class="fas fa-hand-pointer"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -15,17 +15,29 @@
                 <a class="nav-link" href="{{ LinkBuilder.getLink("Home") }}#contact">Contact</a>
             </li>
         </ul>
-        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-            <li class="nav-item">
-                <a class="nav-link"  data-toggle="modal" data-target="#registerModal" ><i class="fas fa-user-plus fa-lg"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i></a>
-            </li>
+        <ul class="navbar-nav">
+            {% if Session.get('user') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> {{ Session.get('user').first_name }} {{ Session.get('user').last_name }} ({{ Session.get('user').role_title }})
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                        <a class="dropdown-item" href="{{ LinkBuilder.getLink('MyAccount') }}"><i class="fas fa-user"></i> Mon compte</a>
+                        <a class="dropdown-item" href="{{ LinkBuilder.getLink('UserLogout') }}"><i class="fas fa-times-circle"></i> Déconnection</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link"  data-toggle="modal" data-target="#registerModal" ><i class="fas fa-user-plus fa-lg"></i> S'enregistrer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
-<!-- Modal -->
+<!-- REGISTER MODAL -->
 <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -84,6 +96,7 @@
         </div>
     </div>
 </div>
+<!-- LOGIN MODAL -->
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

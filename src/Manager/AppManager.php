@@ -24,7 +24,7 @@ class AppManager
     /**
      * @return PDO
      */
-    private function getBdd()
+    private function getBdd():PDO
     {
         if (self::$bdd === null) {
             $optPdo =  array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
@@ -42,12 +42,18 @@ class AppManager
     }
 
     /**
-     * @param $manager
-     * @return mixed
+     * @return UserManager
      */
-    public function getManager($manager)
+    public function getUserManager():UserManager
     {
-        $manager = "App\\Manager\\".$manager;
-        return new $manager($this->getBdd());
+        return new UserManager($this->getBdd());
+    }
+
+    /**
+     * @return RoleManager
+     */
+    public function getRoleManager():RoleManager
+    {
+        return new RoleManager($this->getBdd());
     }
 }

@@ -17,6 +17,7 @@ use App\services\LinkBuilder;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class ActionsController extends AppController
 {
@@ -27,15 +28,13 @@ class ActionsController extends AppController
         FormValidator $validator,
         AppManager $manager
     ) {
-
-
         $request = $appFactory->getRequest();
         $validate = $validator->validateRegisterUser($manager, $request, $flash);
         $error = $validate['error'];
 
         // IF NO ERRORS WE CREATE THE ENTITY
         if (!$error) {
-            $userManager = $manager->getManager('UserManager');
+            $userManager = $manager->getUserManager();
             $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
             $userEntity = new UserEntity([
                 'last_name' => $validate['last_name'],
@@ -56,12 +55,10 @@ class ActionsController extends AppController
             // IF NO ERROS AT ALL WE REDIRECT ON USER/MY_ACCOUNT
             $response = new RedirectResponse($linkBuilder->getLink('MyAccount'));
             $response->send();
-
         }
 
         // IF ERRORS IN VALIDATION FIELD OR IN PERSIST DATA WE DISPLAY FORM WITH THE FLASH MESSAGE
         if ($error) {
-            var_dump('dernier');
             $reponse = new Response($this->render('/front/Action/registerUser.html.twig', [
                 'lastName' => $validate['last_name'],
                 'firstName' => $validate['first_name'],
@@ -72,16 +69,21 @@ class ActionsController extends AppController
         }
     }
 
-    public function loginUser(AppFactory $appFactory, AppManager $manager, Flash $flash)
+    public function loginUser(AppFactory $appFactory, AppManager $manager, Flash $flash, Session $session)
     {
+
         // GET $POST
         $mail = $appFactory->getRequest()->get('email');
         $pass = $appFactory->getRequest()->get('password');
 
-
         // GET USER IN DB
-        $userManager = $manager->getManager('UserManager');
-        $user = $userManager->login($mail);
+        $userManager = $manager->getUserManager();
+        $user = $userManager->getUserByMail($mail);
+
+        //GET ROLE IN DB
+        $roleManager = $manager->getRoleManager();
+        $role = $roleManager->getRole($user->getIdRole());
+
 
         // GET HTTPREFERER
         $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
@@ -94,7 +96,20 @@ class ActionsController extends AppController
         // CHECK PASSWORD // ADD DATA IN SESSION
         if (!isset($error)) {
             if (password_verify($pass, $user->getPassword())) {
-                //TODO: FAIRE LA MIS EN SESSION DES INFO
+                // MAKE ARRAY INFO USER
+                $infoUser = array(
+                    'id' => $user->getIdUser(),
+                    'email' => $user->getMailAdress(),
+                    'first_name' => $user->getFirstName(),
+                    'last_name' => $user->getLastName(),
+                    'role_id' => $user->getIdRole(),
+                    'role_title' => $role->getTitle(),
+                );
+
+                // ADD USER DATA IN SESSION
+                $session->set('user', $infoUser);
+
+                // IF NO ERROR WE REDIRECT
                 $flash->set('success', 'Vous êtes maintenant connecté');
                 $response = new RedirectResponse($ref);
                 $response->send();
@@ -109,5 +124,20 @@ class ActionsController extends AppController
             $response = new RedirectResponse($ref);
             $response->send();
         }
+    }
+
+    public function logoutUser(Session $session, AppFactory $appFactory, Flash $flash)
+    {
+
+        // GET HTTPREFERER
+        $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
+
+        // REMOVE SESSION USER
+        $session->remove('user');
+
+        // REDIRECT
+        $flash->set('success', 'Vous êtes maintenant déconnecté');
+        $response = new RedirectResponse($ref);
+        $response->send();
     }
 }

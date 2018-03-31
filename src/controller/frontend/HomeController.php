@@ -7,14 +7,12 @@ use App\controller\AppController;
 use App\services\FormValidator;
 use App\services\Mailer;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController extends AppController
 {
-    public function index()
+    public function index(Session $session)
     {
-
-        //TODO: SI L'USER EST ADMIN DEBLOQU2 LES CADENAS ADMIN DANS TEMPLATE
-        //TODO: AJOUTER LE NOM A LA PLACE DES PICTOS CONECTION
         $reponse = new Response($this->render('/front/Home/index.html.twig', [
             'name' => "Jonjon"
         ]));

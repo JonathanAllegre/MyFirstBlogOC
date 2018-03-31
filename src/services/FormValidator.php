@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FormValidator extends AppFactory
 {
-    private function validateEmailField($email, $required)
+    public function validateEmailField($email, $required)
     {
         if ($required) {
             if (empty($email)) {
@@ -57,7 +57,7 @@ class FormValidator extends AppFactory
         }
     }
 
-    private function sanitizeString($string, $fieldName, $required = null)
+    public function sanitizeString($string, $fieldName, $required = null)
     {
         if ($required) {
             if (empty($string)) {
@@ -153,7 +153,7 @@ class FormValidator extends AppFactory
         }
 
         // CHECK IF EMAIL ADRESS EXIST
-        $userManager = $manager->getManager('UserManager');
+        $userManager = $manager->getUserManager();
         $exist =$userManager->checkExistMail($email['data']);
         if ($exist >= 1) {
             $error = 1;

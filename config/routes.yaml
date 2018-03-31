@@ -39,6 +39,13 @@ UserLogin:
     controller: ActionsController
     action: loginUser
 
+UserLogout:
+    method: GET
+    url: /user/logout
+    bundle: frontend
+    controller: ActionsController
+    action: logoutUser
+
 test:
     method: GET
     url: /home/index/{article_id}/{annee}

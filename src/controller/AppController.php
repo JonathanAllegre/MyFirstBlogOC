@@ -50,6 +50,7 @@ class AppController
         // Add Global Objet LinkBuilder
         $twig->addGlobal('LinkBuilder', new LinkBuilder());
         $twig->addGlobal('Flash', new Flash($this->session));
+        $twig->addGlobal('Session', new Session());
 
         $prefix = $this->config->getPrefix();
         if ($this->config->getPrefix() !== '/') {
