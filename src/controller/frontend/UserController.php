@@ -31,8 +31,6 @@ class UserController extends AppController
                 'user' => $user
             ]));
             $reponse->send();
-
-
         } else {
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             $response->send();
