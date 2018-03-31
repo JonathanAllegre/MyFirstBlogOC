@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class HomeController extends AppController
 {
-    public function index(Session $session)
+    public function index()
     {
         $reponse = new Response($this->render('/front/Home/index.html.twig', [
             'name' => "Jonjon"
