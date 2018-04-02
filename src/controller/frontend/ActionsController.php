@@ -53,6 +53,10 @@ class ActionsController extends AppController
             }
 
             // IF NO ERROS AT ALL WE REDIRECT ON USER/MY_ACCOUNT
+            $flash->set(
+                'success',
+                'Votre compte a bien été créer. Vous pouvez maintenenat vous connecter en utilisant vos identifiants.'
+            );
             $response = new RedirectResponse($linkBuilder->getLink('MyAccount'));
             $response->send();
         }
@@ -80,11 +84,6 @@ class ActionsController extends AppController
         $userManager = $manager->getUserManager();
         $user = $userManager->getUserByMail($mail);
 
-        //GET ROLE IN DB
-        $roleManager = $manager->getRoleManager();
-        $role = $roleManager->getRole($user->getIdRole());
-
-
         // GET HTTPREFERER
         $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
 
@@ -103,7 +102,7 @@ class ActionsController extends AppController
                     'first_name' => $user->getFirstName(),
                     'last_name' => $user->getLastName(),
                     'role_id' => $user->getIdRole(),
-                    'role_title' => $role->getTitle(),
+                    'role_title' => $user->getRoleTitle(),
                 );
 
                 // ADD USER DATA IN SESSION

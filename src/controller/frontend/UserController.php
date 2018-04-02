@@ -19,21 +19,23 @@ class UserController extends AppController
 {
     public function myAccount(Session $session, LinkBuilder $linkBuilder, AppManager $manager)
     {
-        if ($session->get('user')) {
-            // GET USER SESSION
-            $userSession = $session->get('user');
-
-            // GET USER OBJECT
-            $user = $manager->getUserManager()->getUser($userSession['id']);
-
-            // SET RESPONSE
-            $reponse = new Response($this->render('/front/user/myAccount.html.twig', [
-                'user' => $user
-            ]));
-            $reponse->send();
-        } else {
+        // IF $SESSION.USER DON'T EXIST WE REDIRECT TO HOME
+        if (!$session->get('user')) {
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             $response->send();
         }
+
+        // GET USER SESSION
+        $userSession = $session->get('user');
+
+        // GET USER OBJECT
+        $user = $manager->getUserManager()->getUserById($userSession['id']);
+
+
+        // SET RESPONSE
+        $reponse = new Response($this->render('/front/user/myAccount.html.twig', [
+            'user' => $user
+        ]));
+        $reponse->send();
     }
 }
