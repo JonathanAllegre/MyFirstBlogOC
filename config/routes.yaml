@@ -1,16 +1,54 @@
 ### Inserer les routes ici ###
 #### SITE BUNDLE #####
 
-Accueil:
+### HOME CONTROLLER ######
+Home:
     method: GET
     url: /
     bundle: frontend
     controller: HomeController
     action: index
 
-Articles:
+### USER CONTROLLER ######
+MyAccount:
     method: GET
-    url: /home/index/{article}
+    url: /user/my-account
+    bundle: frontend
+    controller: UserController
+    action: myAccount
+
+### ACTIONS CONTROLLER ######
+SendMessContact:
+    method: POST
+    url: /contact/sendMailContact
+    bundle: frontend
+    controller: HomeController
+    action: sendMailContact
+
+NewUserRegister:
+    method: POST
+    url: /user/new
+    bundle: frontend
+    controller: ActionsController
+    action: registerUser
+
+UserLogin:
+    method: POST
+    url: /user/login
+    bundle: frontend
+    controller: ActionsController
+    action: loginUser
+
+UserLogout:
+    method: GET
+    url: /user/logout
+    bundle: frontend
+    controller: ActionsController
+    action: logoutUser
+
+test:
+    method: GET
+    url: /home/index/{article_id}/{annee}
     bundle: frontend
     controller: HomeController
     action: index

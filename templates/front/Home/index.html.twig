@@ -1,4 +1,88 @@
-{{ name }}
+{% extends '/front/base.html.twig' %}
 
+{%block head %}
+    <title>MyFirstBlog | Accueil</title>
+{% endblock %}
 
-ùmlkùmlk
+{%block content %}
+    <!-- A PROPOS -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-2 col-8 text-center">
+                <h2 class="h2Accueil">A propos</h2>
+                <hr class="hrAccueil">
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-2 col-8 text-center">
+                <img src="{{ publicFolder }}/img/portrait.jpeg" class="rounded-circle" alt="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-2 col-8">
+                <p class="about text-center">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed dapibus leo nec ornare diam. Sed commodo nibh ante facilisis bibendum dolor feugiat at. Duis sed dapibus leo nec ornare diam commodo nibh.
+                </p>
+                <p class="about text-center">
+                    Mon cv ici
+                </p>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <!-- CONTACT -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="offset-2 col-8 text-center">
+                <h2 id="contact" class="h2Accueil">Contact</h2>
+                <hr class="hrAccueil">
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-2 col-8">
+                <form name="sentMessage" id="contactForm" method="POST" action="{{ LinkBuilder.getLink('SendMessContact') }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="name" class="form-control" name="name" required placeholder="Votre Nom">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="email" id="email" class="form-control" name="email" placeholder="Votre adresse email" required="required">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea name="message" id="message" class="form-control" rows="4" placeholder="Votre message" required></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <input type="hidden" id="adresse" class="form-control" placeholder="adresse" name="adresse">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-outline-secondary sendContactButton">Envoyer</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- SOCIAL -->
+    <div class="container-fluid footerSpacer">
+        <div class="row">
+            <div class="col-12 text-center">
+                <ul class="list-inline">
+                    <li class="list-inline-item socialIcon"><a href="#"><i class="fab fa-facebook-f fa-lg"></i></a></li>
+                    <li class="list-inline-item socialIcon"><a href="#"><i class="fab fa-linkedin-in fa-lg"></i></a></li>
+                    <li class="list-inline-item socialIcon"><a href="#"><i class="fab fa-instagram fa-lg"></i></a></li>
+                    <li class="list-inline-item socialIcon"><a href="#"><i class="fab fa-twitter fa-lg"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

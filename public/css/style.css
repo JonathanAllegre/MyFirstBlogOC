@@ -1,0 +1,146 @@
+/* ACCUEIL */
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+a{
+    color:#666;
+    cursor:pointer;
+}
+
+a:hover{
+    color:#721c24;
+    text-decoration: none;
+}
+
+.socialIcon{
+    padding-right: 25px;
+}
+.containerAccueil{
+
+    padding-bottom:50px;
+    padding-left:50px;
+    padding-right:50px;
+
+}
+.navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show>.nav-link {
+    color: #856f6c;
+}
+.form-control:focus{
+    border-color:#721c24;
+    box-shadow: 0 0 0 0.0rem;
+}
+
+.navCustom{
+    border-bottom: solid 1px white;
+}
+
+.h2Accueil{
+    margin-top: 40px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+    font-size: 30px;
+
+}
+
+.btn-outline-secondary:hover{
+    border-color: #721c24;
+    background-color: transparent;
+    color:black;
+}
+.btn-outline-secondary.active{
+    border-color: #721c24;
+    background-color: transparent;
+    color:black;
+}
+
+.hrAccueil{
+    height: 1px;
+    width: 70px;
+    text-align: center;
+    position: relative;
+    background: #666;
+    margin-bottom: 100px;
+    border: 0;
+}
+
+.lead{
+    margin-left:10px;
+}
+
+.footerSpacer{
+    padding-top:100px;
+    padding-bottom:50px;
+}
+.jumbotron{
+    border-radius: 0;
+}
+
+.headerIndex{
+    background: url("../img/header/header.jpg") no-repeat;
+    background-size: 100%;
+    color:white;
+    border-radius: 0;
+}
+
+.about{
+    margin-top: 40px;
+    margin-bottom: 30px;
+    line-height: 22px;
+    color: #777;
+}
+
+/* CONNECTION / REGISTER */
+
+
+@keyframes onloadThumb {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.8
+    }
+}
+@keyframes onhoverThumb {
+    from {
+        opacity: 0.8;
+    }
+    to {
+        opacity: 1
+    }
+}
+.thumb{
+
+    margin-top:25px;
+    opacity:0.8;
+    animation-name: onloadThumb;
+    animation-duration: 3s;
+}
+.thumb:hover{
+    opacity:1;
+    animation-name: onhoverThumb;
+    animation-duration: 1s;
+}
+.rowHome{
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+.containerFooter{
+    background-color:#f6f6f6;
+    padding-bottom:25px;
+
+}
+.footer{
+    padding-top:10px;
+    text-align: center;
+}
+
+
+
+
+
+
+
+

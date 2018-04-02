@@ -22,17 +22,21 @@ class Config
     private $twigCache;
     private $twigTemplates;
     private $rootPath;
+    private $mail;
 
 
     /**
      * Config constructor.
-     * @param $root
      */
-    public function __construct($root)
+    public function __construct()
     {
+
+        // rootPath
+        $this->rootPath = __DIR__.'/../../';
+
         // load .env
         $dotenv = new Dotenv();
-        $dotenv->load($root.'/.env');
+        $dotenv->load($this->rootPath.'/.env');
 
         // load var .env
         $this->env    = getenv('APP_ENV');
@@ -40,14 +44,13 @@ class Config
         $this->dbName = getenv('DB_NAME');
         $this->dbUser = getenv('DB_USER');
         $this->dbPass = getenv('DB_PASS');
+        $this->mail = getenv('MAIL_ADRESS');
 
-        // rootPath
-        $this->rootPath = $root;
         $this->setYaml();
     }
 
 
-    private function setYaml()
+    private function setYaml():void
     {
         // load .yaml
         $yaml = new Yaml();
@@ -63,7 +66,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getEnv()
+    public function getEnv():string
     {
         return $this->env;
     }
@@ -71,7 +74,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbHost()
+    public function getDbHost():string
     {
         return $this->dbHost;
     }
@@ -79,7 +82,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbName()
+    public function getDbName():string
     {
         return $this->dbName;
     }
@@ -87,7 +90,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbUser()
+    public function getDbUser():string
     {
         return $this->dbUser;
     }
@@ -95,7 +98,7 @@ class Config
     /**
      * @return array|false|string
      */
-    public function getDbPass()
+    public function getDbPass():string
     {
         return $this->dbPass;
     }
@@ -103,7 +106,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getPrefix()
+    public function getPrefix():string
     {
         return $this->prefix;
     }
@@ -111,7 +114,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getTwigCache()
+    public function getTwigCache():string
     {
         return $this->twigCache;
     }
@@ -119,7 +122,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getTwigTemplates()
+    public function getTwigTemplates():string
     {
         return $this->twigTemplates;
     }
@@ -127,8 +130,16 @@ class Config
     /**
      * @return mixed
      */
-    public function getRootPath()
+    public function getRootPath():string
     {
         return $this->rootPath;
+    }
+
+    /**
+     * @return array|false|string
+     */
+    public function getMail():string
+    {
+        return $this->mail;
     }
 }

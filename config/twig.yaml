@@ -3,5 +3,5 @@ dev:
     templates: /templates
 
 production:
-    cache: false/var/cache/twig
+    cache: /var/cache/twig
     templates: /templates
