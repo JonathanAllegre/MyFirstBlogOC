@@ -17,6 +17,35 @@ MyAccount:
     controller: UserController
     action: myAccount
 
+NewUserRegister:
+    method: POST
+    url: /user/new
+    bundle: frontend
+    controller: UserController
+    action: registerUser
+
+DeleteUser:
+    method: POST
+    url: /user/delete
+    bundle: frontend
+    controller: UserController
+    action: deleteUser
+
+
+UserLogin:
+    method: POST
+    url: /user/login
+    bundle: frontend
+    controller: UserController
+    action: loginUser
+
+UserLogout:
+    method: GET
+    url: /user/logout
+    bundle: frontend
+    controller: UserController
+    action: logoutUser
+
 ### ACTIONS CONTROLLER ######
 SendMessContact:
     method: POST
@@ -25,34 +54,6 @@ SendMessContact:
     controller: HomeController
     action: sendMailContact
 
-NewUserRegister:
-    method: POST
-    url: /user/new
-    bundle: frontend
-    controller: ActionsController
-    action: registerUser
-
-DeleteUser:
-    method: POST
-    url: /user/delete
-    bundle: frontend
-    controller: ActionsController
-    action: deleteUser
-
-
-UserLogin:
-    method: POST
-    url: /user/login
-    bundle: frontend
-    controller: ActionsController
-    action: loginUser
-
-UserLogout:
-    method: GET
-    url: /user/logout
-    bundle: frontend
-    controller: ActionsController
-    action: logoutUser
 
 test:
     method: GET

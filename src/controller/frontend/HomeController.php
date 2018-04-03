@@ -4,10 +4,8 @@
 namespace App\controller\frontend;
 
 use App\controller\AppController;
-use App\services\FormValidator;
-use App\services\Mailer;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class HomeController extends AppController
 {
@@ -19,6 +17,7 @@ class HomeController extends AppController
         $reponse->send();
     }
 
+    
     public function sendMailContact()
     {
         $request = $this->getRequest();
@@ -76,4 +75,5 @@ class HomeController extends AppController
 
         $response->send();
     }
+
 }

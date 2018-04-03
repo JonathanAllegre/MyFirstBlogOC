@@ -11,6 +11,10 @@ namespace App\Manager;
 use App\Entity\RoleEntity;
 use \PDO as PDO;
 
+/**
+ * Class RoleManager
+ * @package App\Manager
+ */
 class RoleManager
 {
     private $pdo;
@@ -21,7 +25,10 @@ class RoleManager
     }
 
 
-    public function create(RoleEntity $role)
+    /**
+     * @param RoleEntity $role
+     */
+    public function create(RoleEntity $role):void
     {
         $request = $this->pdo->prepare('	INSERT INTO role (title)
 									VALUES(:title)');
@@ -33,7 +40,11 @@ class RoleManager
         $request->execute();
     }
 
-    public function getRole($idRole)
+    /**
+     * @param $idRole
+     * @return RoleEntity
+     */
+    public function getRole($idRole):RoleEntity
     {
         $request = $this->pdo->prepare('	SELECT *
 									FROM role
@@ -48,5 +59,7 @@ class RoleManager
             $data = new RoleEntity($donnees);
             return $data;
         }
+
+        return null;
     }
 }
