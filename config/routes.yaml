@@ -32,6 +32,14 @@ NewUserRegister:
     controller: ActionsController
     action: registerUser
 
+DeleteUser:
+    method: POST
+    url: /user/delete
+    bundle: frontend
+    controller: ActionsController
+    action: deleteUser
+
+
 UserLogin:
     method: POST
     url: /user/login

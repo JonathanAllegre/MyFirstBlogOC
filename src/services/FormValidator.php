@@ -11,6 +11,7 @@ namespace App\services;
 use App\Manager\AppManager;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class FormValidator extends AppFactory
 {
@@ -167,5 +168,24 @@ class FormValidator extends AppFactory
             'email' => $email['data'],
             'password' =>$password['data'],
         );
+    }
+
+    public function validateDeleteUser(Request $request, Session $session, Flash $flash)
+    {
+        $error = 0;
+        // CHECK TOKEN $POST
+        $tokenSend = $this->sanitizeString($request->request->get('token'), 'tokenSend', true);
+        if ($tokenSend['error']) {
+            $error = 1;
+            $flash->set('warning', $tokenSend['errorTitle']);
+        }
+
+        // CHECK IF TOKEN POST AND TOKEN SESSION ==
+        if ($tokenSend['data'] != $session->get('myToken')) {
+            $error = 1;
+            $flash->set('warning', 'Erreur dans la validation des jetons');
+        }
+
+        return $error;
     }
 }

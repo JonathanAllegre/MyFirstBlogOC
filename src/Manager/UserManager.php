@@ -72,7 +72,7 @@ class UserManager
 		               WHERE mail_adress = :mail'
         );
 
-        $request->bindValue(':mail', $mail);
+        $request->bindValue(':mail', $mail, PDO::PARAM_STR);
         $request->execute();
 
         $donnees = $request->fetch(PDO::FETCH_ASSOC);
@@ -81,6 +81,8 @@ class UserManager
             $data = new UserEntity($donnees);
             return $data;
         }
+
+        return null;
     }
 
 
@@ -97,7 +99,7 @@ class UserManager
 					   WHERE id_user = :idUser'
         );
 
-        $request->bindValue(':idUser', $idUser);
+        $request->bindValue(':idUser', $idUser, PDO::PARAM_INT);
         $request->execute();
 
         $donnees = $request->fetch(PDO::FETCH_ASSOC);
@@ -106,6 +108,8 @@ class UserManager
             $data = new UserEntity($donnees);
             return $data;
         }
+
+        return null;
     }
 
 
@@ -113,13 +117,39 @@ class UserManager
      * @param string $mail
      * @return integer
      */
-    public function checkExistMail(string $mail)
+    public function checkExistMail(string $mail):int
     {
-        $request = $this->pdo->prepare('SELECT COUNT(id_user) AS nb FROM user WHERE mail_adress = :mail');
+        $request = $this->pdo->prepare(
+            'SELECT COUNT(id_user) AS nb 
+                       FROM user 
+                       WHERE mail_adress = :mail'
+        );
+
         $request->bindValue('mail', $mail);
         $request->execute();
 
         $donnees = $request->fetch();
         return $donnees['nb'];
+    }
+
+
+    /**
+     * Delete User
+     * @param $idUser
+     * @return int
+     */
+    public function deleteUser($idUser):int
+    {
+        // REQUEST DELETE
+        $request = $this->pdo->prepare(
+            '	DELETE FROM user
+                        WHERE id_user = :id'
+        );
+        $request->bindValue(':id', $idUser, PDO::PARAM_INT);
+
+        if ($request->execute()) {
+            return $error = 0;
+        }
+        return $error = 1;
     }
 }

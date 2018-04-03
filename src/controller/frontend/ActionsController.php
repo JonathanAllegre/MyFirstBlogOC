@@ -21,6 +21,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class ActionsController extends AppController
 {
+    /**
+     * @param Flash $flash
+     * @param LinkBuilder $linkBuilder
+     * @param AppFactory $appFactory
+     * @param FormValidator $validator
+     * @param AppManager $manager
+     */
     public function registerUser(
         Flash $flash,
         LinkBuilder $linkBuilder,
@@ -73,6 +80,71 @@ class ActionsController extends AppController
         }
     }
 
+    /**
+     * @param AppFactory $app
+     * @param Session $session
+     * @param FormValidator $validator
+     * @param Flash $flash
+     * @param LinkBuilder $linkBuilder
+     * @param AppManager $manager
+     * @return RedirectResponse
+     */
+    public function deleteUser(
+        AppFactory $app,
+        Session $session,
+        FormValidator $validator,
+        Flash $flash,
+        LinkBuilder $linkBuilder,
+        AppManager $manager
+    ) {
+
+        // VALIDATE FORM
+        $request = $app->getRequest();
+        $validate = $validator->validateDeleteUser($request, $session, $flash);
+
+        // URL DE REDIRECTION
+        $homeUrl = $linkBuilder->getLink('Home');
+
+        // IF ERRORS REDIRECT TO HOME
+        if ($validate) {
+            $response = new RedirectResponse($homeUrl);
+            return $response->send();
+        }
+
+
+        // GET USER ID IN SESSION
+        $user = $session->get('user');
+
+        // DELETE USER IN BDD IF ERROR WE REDIRECT TO HOME
+        if ($manager->getUserManager()->deleteUser($user['id'])) {
+            // FLASH MESSAGE WARNING
+            $flash->set('warning', 'Une erreur est survenue lors de la suppression de votre compte');
+
+
+            // REDIRECT TO HOME
+            $response = new RedirectResponse($homeUrl);
+            return $response->send();
+        }
+
+        // REMOVE SESSION USER & TOKEN
+        $session->remove('user');
+        $session->remove('myToken');
+
+        // FLASH MESSAGE SUCCESS
+        $flash->set('success', 'Votre compte à bien été supprimé');
+
+        // REDIRECT TO HOME
+        $response = new RedirectResponse($homeUrl);
+        return $response->send();
+    }
+
+    /**
+     * @param AppFactory $appFactory
+     * @param AppManager $manager
+     * @param Flash $flash
+     * @param Session $session
+     * @throws \Exception
+     */
     public function loginUser(AppFactory $appFactory, AppManager $manager, Flash $flash, Session $session)
     {
 
@@ -105,8 +177,9 @@ class ActionsController extends AppController
                     'role_title' => $user->getRoleTitle(),
                 );
 
-                // ADD USER DATA IN SESSION
+                // ADD USER DATA IN SESSION && TOKEN
                 $session->set('user', $infoUser);
+                $session->set('myToken', bin2hex(random_bytes(32)));
 
                 // IF NO ERROR WE REDIRECT
                 $flash->set('success', 'Vous êtes maintenant connecté');
@@ -125,14 +198,20 @@ class ActionsController extends AppController
         }
     }
 
+    /**
+     * @param Session $session
+     * @param AppFactory $appFactory
+     * @param Flash $flash
+     */
     public function logoutUser(Session $session, AppFactory $appFactory, Flash $flash)
     {
 
         // GET HTTPREFERER
         $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
 
-        // REMOVE SESSION USER
+        // REMOVE SESSION USER & TOKEN
         $session->remove('user');
+        $session->remove('myToken');
 
         // REDIRECT
         $flash->set('success', 'Vous êtes maintenant déconnecté');

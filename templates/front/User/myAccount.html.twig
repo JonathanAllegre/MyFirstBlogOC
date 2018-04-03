@@ -1,9 +1,7 @@
 {% extends '/front/base.html.twig' %}
-
 {%block head %}
     <title>MyFirstBlog | Mon Compte</title>
 {% endblock %}
-
 {%block content %}
     <div class="container-fluid">
         <div class="row">
@@ -20,19 +18,24 @@
             </div>
             <div class="col-md-3">
                 <p>
-                    <h3>{{ user.firstName }} {{ user.lastName }}</h3>
-                    <h5>{{ user.mailAdress }}</h5>
+                <h3>{{ user.firstName }} {{ user.lastName }}</h3>
+                <h5>{{ user.mailAdress }}</h5>
                 </p>
                 <p>
-                    <h5>Inscrit le: {{ user.registrationDate |date('d-m-Y à H:i:s') }}</h5>
-                    <h5>Rôle: {{ user.roleTitle }}</h5>
+                <h5>Inscrit le: {{ user.registrationDate |date('d-m-Y à H:i:s') }}</h5>
+                <h5>Rôle: {{ user.roleTitle }}</h5>
                 </p>
                 <div class="offset-md-3 col-md-4">
-                    <button type="button" class="btn btn-danger">Supprimer Mon Compte</button>
+                    <form action="{{ LinkBuilder.getLink('DeleteUser') }}" method="POST">
+                        <input name="token" type="hidden" value="{{ token }}">
+                        <button type="submit" id="deleteButton" class="btn btn-danger">Supprimer Mon Compte</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <div class="container-fluid footerSpacer"></div>
-
+{% endblock %}
+{% block script %}
+<script src="{{ publicFolder }}/js/script.js"></script>
 {% endblock %}

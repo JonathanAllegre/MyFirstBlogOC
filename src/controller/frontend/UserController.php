@@ -25,8 +25,9 @@ class UserController extends AppController
             $response->send();
         }
 
-        // GET USER SESSION
+        // GET USER SESSION & TOKEN
         $userSession = $session->get('user');
+        $token = $session->get('myToken');
 
         // GET USER OBJECT
         $user = $manager->getUserManager()->getUserById($userSession['id']);
@@ -34,7 +35,8 @@ class UserController extends AppController
 
         // SET RESPONSE
         $reponse = new Response($this->render('/front/user/myAccount.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'token' => $token,
         ]));
         $reponse->send();
     }
