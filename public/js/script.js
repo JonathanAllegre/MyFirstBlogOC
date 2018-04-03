@@ -1,3 +1,5 @@
-$('#deleteButton').click(function() {
-    if (!confirm("Attention, si vous continuez, votre compte sera définitivement supprimé.")) return false;
+$("#deleteButton").click(function() {
+    if (!confirm("Attention, si vous continuez, votre compte sera définitivement supprimé.")){
+        return false;
+    }
 });

@@ -17,7 +17,7 @@ class HomeController extends AppController
         $reponse->send();
     }
 
-    
+
     public function sendMailContact()
     {
         $request = $this->getRequest();
