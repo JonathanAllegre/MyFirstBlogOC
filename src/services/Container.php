@@ -26,6 +26,10 @@ class Container extends AppFactory
         $containerBuilder->addDefinitions([
             RequestParameters::class => \DI\create()->constructor($requestParameters),
             Flash::class => \DI\create()->constructor(\DI\get(Session::class)),
+            CheckPermissions::class => \DI\create()->constructor(
+                \DI\get(Session::class),
+                \DI\get(Flash::class)
+            ),
         ]);
 
         return $containerBuilder->build();

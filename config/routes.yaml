@@ -1,6 +1,7 @@
 ### Inserer les routes ici ###
 #### SITE BUNDLE #####
 
+### FRONT END #############################################################
 ### HOME CONTROLLER ######
 Home:
     method:
@@ -48,13 +49,27 @@ UserLogout:
     controller: UserController
     action: logoutUser
 
-### ADMIN ######
-home_admin:
+### BACKEND #######################################################################
+HomeAdmin:
     method: GET
     url: /admin
     bundle: backend
     controller: HomeController
     action: index
+
+PostAdmin:
+    method: GET
+    url: /admin/post
+    bundle: backend
+    controller: PostController
+    action: index
+
+PostAdminAdd:
+    method: GET
+    url: /admin/post/add
+    bundle: backend
+    controller: PostController
+    action: add
 
 
 test:

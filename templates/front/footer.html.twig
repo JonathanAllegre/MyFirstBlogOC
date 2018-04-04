@@ -7,7 +7,7 @@
             <li class="list-inline-item socialIcon"><a href="#"><i class="far fa-envelope fa-lg"></i> Contact</a></li>
             {% if Session.get('user') %}
                 {% if Session.get('user').role_id == 2 %}
-                    <li class="list-inline-item socialIcon"><a href="{{ LinkBuilder.getLink('home_admin') }}"><i class="fas fa-unlock fa-lg"></i></i> Administration</a></li>
+                    <li class="list-inline-item socialIcon"><a href="{{ LinkBuilder.getLink('HomeAdmin') }}"><i class="fas fa-unlock fa-lg"></i></i> Administration</a></li>
                 {% else %}
                     <li class="list-inline-item socialIcon"><a href=""><i class="fas fa-lock fa-lg"></i> Administration</a></li>
                 {% endif %}
