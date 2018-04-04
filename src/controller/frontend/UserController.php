@@ -238,7 +238,7 @@ class UserController extends AppController
 
 
         // SET RESPONSE
-        $reponse = new Response($this->render('/front/user/myAccount.html.twig', [
+        $reponse = new Response($this->render('/front/User/myAccount.html.twig', [
             'user' => $user,
             'token' => $token,
         ]));

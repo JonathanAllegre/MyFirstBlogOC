@@ -4,76 +4,69 @@
 namespace App\controller\frontend;
 
 use App\controller\AppController;
+use App\services\AppFactory;
+use App\services\FormValidator;
+use App\services\Mailer;
+use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Response;
-
 
 class HomeController extends AppController
 {
-    public function index()
+    public function index(AppFactory $appFactory, FormValidator $validator, Flash $flash, Mailer $mailer)
     {
-        $reponse = new Response($this->render('/front/Home/index.html.twig', [
-            'name' => "Jonjon"
-        ]));
-        $reponse->send();
-    }
 
-
-    public function sendMailContact()
-    {
-        $request = $this->getRequest();
-
-        $response      = new Response();
-        $formValidator = new FormValidator();
-        $response->headers->set('Content-Type', 'application/json');
-
-
-        // Validate Form
-        $retour = $formValidator->validateContactForm();
-        $error = $retour['error'];
-
-        // If Errors
-        if ($error == 1) {
-            $response->setContent(json_encode(array(
-                'error' => 1,
-                'errorTitle' => $retour['errorTitle'],
-            )));
+        // IF METHOD != POST ( IF FORM CONTACT NOT SEND )
+        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+            $reponse = new Response($this->render('/front/Home/index.html.twig'));
+            return $reponse->send();
         }
 
-        // If No errors
-        if ($error == 0) {
-            // Get Datas and filter
-            $name = $formValidator->sanitizeString($request->request->get('name'));
-            $message = $formValidator->sanitizeString($request->request->get('message'));
-            $subject = "Contact MyFirstBlogOc";
+        // IF FORM CONTACT IS SEND
+        // GET REQUEST
+        $request = $appFactory->getRequest();
 
-            // Format message
-            $text = " Message de ".$name."\r\n\r\n".$message;
+        // VALIDATE FORM
+        $validate = $validator->validateContactForm($request, $flash);
 
-            // Call mailer class
-            $mail = new Mailer($request->request->get('email'), $subject, $text);
-
-            // Get Errors
-            $sendError = $mail->getError();
-
-            // If errors response = KO
-            if ($sendError == 1) {
-                $response->setContent(json_encode(array(
-                    'error' => 1,
-                    'errorTitle' => "Erreur lors de l'envoie du mail",
-                )));
-            }
-
-            // If no errors response = OK
-            if ($sendError == 0) {
-                $response->setContent(json_encode(array(
-                    'retour' => "Message bien envoyé",
-                    'error' => 0,
-                    'errorTitle' => ""
-                )));
-            }
+        // IF ERRORS IN VALIDATE FORM
+        if ($validate['error']) {
+            $reponse = new Response($this->render('/front/Home/index.html.twig', [
+                'post_name' => $validate['name'],
+                'post_email' => $validate['email'],
+                'post_message' => $validate['message'],
+            ]));
+            return $reponse->send();
         }
 
-        $response->send();
+        // IF NO ERRORS WE SEND MAIL
+        // BUILD MAIL VAR
+        $name = $validate['name'];
+        $message = $validate['message'];
+        $subject = "Contact MyFirstBlogOc";
+        $email = $validate['email'];
+
+        // FORMATE THE BODY OF MESSAGE
+        $text = " Message de ".$name."\r\n\r\n".$message;
+
+        // CALL THE MAILER CLASS
+        $send = $mailer->sendMail($email, $subject, $text);
+
+
+        // IF ERROR IN MAILER
+        if ($send) {
+            $flash->set('warning', "Un problème est survenue lors de l'envoie du mail");
+            $reponse = new Response($this->render('/front/Home/index.html.twig', [
+                'post_name' => $validate['name'],
+                'post_email' => $validate['email'],
+                'post_message' => $validate['message'],
+            ]));
+            return $reponse->send();
+        }
+
+        // IF NO ERRORS WE REDIRECT TO HOME
+        $flash->set('success', "Votre Message a été correctement envoyé");
+        $reponse = new Response($this->render('/front/Home/index.html.twig'));
+        return $reponse->send();
     }
 
 }

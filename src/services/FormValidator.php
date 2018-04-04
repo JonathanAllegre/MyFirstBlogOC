@@ -63,7 +63,7 @@ class FormValidator extends AppFactory
         if ($required) {
             if (empty($string)) {
                 $error = 1;
-                $errorTitle = "Le champ ".$fieldName." ne doit pas etre vide";
+                $errorTitle = "Le champ ".$fieldName." ne doit pas être vide";
                 $data = $string;
             } else {
                 $error = 0;
@@ -81,48 +81,35 @@ class FormValidator extends AppFactory
         return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
     }
 
-    public function validateContactForm()
+    public function validateContactForm(Request $request, Flash $flash)
     {
-        $request = $this->getRequest();
+        $error = 0;
 
-        $response = array('error' => 0, 'errorTitle' => '');
-        // Stop Robots
-        $adresse = $request->request->get('adresse');
-        if (!empty($adresse)) {
+        // CHECK ALL FIELDS
+        $name = $this->sanitizeString($request->request->get('name'), 'Nom', true);
+        if ($name['error']) {
             $error = 1;
-            $response = array(
-                'error' => 1,
-                'errorTitle' => "Vous êtes un robot !",
-            );
+            $flash->set('warning', $name['errorTitle']);
         }
 
-        // Verif Empty
-        if (empty($request->request->get('name'))) {
+        $email = $this->validateEmailField($request->request->get('email'), true);
+        if ($email['error']) {
             $error = 1;
-            $response = array(
-                'error' => 1,
-                'errorTitle' => "Vous devez remplir le champ Name"
-            );
-        }
-        if (empty($request->request->get('message'))) {
-            $error = 1;
-            $response = array(
-                'error' => 1,
-                'errorTitle' => "Vous devez remplir le champ Message"
-            );
+            $flash->set('warning', $email['errorTitle']);
         }
 
-        // Validate email
-        $email = $this->validateEmailField($request->request->get('email'));
-        if ($email['statut'] == 1 && empty($adresse)) {
+        $message = $this->sanitizeString($request->request->get('message'), 'message', true);
+        if ($message['error']) {
             $error = 1;
-            $response = array(
-                'error' => 1,
-                'errorTitle' => "Erreur dans la validation du mail"
-            );
+            $flash->set('warning', $message['errorTitle']);
         }
 
-        return $response;
+        return array(
+            'error' => $error,
+            'name' => $name['data'],
+            'email' => $email['data'],
+            'message' => $message['data'],
+        );
     }
 
     public function validateRegisterUser(AppManager $manager, Request $request, Flash $flash)

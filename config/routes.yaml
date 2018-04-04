@@ -3,7 +3,9 @@
 
 ### HOME CONTROLLER ######
 Home:
-    method: GET
+    method:
+        - GET
+        - POST
     url: /
     bundle: frontend
     controller: HomeController
