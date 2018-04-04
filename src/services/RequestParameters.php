@@ -55,7 +55,9 @@ class RequestParameters
         return $this->bundle;
     }
 
+
     /**
+     * @param $key
      * @return string
      */
     public function getParameters($key):string

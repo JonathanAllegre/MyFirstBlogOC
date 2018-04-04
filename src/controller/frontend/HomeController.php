@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
 {
+    /**
+     * @param AppFactory $appFactory
+     * @param FormValidator $validator
+     * @param Flash $flash
+     * @param Mailer $mailer
+     * @return Response
+     */
     public function index(AppFactory $appFactory, FormValidator $validator, Flash $flash, Mailer $mailer)
     {
 
@@ -68,5 +75,4 @@ class HomeController extends AppController
         $reponse = new Response($this->render('/front/Home/index.html.twig'));
         return $reponse->send();
     }
-
 }

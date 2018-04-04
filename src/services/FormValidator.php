@@ -15,6 +15,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class FormValidator extends AppFactory
 {
+    /**
+     * @param $email
+     * @param $required
+     * @return array
+     */
     public function validateEmailField($email, $required)
     {
         if ($required) {

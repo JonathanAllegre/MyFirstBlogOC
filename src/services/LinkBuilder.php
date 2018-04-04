@@ -16,6 +16,9 @@ class LinkBuilder extends AppFactory
     private $prefix;
 
 
+    /**
+     * LinkBuilder constructor.
+     */
     public function __construct()
     {
         if ($this->routes === null) {
@@ -27,6 +30,11 @@ class LinkBuilder extends AppFactory
         }
     }
 
+    /**
+     * @param $routeName
+     * @param null $parametres
+     * @return mixed|string
+     */
     public function getLink($routeName, $parametres = null)
     {
         $route = $routeName;

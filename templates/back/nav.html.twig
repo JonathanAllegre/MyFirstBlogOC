@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark navCustom fixed-top">
+    <a class="navbar-brand" href="#"></i><span> Administration</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ LinkBuilder.getLink("home_admin") }}">Accueil <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Articles
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#"><i class="fas fa-plus"></i> Ajouter un article</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-list-ul"></i> Tous les articles</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Utilisateurs
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#"><i class="fas fa-list-ul"></i> Tous les utilsateurs</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Commentaires
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#"><i class="fas fa-check"></i> Valider <span class="badge badge-pill badge-warning float-lg-right">4 </span> </a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-list-ul"></i> Tous les commentaires <span class="badge badge-pill badge-info ">454</span></a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            {% if Session.get('user') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> {{ Session.get('user').first_name }} {{ Session.get('user').last_name }} ({{ Session.get('user').role_title }})
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                        <a class="dropdown-item" href="{{ LinkBuilder.getLink('UserLogout') }}"><i class="fas fa-times-circle"></i> Déconnection</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link"  data-toggle="modal" data-target="#registerModal" ><i class="fas fa-user-plus fa-lg"></i> S'enregistrer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

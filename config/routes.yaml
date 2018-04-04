@@ -48,13 +48,13 @@ UserLogout:
     controller: UserController
     action: logoutUser
 
-### ACTIONS CONTROLLER ######
-SendMessContact:
-    method: POST
-    url: /contact/sendMailContact
-    bundle: frontend
+### ADMIN ######
+home_admin:
+    method: GET
+    url: /admin
+    bundle: backend
     controller: HomeController
-    action: sendMailContact
+    action: index
 
 
 test:

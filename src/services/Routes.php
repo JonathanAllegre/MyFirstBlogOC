@@ -27,6 +27,9 @@ class Routes extends AppFactory
         $this->dispatcher();
     }
 
+    /**
+     * @throws \Exception
+     */
     private function dispatcher()
     {
         $dispatcher = \FastRoute\simpleDispatcher(function (Collector $routes) {
@@ -51,7 +54,6 @@ class Routes extends AppFactory
                 $controller = "ErrorController";
                 $action = "notFound";
                 $bundle = "error";
-                $vars = "";
 
                 $this->initController($routeInfo, $bundle, $controller, $action);
                 break;
@@ -60,7 +62,6 @@ class Routes extends AppFactory
                 $controller = ucwords($routeInfo[1]['controller']);
                 $action = $routeInfo[1]['action'];
                 $bundle = $routeInfo[1]['bundle'];
-                $vars = $routeInfo[2];
 
                 $this->initController($routeInfo, $bundle, $controller, $action);
 
@@ -68,6 +69,13 @@ class Routes extends AppFactory
         }
     }
 
+    /**
+     * @param $routeInfo
+     * @param $bundle
+     * @param $controller
+     * @param $action
+     * @throws \Exception
+     */
     public function initController($routeInfo, $bundle, $controller, $action)
     {
         $container = new Container();
