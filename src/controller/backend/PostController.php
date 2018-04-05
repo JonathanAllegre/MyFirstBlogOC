@@ -11,9 +11,12 @@ namespace App\controller\backend;
 use App\controller\AppController;
 use App\Entity\PostEntity;
 use App\Manager\AppManager;
+use App\services\AppFactory;
 use App\services\CheckPermissions;
 use App\services\LinkBuilder;
+use App\services\RequestParameters;
 use App\services\Sessions\Flash;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -23,7 +26,9 @@ class PostController extends AppController
         AppManager $manager,
         Session $session,
         LinkBuilder $linkBuilder,
-        CheckPermissions $checkPermissions
+        CheckPermissions $checkPermissions,
+        AppFactory $appFactory,
+        Flash $flash
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
@@ -32,22 +37,110 @@ class PostController extends AppController
             return $response->send();
         }
 
+        // IF METHOD != POST ( IF FORM POST IS NOT SEND )
+        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+            $reponse = new Response($this->render('/back/Post/add.html.twig', [
+                'active' => "articles",
+            ]));
+            return $reponse->send();
+        }
+
+        // IF FORM IS SEND ( IF REQUEST == POST )
+        // GET $POST
+        $post = $appFactory->getRequest()->request->all();
+
+        // GET TIME
+        $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
+
+        // COMPLETE FOR CREATE ENTITY
+        $post['created'] = $date->format('Y-m-d H:i:s');
+        $post['modified'] = $date->format('Y-m-d H:i:s');
+        $post['id_user'] = $session->get('user')['id'];
 
         // CREATE ENTITY
-        $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
-        $post = new PostEntity(array(
-            'created' => $date->format('Y-m-d H:i:s'),
-            'modified' => $date->format('Y-m-d H:i:s'),
-            'title' => "Un Titre",
-            'short_text' => "Un texte court",
-            'content' => "Le contenu",
-            'id_user' => $session->get('user')['id'],
-            'id_statut_post' => 2,
-        ));
+        $postEntity = new PostEntity($post);
 
         // PERSIST ENTITY
         $postManager = $manager->getPostManager();
-        $postManager->create($post);
-        return var_dump($post);
+        $postManager->create($postEntity);
+
+        // GET LAST ID
+        $lastId = $postManager->getLastId();
+
+        // REDIRECT TO POST/UPDATE/{article_id}
+        $flash->set('success', 'Votre article a bien été enregistré. Vous pouvez maintenant le modifier');
+        $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+            'article_id' => $lastId
+        ]));
+        return $response->send();
+    }
+
+    public function update(
+        AppFactory $appFactory,
+        CheckPermissions $checkPermissions,
+        LinkBuilder $linkBuilder,
+        RequestParameters $parameters,
+        AppManager $manager,
+        Flash $flash
+    ) {
+
+        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
+        if (!$checkPermissions->isAdmin()) {
+            $response = new RedirectResponse($linkBuilder->getLink('Home'));
+            return $response->send();
+        }
+
+        // GET ID POST
+        $articleId = $parameters->getParameters('article_id');
+
+        // GET ARTICLE
+        $post = $manager->getPostManager()->read($articleId);
+
+        // IF METHOD = POST ( IF FORM POST IS SEND )
+        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+            // GET TIME
+            $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
+
+            // GET $FORM DATA
+            $formData = $appFactory->getRequest()->request->all();
+
+            // UPDATE MODIFIED
+            $formData['modified'] = $date->format('Y-m-d H:i:s');
+
+
+            // UPDATE ENTITY
+            $post->setTitle($formData['title']);
+            $post->setShortText($formData['short_text']);
+            $post->setContent($formData['content']);
+            $post->setModified($formData['modified']);
+            $post->setIdStatutPost($formData['id_statut_post']);
+
+            // PERSIST
+            if (!$manager->getPostManager()->update($post)) {
+                $flash->set('warning', "Une erreur est survenue lors de l'enregistrment");
+                $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+                    'article_id' => $articleId
+                ]));
+                return $response->send();
+            }
+
+                $flash->set('success', "Votre message a bien été sauvegardeé");
+            // READ NEW POST
+            $post = $manager->getPostManager()->read($articleId);
+        }
+
+        // IF POST DON'T EXIST
+        if (!$post) {
+            $flash->set('warning', "L'article demandé n'existe pas");
+            $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+            return $response->send();
+        }
+
+
+        $reponse = new Response($this->render('/back/Post/update.html.twig', [
+                'active' => "articles",
+                'post' => $post,
+        ]));
+        return $reponse->send();
     }
 }

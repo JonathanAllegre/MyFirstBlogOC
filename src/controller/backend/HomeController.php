@@ -31,7 +31,9 @@ class HomeController extends AppController
         }
 
         // IF USER IS CONNECT AND HAVE THE GOOD LEVEL AUTH
-        $reponse = new Response($this->render('/back/Home/index.html.twig'));
+        $reponse = new Response($this->render('/back/Home/index.html.twig', [
+            'active' => 'home',
+        ]));
         return $reponse->send();
     }
 }

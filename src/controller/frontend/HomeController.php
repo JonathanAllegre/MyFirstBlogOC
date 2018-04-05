@@ -70,9 +70,11 @@ class HomeController extends AppController
             return $reponse->send();
         }
 
-        // IF NO ERRORS WE REDIRECT TO HOME
+        // IF NO ERRORS WE DISPLAY HOME ADMIN
         $flash->set('success', "Votre Message a été correctement envoyé");
-        $reponse = new Response($this->render('/front/Home/index.html.twig'));
+        $reponse = new Response($this->render('/front/Home/index.html.twig', [
+            'active' => 'home',
+        ]));
         return $reponse->send();
     }
 }

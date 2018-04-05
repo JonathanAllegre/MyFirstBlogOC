@@ -1,0 +1,83 @@
+{% extends '/back/base.html.twig' %}
+{%block head %}
+    <title>MyFirstBlog | Accueil</title>
+{% endblock %}
+{%block content %}
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Modifier un article</h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <form action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header bg-dark text-light">
+                            Article
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="title_article">Titre de l'article:</label>
+                                <input type="hidden" class="form-control" id="title_article" name="id_post" value="{{ post.idPost }}" required>
+                                <input type="text" class="form-control" id="title_article" name="title" value="{{ post.title }}" required>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="chapo">Petite déscription</label>
+                                <textarea class="form-control" id="chapo" name="short_text" rows="2" required>{{ post.shortText }}</textarea>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="content">Contenu de l'article</label>
+                                <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header text-center bg-dark text-light">
+                            Actions
+                        </div>
+                        <div class="card-body">
+                            <h5>Visibilité:</h5>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="id_statut_post" value="2"{% if post.idStatutPost == 2 %}checked{% endif %}>
+                                    Brouillon
+                                </label>
+
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="id_statut_post" value="1"{% if post.idStatutPost == 1 %}checked{% endif %}>
+                                    En Ligne
+                                </label>
+
+                            </div>
+                            <hr>
+                            <input type="submit" class="btn btn-outline-success btn-block" value="Enregistrer">
+                            <input type="submit" class="btn btn-outline-danger btn-block" value="Supprimer">
+                            <hr>
+                            <h5>Image:</h5>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="validatedCustomFile">
+                                <label class="custom-file-label" for="validatedCustomFile">Choisissez un fichier</label>
+                                <div class="invalid-feedback">Example invalid custom file feedback</div>
+                            </div>
+                            <hr>
+                            <h5>Infos:</h5>
+                            <ul>
+                                <li>Ajouté le {{ post.created|date('d-m-Y à H:i') }}</li>
+                                <li>Modifié le {{ post.modified|date('d-m-Y à H:i') }}</li>
+                                <hr>
+                                <li>Auteur: {{ post.firstName }} {{ post.lastName }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

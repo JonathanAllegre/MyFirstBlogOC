@@ -58,9 +58,9 @@ class RequestParameters
 
     /**
      * @param $key
-     * @return string
+     * @return mixed
      */
-    public function getParameters($key):string
+    public function getParameters($key)
     {
         return $this->parameters[$key];
     }

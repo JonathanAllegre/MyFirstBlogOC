@@ -65,11 +65,22 @@ PostAdmin:
     action: index
 
 PostAdminAdd:
-    method: GET
+    method:
+        - GET
+        - POST
     url: /admin/post/add
     bundle: backend
     controller: PostController
     action: add
+
+PostAdminUpdate:
+    method:
+        - GET
+        - POST
+    url: /admin/post/update/{article_id}
+    bundle: backend
+    controller: PostController
+    action: update
 
 
 test:

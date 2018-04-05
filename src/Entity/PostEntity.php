@@ -20,6 +20,10 @@ class PostEntity
     private $idStatutPost;
     private $idImage;
 
+    // INFO USER
+    private $lastName;
+    private $firstName;
+
     public function __construct(array $donnees)
     {
         $this->hydrate($donnees);
@@ -183,5 +187,37 @@ class PostEntity
     public function setIdImage($idImage): void
     {
         $this->idImage = $idImage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName): void
+    {
+        $this->firstName = $firstName;
     }
 }
