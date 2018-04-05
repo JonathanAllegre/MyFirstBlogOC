@@ -63,7 +63,7 @@ class UserManager
      * @param $mail
      * @return UserEntity
      */
-    public function getUserByMail($mail):UserEntity
+    public function getUserByMail($mail)
     {
         $request = $this->pdo->prepare(
             'SELECT id_user,last_name,first_name,mail_adress,u.id_role,r.title as role_title, u.password
@@ -77,12 +77,11 @@ class UserManager
 
         $donnees = $request->fetch(PDO::FETCH_ASSOC);
 
-        if (!empty($donnees)) {
-            $data = new UserEntity($donnees);
-            return $data;
+        if (empty($donnees)) {
+            return null;
         }
-
-        return null;
+        $data = new UserEntity($donnees);
+        return $data;
     }
 
 
@@ -90,7 +89,7 @@ class UserManager
      * @param $idUser
      * @return UserEntity
      */
-    public function getUserById($idUser):UserEntity
+    public function getUserById($idUser)
     {
         $request = $this->pdo->prepare(
             'SELECT id_user,first_name,last_name,registration_date,mail_adress,u.id_role,r.title as role_title
@@ -104,12 +103,12 @@ class UserManager
 
         $donnees = $request->fetch(PDO::FETCH_ASSOC);
 
-        if (!empty($donnees)) {
-            $data = new UserEntity($donnees);
-            return $data;
+        if (empty($donnees)) {
+            return null;
         }
 
-        return null;
+        $data = new UserEntity($donnees);
+        return $data;
     }
 
 

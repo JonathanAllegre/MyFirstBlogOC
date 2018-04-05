@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="container-fluid">
-        <form action="{{ LinkBuilder.getLink('PostAdminA;dd') }}" method="POST">
+        <form action="{{ LinkBuilder.getLink('PostAdminAdd') }}" method="POST">
         <div class="row">
             <div class="col-md-9">
                 <div class="card">
@@ -48,6 +48,7 @@
                             </label>
                         </div>
                         <hr>
+                        <input type="hidden" name="myToken" value="{{ myToken }}">
                         <input type="submit" class="btn btn-outline-success btn-block" value="Enregistrer">
                     </div>
                 </div>

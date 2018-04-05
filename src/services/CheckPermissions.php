@@ -10,7 +10,6 @@ namespace App\services;
 
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CheckPermissions
 {
@@ -26,11 +25,11 @@ class CheckPermissions
 
     public function isAdmin()
     {
-        if ($this->session->has('user') || $this->session->get('user')['role_id'] == 2) {
+        if ($this->session->has('user') && $this->session->get('user')['role_id'] == 2) {
             return true;
         }
 
-        $this->flash->set('warning', "vous n'avez pas access a cette partie du site");
+        $this->flash->set('warning', "vous n'avez pas access à cette partie du site");
         return false;
     }
 }

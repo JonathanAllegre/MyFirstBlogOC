@@ -41,6 +41,7 @@ class PostController extends AppController
         if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/back/Post/add.html.twig', [
                 'active' => "articles",
+                'myToken' => $session->get('myToken'),
             ]));
             return $reponse->send();
         }
@@ -48,6 +49,13 @@ class PostController extends AppController
         // IF FORM IS SEND ( IF REQUEST == POST )
         // GET $POST
         $post = $appFactory->getRequest()->request->all();
+
+        // CHECK IF TOKENS MATCH
+        if ($post['myToken'] != $session->get('myToken')) {
+            $flash->set('warning', 'Erreur de token');
+            $response = new RedirectResponse($linkBuilder->getLink('PostAdminAdd'));
+            return $response->send();
+        }
 
         // GET TIME
         $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
@@ -81,7 +89,8 @@ class PostController extends AppController
         LinkBuilder $linkBuilder,
         RequestParameters $parameters,
         AppManager $manager,
-        Flash $flash
+        Flash $flash,
+        Session $session
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
@@ -96,6 +105,13 @@ class PostController extends AppController
         // GET ARTICLE
         $post = $manager->getPostManager()->read($articleId);
 
+        // IF POST DON'T EXIST
+        if (!$post) {
+            $flash->set('warning', "L'article demandé n'existe pas");
+            $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+            return $response->send();
+        }
+
         // IF METHOD = POST ( IF FORM POST IS SEND )
         if ($appFactory->getRequest()->server->get('REQUEST_METHOD') == "POST") {
             // GET TIME
@@ -103,6 +119,15 @@ class PostController extends AppController
 
             // GET $FORM DATA
             $formData = $appFactory->getRequest()->request->all();
+
+            // CHECK IF TOKENS MATCH
+            if ($formData['myToken'] != $session->get('myToken')) {
+                $flash->set('warning', 'Erreur de token');
+                $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+                    'article_id' => $articleId
+                ]));
+                return $response->send();
+            }
 
             // UPDATE MODIFIED
             $formData['modified'] = $date->format('Y-m-d H:i:s');
@@ -124,22 +149,17 @@ class PostController extends AppController
                 return $response->send();
             }
 
-                $flash->set('success', "Votre message a bien été sauvegardeé");
+            $flash->set('success', "Votre article a bien été sauvegardé");
             // READ NEW POST
             $post = $manager->getPostManager()->read($articleId);
         }
 
-        // IF POST DON'T EXIST
-        if (!$post) {
-            $flash->set('warning', "L'article demandé n'existe pas");
-            $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
-            return $response->send();
-        }
 
 
         $reponse = new Response($this->render('/back/Post/update.html.twig', [
                 'active' => "articles",
                 'post' => $post,
+                'myToken' => $session->get('myToken'),
         ]));
         return $reponse->send();
     }

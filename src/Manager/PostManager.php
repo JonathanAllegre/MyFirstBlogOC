@@ -67,12 +67,11 @@ class PostManager
 
         $data = $request->fetch(PDO::FETCH_ASSOC);
 
-        if (!empty($data)) {
-            $post = new PostEntity($data);
-            return $post;
+        if (empty($data)) {
+            return null;
         }
-
-        return false;
+        $post = new PostEntity($data);
+        return $post;
     }
 
 
@@ -109,7 +108,7 @@ class PostManager
         if ($request->execute()) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -128,12 +127,10 @@ class PostManager
         $request->execute();
         $data = $request->fetch(PDO::FETCH_ASSOC);
 
-        var_dump($data);
-
-        if (!empty($data)) {
-            return $data['id_post'];
+        if (empty($data)) {
+            return null;
         }
 
-        return null;
+        return $data['id_post'];
     }
 }

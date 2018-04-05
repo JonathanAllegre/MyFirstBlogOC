@@ -68,7 +68,7 @@ class UserController extends AppController
                     'success',
                     'Votre compte a bien été créer. Vous pouvez vous connecter en utilisant vos identifiants'
                 );
-                $response = new RedirectResponse($linkBuilder->getLink('MyAccount'));
+                $response = new RedirectResponse($linkBuilder->getLink('Home'));
                 return $response->send();
             }
         }
