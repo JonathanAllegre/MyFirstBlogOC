@@ -57,6 +57,7 @@ HomeAdmin:
     controller: HomeController
     action: index
 
+### POST CONTROLLER ######
 PostAdmin:
     method: GET
     url: /admin/post
@@ -81,6 +82,13 @@ PostAdminUpdate:
     bundle: backend
     controller: PostController
     action: update
+
+PostAdminDelete:
+    method: POST
+    url: /admin/post/delete
+    bundle: backend
+    controller: PostController
+    action: delete
 
 
 test:

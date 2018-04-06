@@ -142,10 +142,11 @@ class PostController extends AppController
 
             // PERSIST
             if (!$manager->getPostManager()->update($post)) {
-                $flash->set('warning', "Une erreur est survenue lors de l'enregistrment");
+                $flash->set('warning', "Une erreur est survenue lors de l'enregistrement");
                 $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
                 ]));
+
                 return $response->send();
             }
 
@@ -162,5 +163,51 @@ class PostController extends AppController
                 'myToken' => $session->get('myToken'),
         ]));
         return $reponse->send();
+    }
+
+    public function delete(
+        CheckPermissions $checkPermissions,
+        LinkBuilder $linkBuilder,
+        AppFactory $appFactory,
+        Session $session,
+        Flash $flash,
+        AppManager $appManager
+    ) {
+
+
+        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
+        if (!$checkPermissions->isAdmin()) {
+            $response = new RedirectResponse($linkBuilder->getLink('Home'));
+            return $response->send();
+        }
+
+        // GET POST DATA
+        $formData = $appFactory->getRequest()->request->all();
+
+        // CHECK IF TOKENS MATCH
+        if ($formData['myToken'] != $session->get('myToken')) {
+            $flash->set('warning', 'Erreur de token');
+            $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+                'article_id' => $formData['id_post'],
+            ]));
+            return $response->send();
+        }
+
+        // IF NO ERRORS WE DELETE THE POST
+        $manager = $appManager->getPostManager()->delete($formData['id_post']);
+
+        // IF ERROR WE REDIRECT TO ADMIN UPDATE
+        if (!$manager) {
+            $flash->set("warning", "Erreur lors de la supression de l'article");
+            $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+                'article_id' => $formData['id_post'],
+            ]));
+            return $response->send();
+        }
+
+        // IF NO ERRORS WE REDIRECT TO HOME ADMIN
+        $flash->set("success", "Votre article à bien été supprimé");
+        $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+        return $response->send();
     }
 }

@@ -113,6 +113,23 @@ class PostManager
     }
 
     /**
+     * @param $idPost
+     * @return bool
+     */
+    public function delete($idPost):bool
+    {
+        $request = $this->pdo->prepare(
+            'DELETE FROM post
+					   WHERE id_post = :idPost'
+        );
+        $request->bindValue(':idPost', $idPost);
+        if($request->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return int
      */
     public function getLastId():int

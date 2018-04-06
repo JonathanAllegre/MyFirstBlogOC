@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="container-fluid">
-        <form action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
+        <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
             <div class="row">
                 <div class="col-md-9">
                     <div class="card">
@@ -44,14 +44,14 @@
                             <h5>Visibilité:</h5>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="id_statut_post" value="2"{% if post.idStatutPost == 2 %}checked{% endif %}>
+                                    <input type="radio" class="form-check-input" name="id_statut_post" value="2"{% if post.idStatutPost == 2 %} checked {% endif %}>
                                     Brouillon
                                 </label>
 
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="id_statut_post" value="1"{% if post.idStatutPost == 1 %}checked{% endif %}>
+                                    <input type="radio" class="form-check-input" name="id_statut_post" value="1"{% if post.idStatutPost == 1 %} checked {% endif %}>
                                     En Ligne
                                 </label>
 
@@ -59,7 +59,7 @@
                             <hr>
                             <input type="hidden" name="myToken" value="{{ myToken }}">
                             <input type="submit" class="btn btn-outline-success btn-block" value="Enregistrer">
-                            <input type="submit" class="btn btn-outline-danger btn-block" value="Supprimer">
+
                             <hr>
                             <h5>Image:</h5>
                             <div class="custom-file">
@@ -72,13 +72,43 @@
                             <ul>
                                 <li>Ajouté le {{ post.created|date('d-m-Y à H:i') }}</li>
                                 <li>Modifié le {{ post.modified|date('d-m-Y à H:i') }}</li>
-                                <hr>
+
                                 <li>Auteur: {{ post.firstName }} {{ post.lastName }}</li>
                             </ul>
+                            <hr>
+                            <button type="button" class="btn btn-outline-danger btn-block" data-toggle="modal" data-target="#suppPostModal">
+                                Supprimer
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
+    </div>
+
+    <!-- MODAL SUPP POST -->
+    <div class="modal fade" id="suppPostModal" tabindex="-1" role="dialog" aria-labelledby="suppPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-light">
+                    <h5 class="modal-title" id="exampleModalLabel">Suppression de l'article #{{ post.idPost }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    Attention ! Vous allez supprimer cet article. Cette action est irreversible.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">Annuler</button>
+                    <form name="delete" id="formDelete" action="{{ LinkBuilder.getLink('PostAdminDelete') }}" method="POST">
+                        <input type="hidden" name="id_post" value="{{ post.idPost }}">
+                        <input type="hidden" name="myToken" value="{{ myToken }}">
+                        <input type="submit" class="btn btn-outline-danger" value="Continuer">
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
