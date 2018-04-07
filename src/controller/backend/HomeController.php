@@ -26,6 +26,8 @@ class HomeController extends AppController
         AppManager $manager
     ) {
 
+
+
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
