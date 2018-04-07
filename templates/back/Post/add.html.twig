@@ -3,11 +3,6 @@
     <title>MyFirstBlog | Ajouter un article</title>
 {% endblock %}
 {%block content %}
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-4">Ajouter un article</h1>
-        </div>
-    </div>
     <div class="container-fluid">
         <form action="{{ LinkBuilder.getLink('PostAdminAdd') }}" method="POST">
         <div class="row">

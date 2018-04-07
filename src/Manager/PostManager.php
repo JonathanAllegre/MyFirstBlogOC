@@ -74,6 +74,62 @@ class PostManager
         return $post;
     }
 
+    public function getAllPost($limit = null)
+    {
+        if ($limit === null) {
+            $sql = "
+                    SELECT 
+                      ps.title AS 'statut_post_title',
+                      p.id_post,
+                      p.created,
+                      p.modified,
+                      p.title,
+                      p.short_text,
+                      p.content,
+                      p.id_user,
+                      p.id_statut_post,
+                      p.id_image,
+                      u.first_name,
+                      u.last_name
+                    FROM post p
+                    INNER JOIN user u ON p.id_user = u.id_user
+                    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
+                    ORDER BY p.id_post DESC ";
+        } else {
+            $sql = "
+                    SELECT
+                      ps.title AS 'statut_post_title',
+                      p.id_post,
+                      p.created,
+                      p.modified,
+                      p.title,
+                      p.short_text,
+                      p.content,
+                      p.id_user,
+                      p.id_statut_post,
+                      p.id_image,
+                      u.first_name,
+                      u.last_name 
+                    FROM post p
+                    INNER JOIN user u ON p.id_user = u.id_user
+                    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
+                    ORDER BY p.id_post DESC
+                    LIMIT 0,".$limit;
+        }
+
+        $request = $this->pdo->prepare($sql);
+        $request->execute();
+
+        while ($donnees = $request->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = new PostEntity($donnees);
+        }
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data;
+    }
+
 
     /**
      * @param PostEntity $post
@@ -123,7 +179,7 @@ class PostManager
 					   WHERE id_post = :idPost'
         );
         $request->bindValue(':idPost', $idPost);
-        if($request->execute()) {
+        if ($request->execute()) {
             return true;
         }
         return false;

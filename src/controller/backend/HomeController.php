@@ -9,6 +9,7 @@
 namespace App\controller\backend;
 
 use App\controller\AppController;
+use App\Manager\AppManager;
 use App\services\AppFactory;
 use App\services\CheckPermissions;
 use App\services\LinkBuilder;
@@ -21,7 +22,8 @@ class HomeController extends AppController
 {
     public function index(
         LinkBuilder $linkBuilder,
-        CheckPermissions $checkPermissions
+        CheckPermissions $checkPermissions,
+        AppManager $manager
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
@@ -31,8 +33,13 @@ class HomeController extends AppController
         }
 
         // IF USER IS CONNECT AND HAVE THE GOOD LEVEL AUTH
+
+        // GET POST LIST
+        $listPost = $manager->getPostManager()->getAllPost(5);
+
         $reponse = new Response($this->render('/back/Home/index.html.twig', [
             'active' => 'home',
+            'posts' => $listPost,
         ]));
         return $reponse->send();
     }

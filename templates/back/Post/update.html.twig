@@ -3,11 +3,6 @@
     <title>MyFirstBlog | Accueil</title>
 {% endblock %}
 {%block content %}
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-4">Modifier un article</h1>
-        </div>
-    </div>
     <div class="container-fluid">
         <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
             <div class="row">

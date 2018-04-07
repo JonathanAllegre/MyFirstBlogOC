@@ -24,6 +24,10 @@ class PostEntity
     private $lastName;
     private $firstName;
 
+    // INFO STATUT
+    private $statutPostTitle;
+
+
     public function __construct(array $donnees)
     {
         $this->hydrate($donnees);
@@ -220,4 +224,22 @@ class PostEntity
     {
         $this->firstName = $firstName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getStatutPostTitle()
+    {
+        return $this->statutPostTitle;
+    }
+
+    /**
+     * @param mixed $statutPostTitle
+     */
+    public function setStatutPostTitle($statutPostTitle): void
+    {
+        $this->statutPostTitle = $statutPostTitle;
+    }
+
+
 }

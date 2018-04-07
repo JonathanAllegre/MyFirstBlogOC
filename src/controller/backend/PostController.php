@@ -83,6 +83,7 @@ class PostController extends AppController
         return $response->send();
     }
 
+
     public function update(
         AppFactory $appFactory,
         CheckPermissions $checkPermissions,
