@@ -2,6 +2,9 @@
 {%block head %}
     <title>MyFirstBlog | Accueil</title>
 {% endblock %}
+{% block titleJumboTron %}
+    Modifier un article
+{% endblock %}
 {%block content %}
     <div class="container-fluid">
         <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">

@@ -1,0 +1,13 @@
+{% extends '/front/base.html.twig' %}
+
+{%block head %}
+    <title>MyFirstBlog | Tous les articles</title>
+{% endblock %}
+
+{%block content %}
+    {% for post in posts %}
+        {% if post.idStatutPost == 1 %}
+            <a href="{{ LinkBuilder.getLink('PostRead', {id_article: post.idPost}) }}">{{ post.idPost }}</a>
+            {% endif %}
+        {% endfor %}
+{% endblock %}

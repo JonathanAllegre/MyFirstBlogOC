@@ -56,9 +56,22 @@ class PostManager
     public function read($postId)
     {
         $request = $this->pdo->prepare(
-            '	SELECT *
+            '	SELECT 
+                          ps.title AS \'statut_post_title\',
+                          p.id_post,
+                          p.created,
+                          p.modified,
+                          p.title,
+                          p.short_text,
+                          p.content,
+                          p.id_user,
+                          p.id_statut_post,
+                          p.id_image,
+                          u.first_name,
+                          u.last_name
 					    FROM post p
 					    INNER JOIN user u ON p.id_user = u.id_user
+					    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
 						WHERE id_post = :id'
         );
 
@@ -73,6 +86,7 @@ class PostManager
         $post = new PostEntity($data);
         return $post;
     }
+
 
     public function getAllPost($limit = null)
     {

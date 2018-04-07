@@ -24,7 +24,9 @@ class HomeController extends AppController
 
         // IF METHOD != POST ( IF FORM CONTACT NOT SEND )
         if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
-            $reponse = new Response($this->render('/front/Home/index.html.twig'));
+            $reponse = new Response($this->render('/front/Home/index.html.twig', [
+                'active' => 'home',
+            ]));
             return $reponse->send();
         }
 

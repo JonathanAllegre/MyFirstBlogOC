@@ -49,7 +49,24 @@ UserLogout:
     controller: UserController
     action: logoutUser
 
+### POST CONTROLLER ######
+PostRead:
+  method: GET
+  url: /post/read/{id_article}
+  bundle: frontend
+  controller: PostController
+  action: read
+
+PostList:
+  method: GET
+  url: /post/all
+  bundle: frontend
+  controller: PostController
+  action: listPost
+
+
 ### BACKEND #######################################################################
+### HOME CONTROLLER ######
 HomeAdmin:
     method: GET
     url: /admin

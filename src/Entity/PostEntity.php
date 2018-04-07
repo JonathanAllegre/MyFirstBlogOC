@@ -240,6 +240,4 @@ class PostEntity
     {
         $this->statutPostTitle = $statutPostTitle;
     }
-
-
 }

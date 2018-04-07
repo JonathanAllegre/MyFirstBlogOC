@@ -2,6 +2,9 @@
 {%block head %}
     <title>MyFirstBlog | Ajouter un article</title>
 {% endblock %}
+{% block titleJumboTron %}
+    Ajouter un article
+{% endblock %}
 {%block content %}
     <div class="container-fluid">
         <form action="{{ LinkBuilder.getLink('PostAdminAdd') }}" method="POST">
