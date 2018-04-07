@@ -10,42 +10,22 @@ namespace App\services;
 
 class Mailer extends AppFactory
 {
-    private $sendTo;
-    private $subject;
-    private $message;
-    private $headers;
-    private $error;
-
-
     /**
-     * Mailer constructor.
      * @param $from
      * @param $subject
      * @param $message
+     * @return int
      */
-    public function __construct($from, $subject, $message)
+    public function sendMail($from, $subject, $message):int
     {
-        $this->sendTo = $this->getConfig()->getMail();
-        $this->headers = 'From: '.$from;
-        $this->subject = $subject;
-        $this->message = $message;
+        // GET VAR
+        $sendTo = $this->getConfig()->getMail();
+        $header = 'From: ' . $from;
 
-        $this->sendMail();
-    }
-
-    public function sendMail()
-    {
-        $this->error = 1;
-        if (mail($this->sendTo, $this->subject, $this->message, $this->headers)) {
-            $this->error = 0;
+        // SEND MAIL
+        if (mail($sendTo, $subject, $message, $header)) {
+            return $error = 0;
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getError()
-    {
-        return $this->error;
+        return $error = 1;
     }
 }

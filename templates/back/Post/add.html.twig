@@ -1,0 +1,57 @@
+{% extends '/back/base.html.twig' %}
+{%block head %}
+    <title>MyFirstBlog | Ajouter un article</title>
+{% endblock %}
+{% block titleJumboTron %}
+    Ajouter un article
+{% endblock %}
+{%block content %}
+    <div class="container-fluid">
+        <form action="{{ LinkBuilder.getLink('PostAdminAdd') }}" method="POST">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header bg-dark text-light">
+                        Article
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="title_article">Titre de l'article:</label>
+                            <input type="text" class="form-control" id="title_article" name="title" required>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="chapo">Petite déscription</label>
+                            <textarea class="form-control" id="chapo" name="short_text" rows="2" required></textarea>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="content">Contenu de l'article</label>
+                            <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header text-center bg-dark text-light">
+                        Actions
+                    </div>
+                    <div class="card-body">
+                        <h5>Visibilité:</h5>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" name="id_statut_post" value="2" checked>
+                                Brouillon
+                            </label>
+                        </div>
+                        <hr>
+                        <input type="hidden" name="myToken" value="{{ myToken }}">
+                        <input type="submit" class="btn btn-outline-success btn-block" value="Enregistrer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+{% endblock %}

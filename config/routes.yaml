@@ -1,9 +1,12 @@
 ### Inserer les routes ici ###
 #### SITE BUNDLE #####
 
+### FRONT END #############################################################
 ### HOME CONTROLLER ######
 Home:
-    method: GET
+    method:
+        - GET
+        - POST
     url: /
     bundle: frontend
     controller: HomeController
@@ -17,34 +20,93 @@ MyAccount:
     controller: UserController
     action: myAccount
 
-### ACTIONS CONTROLLER ######
-SendMessContact:
-    method: POST
-    url: /contact/sendMailContact
-    bundle: frontend
-    controller: HomeController
-    action: sendMailContact
-
 NewUserRegister:
     method: POST
     url: /user/new
     bundle: frontend
-    controller: ActionsController
+    controller: UserController
     action: registerUser
+
+DeleteUser:
+    method: POST
+    url: /user/delete
+    bundle: frontend
+    controller: UserController
+    action: deleteUser
+
 
 UserLogin:
     method: POST
     url: /user/login
     bundle: frontend
-    controller: ActionsController
+    controller: UserController
     action: loginUser
 
 UserLogout:
     method: GET
     url: /user/logout
     bundle: frontend
-    controller: ActionsController
+    controller: UserController
     action: logoutUser
+
+### POST CONTROLLER ######
+PostRead:
+  method: GET
+  url: /post/read/{id_article}
+  bundle: frontend
+  controller: PostController
+  action: read
+
+PostList:
+  method: GET
+  url: /post/all
+  bundle: frontend
+  controller: PostController
+  action: listPost
+
+
+### BACKEND #######################################################################
+### HOME CONTROLLER ######
+HomeAdmin:
+    method: GET
+    url: /admin
+    bundle: backend
+    controller: HomeController
+    action: index
+
+### POST CONTROLLER ######
+PostAdmin:
+    method: GET
+    url: /admin/post
+    bundle: backend
+    controller: PostController
+    action: index
+
+PostAdminAdd:
+    method:
+        - GET
+        - POST
+    url: /admin/post/add
+    bundle: backend
+    controller: PostController
+    action: add
+
+PostAdminUpdate:
+    method:
+        - GET
+        - POST
+    url: /admin/post/update/{article_id}
+    bundle: backend
+    controller: PostController
+    action: update
+
+PostAdminDelete:
+    method: POST
+    url: /admin/post/delete
+    bundle: backend
+    controller: PostController
+    action: delete
+
 
 test:
     method: GET

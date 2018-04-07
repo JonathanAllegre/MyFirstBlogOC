@@ -18,6 +18,12 @@ class UserEntity
     private $password;
     private $idRole;
 
+    /**
+     * Role_title in role table
+     * @var
+     */
+    private $roleTitle;
+
 
     public function __construct(array $donnees)
     {
@@ -150,5 +156,21 @@ class UserEntity
     public function setIdRole($idRole): void
     {
         $this->idRole = $idRole;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoleTitle()
+    {
+        return $this->roleTitle;
+    }
+
+    /**
+     * @param mixed $roleTitle
+     */
+    public function setRoleTitle($roleTitle): void
+    {
+        $this->roleTitle = $roleTitle;
     }
 }

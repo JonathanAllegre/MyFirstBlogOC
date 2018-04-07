@@ -1,15 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark navCustom fixed-top">
-    <a class="navbar-brand" href="#"><i class="fas fa-hand-pointer"></i></a>
+    <a class="navbar-brand" href="#"><i class="fas fa-hand-pointer"></i><span id="TitleNav"> Jonathan Allègre</span></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item {% if active == 'home' %}active{% endif %}">
                 <a class="nav-link" href="{{ LinkBuilder.getLink("Home") }}">Accueil <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ LinkBuilder.getLink("ArticlesList") }}">Articles</a>
+            <li class="nav-item {% if active == 'articles' %}active{% endif %}">
+                <a class="nav-link" href="{{ LinkBuilder.getLink("PostList") }}">Articles</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ LinkBuilder.getLink("Home") }}#contact">Contact</a>

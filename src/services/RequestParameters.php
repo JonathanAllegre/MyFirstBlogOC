@@ -55,10 +55,12 @@ class RequestParameters
         return $this->bundle;
     }
 
+
     /**
-     * @return string
+     * @param $key
+     * @return mixed
      */
-    public function getParameters($key):string
+    public function getParameters($key)
     {
         return $this->parameters[$key];
     }

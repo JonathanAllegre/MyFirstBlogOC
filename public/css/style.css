@@ -23,7 +23,7 @@ a:hover{
 
 }
 .navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show>.nav-link {
-    color: #856f6c;
+
 }
 .form-control:focus{
     border-color:#721c24;
@@ -64,6 +64,14 @@ a:hover{
     margin-bottom: 100px;
     border: 0;
 }
+.titlePagehr{
+    height: 1px;
+    width: 100%;
+    position: relative;
+    background: #666;
+    margin-bottom: 100px;
+    border: 0;
+}
 
 .lead{
     margin-left:10px;
@@ -93,39 +101,31 @@ a:hover{
 
 /* CONNECTION / REGISTER */
 
+.imgUser{
+    max-width:200px;
+}
 
-@keyframes onloadThumb {
-    from {
-        opacity: 1;
+@media (max-width: 768px) {
+    body{
+        text-align: center;
     }
-    to {
-        opacity: 0.8
+    .headerIndex{
+        display:none;
+        margin-bottom:10px;
     }
-}
-@keyframes onhoverThumb {
-    from {
-        opacity: 0.8;
-    }
-    to {
-        opacity: 1
+    .h2Accueil{
+        margin-top:100px;
     }
 }
-.thumb{
+@media (min-width: 768px) {
+    #TitleNav{
+        display:none;
+    }
+}
 
-    margin-top:25px;
-    opacity:0.8;
-    animation-name: onloadThumb;
-    animation-duration: 3s;
-}
-.thumb:hover{
-    opacity:1;
-    animation-name: onhoverThumb;
-    animation-duration: 1s;
-}
-.rowHome{
-    margin-top:30px;
-    margin-bottom:10px;
-}
+
+
+/* FOOTER */
 
 .containerFooter{
     background-color:#f6f6f6;

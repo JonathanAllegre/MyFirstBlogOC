@@ -22,6 +22,9 @@ class AppFactory
     private static $request;
 
 
+    /**
+     * @return Config
+     */
     public function getConfig():Config
     {
         if (self::$config === null) {
@@ -30,6 +33,9 @@ class AppFactory
         return self::$config;
     }
 
+    /**
+     * @return Request
+     */
     public function getRequest():Request
     {
         if (self::$request === null) {

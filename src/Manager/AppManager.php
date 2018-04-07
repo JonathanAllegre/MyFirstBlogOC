@@ -56,4 +56,9 @@ class AppManager
     {
         return new RoleManager($this->getBdd());
     }
+
+    public function getPostManager():PostManager
+    {
+        return new PostManager($this->getBdd());
+    }
 }
