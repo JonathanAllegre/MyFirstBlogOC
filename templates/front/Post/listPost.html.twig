@@ -5,6 +5,46 @@
 {% endblock %}
 
 {%block content %}
+    <div class="container">
+        <div class="row">
+            <div class="offset-2 col-8 text-center">
+                <h2 class="h2Accueil">Blog</h2>
+                <hr class="hrAccueil">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 text-center spacerCardBlog">
+                <img class="rounded-circle" src="https://foundation.zurb.com/sites/docs/v/5.5.3/assets/img/examples/earth.jpg" alt="Generic placeholder image" width="140" height="140">
+                <h2>Heading</h2>
+                <p>Duis mollis, est non commodo lus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+            </div>
+            <div class="col-lg-4 text-center spacerCardBlog">
+                <img class="rounded-circle" src="https://odis.homeaway.com/odis/listing/3bbd6769-9284-4080-bf77-f25fcc3ebc0b.c10.jpg" alt="Generic placeholder image" width="140" height="140">
+                <h2>Heading</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img class="rounded-circle" src="https://static-goldenfrog.netdna-ssl.com/images/vyprvpn/mac/banner_mac.png" alt="Generic placeholder image" width="200" height="140">
+                <h2>Heading</h2>
+                <p>Du Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img class="rounded-circle" src="http://www.globalgiftfoundationusa.org/wp-content/uploads/2015/04/img-slide-051.jpg" alt="Generic placeholder image" width="140" height="140">
+                <h2>Heading</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img class="rounded-circle" src="http://www.globalgiftfoundationusa.org/wp-content/uploads/2015/04/img-slide-051.jpg" alt="Generic placeholder image" width="140" height="140">
+                <h2>Heading</h2>
+                <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+                <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+            </div>
+        </div>
+    </div>
     {% for post in posts %}
         {% if post.idStatutPost == 1 %}
             <a href="{{ LinkBuilder.getLink('PostRead', {id_article: post.idPost}) }}">{{ post.idPost }}</a>
