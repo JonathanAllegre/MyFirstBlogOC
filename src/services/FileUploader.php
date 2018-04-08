@@ -8,11 +8,14 @@
 
 namespace App\services;
 
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
 {
     private $targetDirectory;
+    private $legalExtensions = array("JPEG", "PNG", "GIF");
+    private $legalSize = 5000000;
+
 
     public function __construct(AppFactory $appFactory)
     {
@@ -20,13 +23,21 @@ class FileUploader
         $this->targetDirectory = $rootPath.$appFactory->getConfig()->getImgBlogFolder();
     }
 
-    public function upload(File $file)
+    public function upload(UploadedFile $file)
     {
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
 
-        $file->move($this->getTargetDirectory(), $fileName);
+        // CHECK SIZE FILE
+        if ($this->legalSize > $file->getClientSize()) {
+            // CHECK EXTENSION
+            $extension = strtoupper($file->guessExtension());
+            if (in_array($extension, $this->legalExtensions)) {
+                $fileName = md5(uniqid()).'.'.$file->guessExtension();
+                $file->move($this->getTargetDirectory(), $fileName);
+                return $fileName;
+            }
+        }
 
-        return $fileName;
+        return false;
     }
 
     public function getTargetDirectory()

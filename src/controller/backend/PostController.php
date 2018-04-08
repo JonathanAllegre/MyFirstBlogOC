@@ -136,8 +136,10 @@ class PostController extends AppController
             // IF IMAGE
             $image = $appFactory->getRequest()->files->get('file');
             if ($image) {
-                $fileName = $fileUploader->upload($image);
-                $flash->set('success', $fileName);
+                $upload = $fileUploader->upload($image);
+                ($upload) ?
+                    $flash->set('success', "Votre image a bien été sauvegardé") :
+                    $flash->set('warning', "Un problème est survenue lors de l'upload de l'image");
             }
 
             // UPDATE MODIFIED
