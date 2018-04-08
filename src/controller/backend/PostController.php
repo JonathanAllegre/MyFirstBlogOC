@@ -13,6 +13,7 @@ use App\Entity\PostEntity;
 use App\Manager\AppManager;
 use App\services\AppFactory;
 use App\services\CheckPermissions;
+use App\services\FileUploader;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
@@ -91,7 +92,9 @@ class PostController extends AppController
         RequestParameters $parameters,
         AppManager $manager,
         Flash $flash,
-        Session $session
+        Session $session,
+        FileUploader $fileUploader
+
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
@@ -106,14 +109,14 @@ class PostController extends AppController
         // GET ARTICLE
         $post = $manager->getPostManager()->read($articleId);
 
-        // IF POST DON'T EXIST
+        // IF $POST DON'T EXIST
         if (!$post) {
             $flash->set('warning', "L'article demandé n'existe pas");
             $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
             return $response->send();
         }
 
-        // IF METHOD = POST ( IF FORM POST IS SEND )
+        // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
         if ($appFactory->getRequest()->server->get('REQUEST_METHOD') == "POST") {
             // GET TIME
             $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
@@ -128,6 +131,13 @@ class PostController extends AppController
                     'article_id' => $articleId
                 ]));
                 return $response->send();
+            }
+
+            // IF IMAGE
+            $image = $appFactory->getRequest()->files->get('file');
+            if ($image) {
+                $fileName = $fileUploader->upload($image);
+                $flash->set('success', $fileName);
             }
 
             // UPDATE MODIFIED

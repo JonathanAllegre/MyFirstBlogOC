@@ -1,5 +1,7 @@
 dev:
     prefix: /MyFirstBlogOC
+    imgBlogFolder: /public/img/Blog
 
 production:
     prefix: /monPrefix
+    imgBlogFolder: /public/img/Blog

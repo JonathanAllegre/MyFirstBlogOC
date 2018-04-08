@@ -7,7 +7,7 @@
 {% endblock %}
 {%block content %}
     <div class="container-fluid">
-        <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
+        <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-9">
                     <div class="card">
@@ -61,8 +61,8 @@
                             <hr>
                             <h5>Image:</h5>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="validatedCustomFile">
-                                <label class="custom-file-label" for="validatedCustomFile">Choisissez un fichier</label>
+                                <label for="file"></label>
+                                <input type="file" id="file" name="file">
                                 <div class="invalid-feedback">Example invalid custom file feedback</div>
                             </div>
                             <hr>

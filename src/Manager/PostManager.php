@@ -90,7 +90,6 @@ class PostManager
 
     public function getAllPost($limit = null)
     {
-
         $limit = (!is_null($limit)) ? " LIMIT 0,".$limit :null;
 
         $sql = "

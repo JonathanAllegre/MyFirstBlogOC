@@ -20,14 +20,14 @@ use Twig_Loader_Filesystem;
 class AppController
 {
     private $config;
-    private $http;
+    private $host;
     private $session;
 
 
-    public function __construct(AppFactory $app, Request $http, Session $session)
+    public function __construct(AppFactory $app, Session $session)
     {
         $this->config = $app->getConfig();
-        $this->http = $http;
+        $this->host = $app->getRequest()->server->get('HTTP_HOST');
         $this->session = $session;
     }
 
@@ -57,12 +57,10 @@ class AppController
             $prefix = $this->config->getPrefix().'/';
         }
 
-        $request = $this->http->createFromGlobals();
-        $httpHost = $request->server->get('HTTP_HOST');
 
         // DEFAULT VARIABLES
         $variables  = array(
-            'publicFolder' => 'http://' . $httpHost  . $prefix . "public",
+            'publicFolder' => 'http://' . $this->host  . $prefix . "public",
             'rootPath' => $this->config->getPrefix()
         );
 
