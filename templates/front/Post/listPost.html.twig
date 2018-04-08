@@ -13,6 +13,17 @@
             </div>
         </div>
         <div class="row">
+            {% for post in posts %}
+                {% if post.idStatutPost == 1 %}
+                    <div class="col-lg-4 text-center spacerCardBlog">
+                        <img class="rounded-circle" src="https://foundation.zurb.com/sites/docs/v/5.5.3/assets/img/examples/earth.jpg" alt="Generic placeholder image" width="140" height="140">
+                        <h2>{{ post.title }}</h2>
+                        <p>{{ post.shortText }}</p>
+                        <p><a class="btn btn-outline-secondary" href="#" role="button">Voir le détail »</a></p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <!-- EXEMPLE
             <div class="col-lg-4 text-center spacerCardBlog">
                 <img class="rounded-circle" src="https://foundation.zurb.com/sites/docs/v/5.5.3/assets/img/examples/earth.jpg" alt="Generic placeholder image" width="140" height="140">
                 <h2>Heading</h2>
@@ -42,7 +53,7 @@
                 <h2>Heading</h2>
                 <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
                 <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
-            </div>
+            </div>-->
         </div>
     </div>
     {% for post in posts %}
