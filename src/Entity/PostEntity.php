@@ -28,14 +28,14 @@ class PostEntity
     private $statutPostTitle;
 
 
-    public function __construct(array $donnees)
+    public function __construct(array $data)
     {
-        $this->hydrate($donnees);
+        $this->hydrate($data);
     }
 
-    public function hydrate(array $donnees)
+    public function hydrate(array $data)
     {
-        foreach ($donnees as $key => $value) {
+        foreach ($data as $key => $value) {
             ### transformation camelCase ####
             $spacing = trim(str_replace("_", " ", $key));
             $spacing = ucwords($spacing);

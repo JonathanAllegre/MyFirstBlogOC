@@ -9,6 +9,7 @@
 namespace App\controller\backend;
 
 use App\controller\AppController;
+use App\Entity\PictureEntity;
 use App\Entity\PostEntity;
 use App\Manager\AppManager;
 use App\services\AppFactory;
@@ -133,16 +134,25 @@ class PostController extends AppController
                 return $response->send();
             }
 
-            // IF IMAGE
+            // IF IMAGE IS SEND
             $image = $appFactory->getRequest()->files->get('file');
             if ($image) {
-                $upload = $fileUploader->upload($image);
-                ($upload) ?
+                $name = $fileUploader->upload($image);
+                ($name) ?
                     $flash->set('success', "Votre image a bien été sauvegardé") :
                     $flash->set('warning', "Un problème est survenue lors de l'upload de l'image");
+
+                // IF SUCCESS UPLOAD WE PERSIST NAME FILE
+                if ($name) {
+                    $data = new PictureEntity([
+                        'created' => $date->format('Y-m-d H:i:s'),
+                        'name' => $name,
+                    ]);
+                    $manager->getPictureManager()->create($data);
+                }
             }
 
-            // UPDATE MODIFIED
+            // UPDATE DATE MODIFIED
             $formData['modified'] = $date->format('Y-m-d H:i:s');
 
 

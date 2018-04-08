@@ -57,8 +57,19 @@ class AppManager
         return new RoleManager($this->getBdd());
     }
 
+    /**
+     * @return PostManager
+     */
     public function getPostManager():PostManager
     {
         return new PostManager($this->getBdd());
+    }
+
+    /**
+     * @return PictureManager
+     */
+    public function getPictureManager():PictureManager
+    {
+        return new PictureManager($this->getBdd());
     }
 }
