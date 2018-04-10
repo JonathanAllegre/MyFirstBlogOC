@@ -154,8 +154,7 @@ class PostController extends AppController
 
             // UPDATE DATE MODIFIED
             $formData['modified'] = $date->format('Y-m-d H:i:s');
-
-
+            
             // UPDATE ENTITY
             $post->setTitle($formData['title']);
             $post->setShortText($formData['short_text']);
