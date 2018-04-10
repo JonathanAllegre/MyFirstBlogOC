@@ -12,24 +12,20 @@ use App\controller\AppController;
 use App\Entity\PictureEntity;
 use App\Entity\PostEntity;
 use App\Manager\AppManager;
-use App\services\AppFactory;
 use App\services\CheckPermissions;
 use App\services\FileUploader;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends AppController
 {
     public function add(
         AppManager $manager,
-        Session $session,
         LinkBuilder $linkBuilder,
         CheckPermissions $checkPermissions,
-        AppFactory $appFactory,
         Flash $flash
     ) {
 
@@ -40,20 +36,19 @@ class PostController extends AppController
         }
 
         // IF METHOD != POST ( IF FORM POST IS NOT SEND )
-        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/back/Post/add.html.twig', [
                 'active' => "articles",
-                'myToken' => $session->get('myToken'),
+                'myToken' => $this->getSession()->get('myToken'),
             ]));
             return $reponse->send();
         }
 
-        // IF FORM IS SEND ( IF REQUEST == POST )
-        // GET $POST
-        $post = $appFactory->getRequest()->request->all();
+        // IF FORM IS SEND ( IF REQUEST == POST  // GET $POST
+        $post = $this->getApp()->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
-        if ($post['myToken'] != $session->get('myToken')) {
+        if ($post['myToken'] != $this->getSession()->get('myToken')) {
             $flash->set('warning', 'Erreur de token');
             $response = new RedirectResponse($linkBuilder->getLink('PostAdminAdd'));
             return $response->send();
@@ -65,7 +60,7 @@ class PostController extends AppController
         // COMPLETE FOR CREATE ENTITY
         $post['created'] = $date->format('Y-m-d H:i:s');
         $post['modified'] = $date->format('Y-m-d H:i:s');
-        $post['id_user'] = $session->get('user')['id'];
+        $post['id_user'] = $this->getSession()->get('user')['id'];
 
         // CREATE ENTITY
         $postEntity = new PostEntity($post);
@@ -87,13 +82,11 @@ class PostController extends AppController
 
 
     public function update(
-        AppFactory $appFactory,
         CheckPermissions $checkPermissions,
         LinkBuilder $linkBuilder,
         RequestParameters $parameters,
         AppManager $manager,
         Flash $flash,
-        Session $session,
         FileUploader $fileUploader
 
     ) {
@@ -104,10 +97,8 @@ class PostController extends AppController
             return $response->send();
         }
 
-        // GET ID POST
+        // GET ID POST AND ARTICLE
         $articleId = $parameters->getParameters('article_id');
-
-        // GET ARTICLE
         $post = $manager->getPostManager()->read($articleId);
 
         // IF $POST DON'T EXIST
@@ -118,15 +109,15 @@ class PostController extends AppController
         }
 
         // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
-        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
             // GET TIME
             $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
 
             // GET $FORM DATA
-            $formData = $appFactory->getRequest()->request->all();
+            $formData = $this->getApp()->getRequest()->request->all();
 
             // CHECK IF TOKENS MATCH
-            if ($formData['myToken'] != $session->get('myToken')) {
+            if ($formData['myToken'] != $this->getSession()->get('myToken')) {
                 $flash->set('warning', 'Erreur de token');
                 $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
@@ -135,7 +126,7 @@ class PostController extends AppController
             }
 
             // IF IMAGE IS SEND
-            $image = $appFactory->getRequest()->files->get('file');
+            $image = $this->getApp()->getRequest()->files->get('file');
             if ($image) {
                 $name = $fileUploader->upload($image);
 
@@ -148,26 +139,21 @@ class PostController extends AppController
                     // PERSIST FILE
                     if ($manager->getPictureManager()->create($data)) {
                         $flash->set('success', "Votre image a bien été envoyé");
-                        $lastId = $manager->getPictureManager()->getLastId();
+                        $post->setIdImage($manager->getPictureManager()->getLastId());
                     }
                 }
             }
-
-            // UPDATE DATE MODIFIED
-            $formData['modified'] = $date->format('Y-m-d H:i:s');
 
             // UPDATE ENTITY
             $post->setTitle($formData['title']);
             $post->setShortText($formData['short_text']);
             $post->setContent($formData['content']);
-            $post->setModified($formData['modified']);
+            $post->setModified($date->format('Y-m-d H:i:s'));
             $post->setIdStatutPost($formData['id_statut_post']);
-            (isset($lastId)) ? $post->setIdImage($lastId) : false;
 
             // PERSIST
             if (!$manager->getPostManager()->update($post)) {
                 $flash->set('warning', "Une erreur est survenue lors de l'enregistrement");
-
                 $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
                 ]));
@@ -180,12 +166,10 @@ class PostController extends AppController
             $post = $manager->getPostManager()->read($articleId);
         }
 
-
-
         $reponse = new Response($this->render('/back/Post/update.html.twig', [
                 'active' => "articles",
                 'post' => $post,
-                'myToken' => $session->get('myToken'),
+                'myToken' => $this->getSession()->get('myToken'),
         ]));
         return $reponse->send();
     }
@@ -193,8 +177,6 @@ class PostController extends AppController
     public function delete(
         CheckPermissions $checkPermissions,
         LinkBuilder $linkBuilder,
-        AppFactory $appFactory,
-        Session $session,
         Flash $flash,
         AppManager $appManager
     ) {
@@ -207,10 +189,10 @@ class PostController extends AppController
         }
 
         // GET POST DATA
-        $formData = $appFactory->getRequest()->request->all();
+        $formData = $this->getApp()->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
-        if ($formData['myToken'] != $session->get('myToken')) {
+        if ($formData['myToken'] != $this->getSession()->get('myToken')) {
             $flash->set('warning', 'Erreur de token');
             $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                 'article_id' => $formData['id_post'],

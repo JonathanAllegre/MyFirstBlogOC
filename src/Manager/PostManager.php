@@ -133,7 +133,6 @@ class PostManager
      */
     public function update(PostEntity $post):bool
     {
-
         $request = $this->pdo->prepare(
             '	UPDATE post
                         SET
