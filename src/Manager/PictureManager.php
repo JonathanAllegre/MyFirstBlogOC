@@ -40,4 +40,20 @@ class PictureManager
 
         return false;
     }
+
+    public function getLastId()
+    {
+        $sql = "SELECT id_image FROM picture ORDER BY id_image DESC LIMIT 0,1";
+
+        $request = $this->pdo->prepare($sql);
+        $request->execute();
+
+        $data = $request->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data['id_image'];
+    }
 }

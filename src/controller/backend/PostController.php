@@ -138,33 +138,36 @@ class PostController extends AppController
             $image = $appFactory->getRequest()->files->get('file');
             if ($image) {
                 $name = $fileUploader->upload($image);
-                ($name) ?
-                    $flash->set('success', "Votre image a bien été sauvegardé") :
-                    $flash->set('warning', "Un problème est survenue lors de l'upload de l'image");
 
-                // IF SUCCESS UPLOAD WE PERSIST NAME FILE
+                // IF SUCCESS UPLOAD WE PERSIST FILE
                 if ($name) {
                     $data = new PictureEntity([
                         'created' => $date->format('Y-m-d H:i:s'),
                         'name' => $name,
                     ]);
-                    $manager->getPictureManager()->create($data);
+                    // PERSIST FILE
+                    if ($manager->getPictureManager()->create($data)) {
+                        $flash->set('success', "Votre image a bien été envoyé");
+                        $lastId = $manager->getPictureManager()->getLastId();
+                    }
                 }
             }
 
             // UPDATE DATE MODIFIED
             $formData['modified'] = $date->format('Y-m-d H:i:s');
-            
+
             // UPDATE ENTITY
             $post->setTitle($formData['title']);
             $post->setShortText($formData['short_text']);
             $post->setContent($formData['content']);
             $post->setModified($formData['modified']);
             $post->setIdStatutPost($formData['id_statut_post']);
+            (isset($lastId)) ? $post->setIdImage($lastId) : false;
 
             // PERSIST
             if (!$manager->getPostManager()->update($post)) {
                 $flash->set('warning', "Une erreur est survenue lors de l'enregistrement");
+
                 $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
                 ]));
