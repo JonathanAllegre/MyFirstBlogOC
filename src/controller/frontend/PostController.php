@@ -22,7 +22,6 @@ class PostController extends AppController
     {
         $posts = $manager->getPostManager()->getAllPost();
 
-
         $reponse = new Response($this->render('/front/Post/listPost.html.twig', [
             'active' => 'articles',
             'posts' => $posts
