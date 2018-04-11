@@ -7,7 +7,7 @@
 {%block content %}
     <div class="container">
         <div class="row">
-            <div class="col-9">
+            <div class="col-md-9">
                 <h2 class="h2Accueil">{{ post.title }}</h2>
                 <hr>
             </div>
@@ -15,7 +15,7 @@
     </div>
     <div class="container">
        <div class="row">
-           <div class="col-9 text-center">
+           <div class="col-md-9 text-center">
                <p>
                    <img src="{{ publicFolder }}/img/Blog/{{ post.imgName }}" alt="" width="100%">
                </p>
@@ -28,8 +28,29 @@
                </p>
                <hr>
                <p class="text-right">Par {{ post.firstName }} {{ post.lastName }}, le {{ post.modified|date('d-m-Y à H:i') }}</p>
+               <div class="spacer30"></div>
+               <div class="card">
+                   <h5 class="card-header text-left"><i class="fas fa-comments"></i> Commenter cet article</h5>
+                   <div class="card-body">
+                    {% if userInSession %}
+                       <div class="row">
+                           <div class="col-12">
+                               <div class="form-group">
+                                   <textarea name="message" id="message" class="form-control" rows="4" placeholder="Votre message"  required>{{ post_message }}</textarea>
+                                   <p class="text-left"><em>Vous commentez en tant que {{ userInSession.first_name }} {{ userInSession.last_name }} </em></p>
+                               </div>
+                           </div>
+                       </div>
+                       <p class="text-right"><button type="submit" class="btn btn-outline-secondary sendContactButton">Envoyer</button></p>
+                        {% else %}
+                            <h5 class="card-title">Vous ne pouvez pas commenter si vous n'êtes pas connecté.</h5>
+                            <button type="button" class="btn btn-outline-secondary sendContactButton" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</button>
+                        {% endif %}
+
+                   </div>
+               </div>
            </div>
-           <div class="col-3 text-center">
+           <div class="col-md-3 text-center">
                <h2 class="">Derniers Articles</h2>
                <hr>
                {% for allPost in allPosts %}

@@ -50,10 +50,13 @@ class PostController extends AppController
             return $response->send();
         }
 
+        $userInSession = ($this->getSession()->get('user')) ? $this->getSession()->get('user') : null;
+
         $reponse = new Response($this->render('/front/Post/read.html.twig', [
             'active' => 'articles',
             'post' => $post,
-            'allPosts' => $allPosts
+            'allPosts' => $allPosts,
+            'userInSession' => $userInSession
 
         ]));
         return $reponse->send();
