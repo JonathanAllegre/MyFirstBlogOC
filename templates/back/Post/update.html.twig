@@ -27,8 +27,8 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="content">Contenu de l'article</label>
-                                <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+                                <label for="content">Contenu de l'article:</label>
+                                <textarea id="summernote" name="content">{{ post.content }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,6 @@
             </div>
         </form>
     </div>
-
     <!-- MODAL SUPP POST -->
     <div class="modal fade" id="suppPostModal" tabindex="-1" role="dialog" aria-labelledby="suppPostModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -113,4 +112,5 @@
             </div>
         </div>
     </div>
+    {% block script %}<script src="{{ publicFolder }}/js/script.js"></script>{% endblock %}
 {% endblock %}
