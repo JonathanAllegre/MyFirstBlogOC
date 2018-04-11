@@ -23,13 +23,29 @@ class CheckPermissions
         $this->flash = $flash;
     }
 
-    public function isAdmin()
+    /**
+     * Check if user had admin role
+     * @return bool
+     */
+    public function isAdmin():bool
     {
         if ($this->session->has('user') && $this->session->get('user')['role_id'] == 2) {
             return true;
         }
 
-        $this->flash->set('warning', "vous n'avez pas access à cette partie du site");
+        return false;
+    }
+
+    /**
+     * Check if user is connect
+     * @return bool
+     */
+    public function isConnect()
+    {
+        if ($this->session->has('user')) {
+            return true;
+        }
+
         return false;
     }
 }

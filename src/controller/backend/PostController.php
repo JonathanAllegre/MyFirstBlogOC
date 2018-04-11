@@ -31,6 +31,7 @@ class PostController extends AppController
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }
@@ -88,11 +89,11 @@ class PostController extends AppController
         AppManager $manager,
         Flash $flash,
         FileUploader $fileUploader
-
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }
@@ -181,9 +182,9 @@ class PostController extends AppController
         AppManager $appManager
     ) {
 
-
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }

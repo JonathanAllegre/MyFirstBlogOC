@@ -10,6 +10,7 @@ namespace App\controller\frontend;
 
 use App\controller\AppController;
 use App\Manager\AppManager;
+use App\services\CheckPermissions;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
@@ -35,22 +36,28 @@ class PostController extends AppController
         RequestParameters $requestParameters,
         AppManager $appManager,
         Flash $flash,
-        LinkBuilder $linkBuilder
+        LinkBuilder $linkBuilder,
+        CheckPermissions $checkPermissions
     ) {
 
         // GET POST ID
         $postId = $requestParameters->getParameters('id_article');
 
+        // LOAD POST IN DB
         $post = $appManager->getPostManager()->read($postId);
+
+        // LOAD ALL POST FOR THE SIDEBAR
         $allPosts = $appManager->getPostManager()->getAllPost('10');
 
+        // VERIFY IF POST HAVE A ONLINE STATUT
         if ($post->getIdStatutPost() == 2) {
             $flash->set('warning', "Vous n'avez pas accès à cet article");
             $response = new RedirectResponse($linkBuilder->getLink('PostList'));
             return $response->send();
         }
 
-        $userInSession = ($this->getSession()->get('user')) ? $this->getSession()->get('user') : null;
+        // FOR COMMENT WE CHECK IF THE USER IS CONNECT
+        $userInSession = ($checkPermissions->isConnect()) ? $this->getSession()->get('user') : null;
 
         $reponse = new Response($this->render('/front/Post/read.html.twig', [
             'active' => 'articles',
