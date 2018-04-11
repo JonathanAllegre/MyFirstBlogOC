@@ -1,9 +1,52 @@
 {% extends '/front/base.html.twig' %}
 
 {%block head %}
-    <title>MyFirstBlog | Accueil</title>
+    <title>MyFirstBlog | {{ post.title }}</title>
 {% endblock %}
 
 {%block content %}
-   kjmlkjmlkj
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <h2 class="h2Accueil">{{ post.title }}</h2>
+                <hr>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+       <div class="row">
+           <div class="col-9 text-center">
+               <p>
+                   <img src="{{ publicFolder }}/img/Blog/{{ post.imgName }}" alt="" width="100%">
+               </p>
+               <p class="about text-center text">
+               <em>{{ post.shortText }}</em>
+               </p>
+               <hr>
+               <p class="text-justify">
+                   {{ post.content|raw }}
+               </p>
+               <hr>
+               <p class="text-right">Par {{ post.firstName }} {{ post.lastName }}, le {{ post.modified|date('d-m-Y à H:i') }}</p>
+           </div>
+           <div class="col-3 text-center">
+               <h2 class="">Derniers Articles</h2>
+               <hr>
+               {% for allPost in allPosts %}
+                   {% if allPost.idStatutPost == 1 %}
+                       <div class="col-sm-12">
+                           <div class="card">
+                               <div class="card-body">
+                                   <h5 class="card-title">{{ allPost.title }}</h5>
+                                   <p class="card-text">{{ allPost.shortText[:40] }}...</p>
+                                   <a class="btn btn-outline-secondary" href="{{ LinkBuilder.getLink("PostRead", {id_article: allPost.idPost}) }}" role="button">Voir le détail »</a>
+                               </div>
+                           </div>
+                       </div>
+                           <br/>
+                   {% endif %}
+               {% endfor %}
+           </div>
+       </div>
+    </div>
 {% endblock %}

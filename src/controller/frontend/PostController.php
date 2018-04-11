@@ -42,6 +42,7 @@ class PostController extends AppController
         $postId = $requestParameters->getParameters('id_article');
 
         $post = $appManager->getPostManager()->read($postId);
+        $allPosts = $appManager->getPostManager()->getAllPost('10');
 
         if ($post->getIdStatutPost() == 2) {
             $flash->set('warning', "Vous n'avez pas accès à cet article");
@@ -51,6 +52,8 @@ class PostController extends AppController
 
         $reponse = new Response($this->render('/front/Post/read.html.twig', [
             'active' => 'articles',
+            'post' => $post,
+            'allPosts' => $allPosts
 
         ]));
         return $reponse->send();
