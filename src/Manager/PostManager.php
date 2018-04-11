@@ -57,7 +57,8 @@ class PostManager
     {
         $request = $this->pdo->prepare(
             '	SELECT 
-                          ps.title AS \'statut_post_title\',
+                          ps.title AS statut_post_title,
+                          pic.name AS img_name,
                           p.id_post,
                           p.created,
                           p.modified,
@@ -72,6 +73,7 @@ class PostManager
 					    FROM post p
 					    INNER JOIN user u ON p.id_user = u.id_user
 					    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
+					    LEFT JOIN picture pic ON p.id_image = pic.id_image
 						WHERE id_post = :id'
         );
 

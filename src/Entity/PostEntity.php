@@ -19,13 +19,13 @@ class PostEntity
     private $idUser;
     private $idStatutPost;
     private $idImage;
-
     // INFO USER
     private $lastName;
     private $firstName;
-
     // INFO STATUT
     private $statutPostTitle;
+    // INFO IMG
+    private $imgName;
 
 
     public function __construct(array $data)
@@ -239,5 +239,21 @@ class PostEntity
     public function setStatutPostTitle($statutPostTitle): void
     {
         $this->statutPostTitle = $statutPostTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImgName()
+    {
+        return $this->imgName;
+    }
+
+    /**
+     * @param mixed $imgName
+     */
+    public function setImgName($imgName): void
+    {
+        $this->imgName = $imgName;
     }
 }
