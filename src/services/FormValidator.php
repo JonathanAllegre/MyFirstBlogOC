@@ -8,6 +8,7 @@
 
 namespace App\services;
 
+use App\Entity\CommentEntity;
 use App\Manager\AppManager;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,14 +74,37 @@ class FormValidator extends AppFactory
             } else {
                 $error = 0;
                 $errorTitle = "";
-                $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING);
+                $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
             }
         }
 
         if (!$required) {
             $error = 0;
             $errorTitle = "";
-            $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING);
+            $data = $newstr = filter_var($string, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
+
+        return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
+    }
+
+    public function sanitizeSpecialChars($string, $fieldName, $required = null)
+    {
+        if ($required) {
+            if (empty($string)) {
+                $error = 1;
+                $errorTitle = "Le champ ".$fieldName." ne doit pas être vide";
+                $data = $string;
+            } else {
+                $error = 0;
+                $errorTitle = "";
+                $data = $newstr = filter_var($string, FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES);
+            }
+        }
+
+        if (!$required) {
+            $error = 0;
+            $errorTitle = "";
+            $data = $newstr = filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
         }
 
         return array("error" => $error, "errorTitle" => $errorTitle, "data" => $data);
@@ -179,5 +203,47 @@ class FormValidator extends AppFactory
         }
 
         return $error;
+    }
+
+    public function validateCommentForm(array $comment, Flash $flash, AppManager $manager, $token, Session $session)
+    {
+        $error = 0;
+        // CHECK CONTENT
+        $content = $this->sanitizeString($comment['content'], "message", true);
+        if ($content['error']) {
+            $error = 1;
+            $flash->set('warning', $content['errorTitle']);
+        }
+
+
+        //CHECK ID POST ( IF IS INTEGER )
+        if (!is_numeric($comment['id_post'])) {
+            $error = 1;
+            $flash->set('warning', "Erreur dans l'identifiant du post (id non entier)");
+        }
+
+        //CHECK ID POST ( IF ID POST EXIST )
+        if (!$manager->getPostManager()->read($comment['id_post'])) {
+            $error = 1;
+            $flash->set('warning', "Erreur dans l'identifiant du post ( id Inconnu )");
+        }
+
+        //CHECK IF USER IS NOT EMPTY
+        if (!$comment['id_user']) {
+            $error = 1;
+            $flash->set('warning', "Vous n'êtes pas connecté");
+        }
+
+        ////CHECK TOKEN
+        if ($token != $session->get('myToken')) {
+            $error = 1;
+            $flash->set('warning', "Erreur de token");
+        }
+
+
+        return array(
+            'error' => $error,
+            'content' => $content['data']
+        );
     }
 }

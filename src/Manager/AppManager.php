@@ -72,4 +72,9 @@ class AppManager
     {
         return new PictureManager($this->getBdd());
     }
+
+    public function getCommentManager():CommentManager
+    {
+        return new CommentManager($this->getBdd());
+    }
 }

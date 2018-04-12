@@ -9,8 +9,10 @@
 namespace App\controller\frontend;
 
 use App\controller\AppController;
+use App\Entity\CommentEntity;
 use App\Manager\AppManager;
 use App\services\CheckPermissions;
+use App\services\FormValidator;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
@@ -37,7 +39,8 @@ class PostController extends AppController
         AppManager $appManager,
         Flash $flash,
         LinkBuilder $linkBuilder,
-        CheckPermissions $checkPermissions
+        CheckPermissions $checkPermissions,
+        FormValidator $validator
     ) {
 
         // GET POST ID
@@ -59,11 +62,57 @@ class PostController extends AppController
         // FOR COMMENT WE CHECK IF THE USER IS CONNECT
         $userInSession = ($checkPermissions->isConnect()) ? $this->getSession()->get('user') : null;
 
+        // ------------- IF METHOD = POST ( IF FORM COMMENT IS SENT ) ---------
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+            $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
+
+            // GET $FORM DATA
+            $comment = array(
+                'message' => $this->getApp()->getRequest()->request->get('message'),
+                'created' => $date->format('Y-m-d H:i:s'),
+                'modified' => $date->format('Y-m-d H:i:s'),
+                'content' => $this->getApp()->getRequest()->request->get('message'),
+                'id_post' => $requestParameters->getParameters('id_article'),
+                'id_comment_statut' => 1,
+                'id_user' => $this->getSession()->get('user')['id'],
+            );
+
+            // FORM VALIDATOR
+            $valideComment = $validator->validateCommentForm(
+                $comment,
+                $flash,
+                $appManager,
+                $this->getApp()->getRequest()->request->get('token'),
+                $this->getSession()
+            );
+
+            // IF NO ERROR IN VALIDATION
+            if (!$valideComment['error']) {
+                // WE REPLACE CONTENT MESSAGE BY SANITIZE CONTENT
+                $comment['content'] = $valideComment['content'];
+
+                // BUILD ENTITY
+                $comment = new CommentEntity($comment);
+
+                $appManager->getCommentManager()->create($comment);
+            }
+
+
+
+            // CREATE ENTITY
+            //$comment = new CommentEntity($comment);
+
+            //var_dump($comment);
+        }
+
+
+        // WE SEND THE REPONSE
         $reponse = new Response($this->render('/front/Post/read.html.twig', [
             'active' => 'articles',
             'post' => $post,
             'allPosts' => $allPosts,
-            'userInSession' => $userInSession
+            'userInSession' => $userInSession,
+            'myToken' => $this->getSession()->get('myToken')
 
         ]));
         return $reponse->send();

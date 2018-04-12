@@ -33,15 +33,19 @@
                    <h5 class="card-header text-left"><i class="fas fa-comments"></i> Commenter cet article</h5>
                    <div class="card-body">
                     {% if userInSession %}
+                       <form action="{{ LinkBuilder.getLink("PostRead", {id_article: post.idPost}) }}" method="POST">
                        <div class="row">
                            <div class="col-12">
                                <div class="form-group">
                                    <textarea name="message" id="message" class="form-control" rows="4" placeholder="Votre message"  required>{{ post_message }}</textarea>
+                                   <input type="hidden" value="{{ myToken }}" name="token">
+                                   <input type="hidden" value="{{ post.idPost }}" name="id_post">
                                    <p class="text-left"><em>Vous commentez en tant que {{ userInSession.first_name }} {{ userInSession.last_name }} </em></p>
                                </div>
                            </div>
                        </div>
-                       <p class="text-right"><button type="submit" class="btn btn-outline-secondary sendContactButton">Envoyer</button></p>
+                           <p class="text-right"><button type="submit" class="btn btn-outline-secondary sendContactButton">Envoyer</button></p>
+                       </form>
                         {% else %}
                             <h5 class="card-title">Vous ne pouvez pas commenter si vous n'êtes pas connecté.</h5>
                             <button type="button" class="btn btn-outline-secondary sendContactButton" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</button>
