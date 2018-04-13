@@ -47,7 +47,7 @@ class PostController extends AppController
         $postId = $requestParameters->getParameters('id_article');
 
         // LOAD POST IN DB
-        $post = $appManager->getPostManager()->read($postId);
+        $post = $appManager->getPostManager()->read($postId, 'true');
 
         // LOAD ALL POST FOR THE SIDEBAR
         $allPosts = $appManager->getPostManager()->getAllPost('10');
@@ -94,15 +94,15 @@ class PostController extends AppController
                 // BUILD ENTITY
                 $comment = new CommentEntity($comment);
 
-                $appManager->getCommentManager()->create($comment);
+                // IF NO ERROR WE SEND FLASH SUCCESS
+                if ($appManager->getCommentManager()->create($comment)) {
+                    $flash->set(
+                        "success",
+                        "Merci d'avoir commenté cet article. 
+                        Une vérification du commentaire sera éffectuée avant d'être publié"
+                    );
+                }
             }
-
-
-
-            // CREATE ENTITY
-            //$comment = new CommentEntity($comment);
-
-            //var_dump($comment);
         }
 
 

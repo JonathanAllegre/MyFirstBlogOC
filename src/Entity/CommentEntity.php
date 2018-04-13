@@ -17,6 +17,9 @@ class CommentEntity
     private $idPost;
     private $idCommentStatut;
     private $idUser;
+    // INFO USER
+    private $lastName;
+    private $firstName;
 
 
     public function __construct(array $donnees)
@@ -150,5 +153,37 @@ class CommentEntity
     public function setIdUser($idUser): void
     {
         $this->idUser = $idUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed $lastName
+     */
+    public function setLastName($lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed $firstName
+     */
+    public function setFirstName($firstName): void
+    {
+        $this->firstName = $firstName;
     }
 }

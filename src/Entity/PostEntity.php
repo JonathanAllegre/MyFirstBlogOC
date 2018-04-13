@@ -26,6 +26,8 @@ class PostEntity
     private $statutPostTitle;
     // INFO IMG
     private $imgName;
+    // COMMENTS
+    private $comments;
 
 
     public function __construct(array $data)
@@ -255,5 +257,21 @@ class PostEntity
     public function setImgName($imgName): void
     {
         $this->imgName = $imgName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
     }
 }

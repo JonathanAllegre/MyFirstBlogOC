@@ -50,7 +50,20 @@
                             <h5 class="card-title">Vous ne pouvez pas commenter si vous n'êtes pas connecté.</h5>
                             <button type="button" class="btn btn-outline-secondary sendContactButton" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt fa-lg"></i> Se connecter</button>
                         {% endif %}
-
+                       <hr>
+                       <div class="col-12">
+                           <h5>A vous la parole: {{ post.title }}</h5>
+                       </div>
+                       <div class="spacer30"></div>
+                       {% for comment in post.comments  %}
+                           {% if comment.idCommentStatut == 2 %}
+                       <div class="col-12 text-left comment-box">
+                           {{ comment.content|nl2br }}
+                           <hr>
+                           <small><i>Rédigé par: {{ comment.firstName }} {{ comment.lastName }} , le {{ comment.created|date('d-m-Y à H:i') }}</i></small>
+                       </div>
+                               {% endif %}
+                           {% endfor %}
                    </div>
                </div>
            </div>

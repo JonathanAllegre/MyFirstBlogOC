@@ -225,7 +225,7 @@ class FormValidator extends AppFactory
         //CHECK ID POST ( IF ID POST EXIST )
         if (!$manager->getPostManager()->read($comment['id_post'])) {
             $error = 1;
-            $flash->set('warning', "Erreur dans l'identifiant du post ( id Inconnu )");
+            $flash->set('warning', "Erreur dans l'identifiant du post (id Inconnu)");
         }
 
         //CHECK IF USER IS NOT EMPTY
