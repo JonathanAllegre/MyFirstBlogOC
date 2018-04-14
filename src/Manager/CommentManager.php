@@ -78,7 +78,7 @@ class CommentManager extends AppManager
         }
 
         if (empty($comments)) {
-            return null;
+            $comments =  array();
         }
 
         return $comments;
