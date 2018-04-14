@@ -20,6 +20,9 @@ class CommentEntity
     // INFO USER
     private $lastName;
     private $firstName;
+    //USEROBJECT
+    private $user;
+
 
 
     public function __construct(array $donnees)
@@ -185,5 +188,21 @@ class CommentEntity
     public function setFirstName($firstName): void
     {
         $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
     }
 }

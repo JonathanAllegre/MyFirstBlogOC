@@ -1,0 +1,29 @@
+{% extends '/back/base.html.twig' %}
+{%block head %}
+    <title>MyFirstBlog | Valider un commentaire</title>
+{% endblock %}
+{% block titleJumboTron %}
+    Valider un commentaire
+{% endblock %}
+{%block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5>Commentaire de {{ comment.user.FirstName }} {{ comment.user.lastName }} <small><i>({{ comment.user.mailAdress }})</i></small></h5>
+            <hr>
+            <p>
+                {{ comment.content|nl2br }}
+            </p>
+            <hr>
+            <p class="text-right"><i>posté le {{ comment.created }}</i></p>
+        </div>
+        <div class="col-12">
+            <p class="text-right">
+                <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+                <button type="submit" class="btn btn-outline-success">Valider</button>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -109,6 +109,22 @@ PostAdminDelete:
     controller: PostController
     action: delete
 
+PostAdminAll:
+    method: GET
+    url: /admin/post/all
+    bundle: backend
+    controller: PostController
+    action: allPost
+
+### COMMENT CONTROLLER ######
+CommentAdminValidate:
+    method:
+        - GET
+        - POST
+    url: /admin/comment/validate/{id_comment}
+    bundle: backend
+    controller: CommentController
+    action: validate
 
 test:
     method: GET

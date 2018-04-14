@@ -37,13 +37,15 @@ class HomeController extends AppController
         }
 
         // IF USER IS CONNECT AND HAVE THE GOOD LEVEL AUTH
-
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
 
+        // GET COMMENT LIST NO VALIDATE
+        $noValidateComments = $manager->getCommentManager()->getCommentInStatut(1);
         $reponse = new Response($this->render('/back/Home/index.html.twig', [
             'active' => 'home',
             'posts' => $listPost,
+            'noValidateComments' => $noValidateComments
         ]));
         return $reponse->send();
     }

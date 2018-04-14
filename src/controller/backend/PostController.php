@@ -218,4 +218,26 @@ class PostController extends AppController
         $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
         return $response->send();
     }
+
+    public function allPost(
+        AppManager $manager,
+        Flash $flash,
+        CheckPermissions $checkPermissions,
+        LinkBuilder $linkBuilder
+    ) {
+
+        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
+        if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
+            $response = new RedirectResponse($linkBuilder->getLink('Home'));
+            return $response->send();
+        }
+
+        $posts = $manager->getPostManager()->getAllPost();
+        $reponse = new Response($this->render('/back/Post/allPost.html.twig', [
+            'active' => "articles",
+            'posts' => $posts,
+        ]));
+        return $reponse->send();
+    }
 }

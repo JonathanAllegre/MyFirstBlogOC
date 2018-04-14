@@ -51,6 +51,7 @@ class PostManager extends AppManager
 
 
     /**
+     * IF $comments true the method return CommentEntities associated to this post
      * @param $postId
      * @param null $comments
      * @return PostEntity|null
