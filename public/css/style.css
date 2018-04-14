@@ -22,9 +22,7 @@ a:hover{
     padding-right:50px;
 
 }
-.navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show>.nav-link {
 
-}
 .form-control:focus{
     border-color:#721c24;
     box-shadow: 0 0 0 0.0rem;
@@ -105,6 +103,11 @@ a:hover{
     max-width:200px;
 }
 
+/* BLOG LIST */
+.spacerCardBlog{
+    padding-bottom: 40px;
+}
+
 @media (max-width: 768px) {
     body{
         text-align: center;
@@ -123,7 +126,15 @@ a:hover{
     }
 }
 
+.spacer30{
+    padding-top:20px;
+}
 
+.comment-box{
+    background-color: #f7f7f7;
+    padding:20px;
+    margin-bottom:20px;
+}
 
 /* FOOTER */
 

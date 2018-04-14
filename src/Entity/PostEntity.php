@@ -19,23 +19,25 @@ class PostEntity
     private $idUser;
     private $idStatutPost;
     private $idImage;
-
     // INFO USER
     private $lastName;
     private $firstName;
-
     // INFO STATUT
     private $statutPostTitle;
+    // INFO IMG
+    private $imgName;
+    // COMMENTS
+    private $comments;
 
 
-    public function __construct(array $donnees)
+    public function __construct(array $data)
     {
-        $this->hydrate($donnees);
+        $this->hydrate($data);
     }
 
-    public function hydrate(array $donnees)
+    public function hydrate(array $data)
     {
-        foreach ($donnees as $key => $value) {
+        foreach ($data as $key => $value) {
             ### transformation camelCase ####
             $spacing = trim(str_replace("_", " ", $key));
             $spacing = ucwords($spacing);
@@ -239,5 +241,37 @@ class PostEntity
     public function setStatutPostTitle($statutPostTitle): void
     {
         $this->statutPostTitle = $statutPostTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImgName()
+    {
+        return $this->imgName;
+    }
+
+    /**
+     * @param mixed $imgName
+     */
+    public function setImgName($imgName): void
+    {
+        $this->imgName = $imgName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
     }
 }

@@ -7,7 +7,7 @@
 {% endblock %}
 {%block content %}
     <div class="container-fluid">
-        <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST">
+        <form name="update" id="formUp" action="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-9">
                     <div class="card">
@@ -27,8 +27,8 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="content">Contenu de l'article</label>
-                                <textarea class="form-control" id="content" name="content" rows="10" required>{{ post.content }}</textarea>
+                                <label for="content">Contenu de l'article:</label>
+                                <textarea id="summernote" name="content">{{ post.content }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -61,10 +61,14 @@
                             <hr>
                             <h5>Image:</h5>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="validatedCustomFile">
-                                <label class="custom-file-label" for="validatedCustomFile">Choisissez un fichier</label>
-                                <div class="invalid-feedback">Example invalid custom file feedback</div>
+                                <label for="file"></label>
+                                <input type="file" id="file" name="file">
                             </div>
+                            {% if post.imgName %}
+                                <hr>
+                                <h5>Image actuelle:</h5>
+                                <img src="{{ publicFolder }}/img/Blog/{{ post.imgName }}" alt="" style="max-width:100%">
+                            {% endif %}
                             <hr>
                             <h5>Infos:</h5>
                             <ul>
@@ -83,7 +87,6 @@
             </div>
         </form>
     </div>
-
     <!-- MODAL SUPP POST -->
     <div class="modal fade" id="suppPostModal" tabindex="-1" role="dialog" aria-labelledby="suppPostModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -109,4 +112,5 @@
             </div>
         </div>
     </div>
+    {% block script %}<script src="{{ publicFolder }}/js/script.js"></script>{% endblock %}
 {% endblock %}

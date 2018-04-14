@@ -2,4 +2,5 @@
 .env
 /vendor/
 /var/
+/public/img/Blog/
 .php_cs.cache

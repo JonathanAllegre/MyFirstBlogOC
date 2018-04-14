@@ -9,49 +9,47 @@
 namespace App\controller\backend;
 
 use App\controller\AppController;
+use App\Entity\PictureEntity;
 use App\Entity\PostEntity;
 use App\Manager\AppManager;
-use App\services\AppFactory;
 use App\services\CheckPermissions;
+use App\services\FileUploader;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends AppController
 {
     public function add(
         AppManager $manager,
-        Session $session,
         LinkBuilder $linkBuilder,
         CheckPermissions $checkPermissions,
-        AppFactory $appFactory,
         Flash $flash
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }
 
         // IF METHOD != POST ( IF FORM POST IS NOT SEND )
-        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/back/Post/add.html.twig', [
                 'active' => "articles",
-                'myToken' => $session->get('myToken'),
+                'myToken' => $this->getSession()->get('myToken'),
             ]));
             return $reponse->send();
         }
 
-        // IF FORM IS SEND ( IF REQUEST == POST )
-        // GET $POST
-        $post = $appFactory->getRequest()->request->all();
+        // IF FORM IS SEND ( IF REQUEST == POST  // GET $POST
+        $post = $this->getApp()->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
-        if ($post['myToken'] != $session->get('myToken')) {
+        if ($post['myToken'] != $this->getSession()->get('myToken')) {
             $flash->set('warning', 'Erreur de token');
             $response = new RedirectResponse($linkBuilder->getLink('PostAdminAdd'));
             return $response->send();
@@ -63,7 +61,7 @@ class PostController extends AppController
         // COMPLETE FOR CREATE ENTITY
         $post['created'] = $date->format('Y-m-d H:i:s');
         $post['modified'] = $date->format('Y-m-d H:i:s');
-        $post['id_user'] = $session->get('user')['id'];
+        $post['id_user'] = $this->getSession()->get('user')['id'];
 
         // CREATE ENTITY
         $postEntity = new PostEntity($post);
@@ -85,44 +83,42 @@ class PostController extends AppController
 
 
     public function update(
-        AppFactory $appFactory,
         CheckPermissions $checkPermissions,
         LinkBuilder $linkBuilder,
         RequestParameters $parameters,
         AppManager $manager,
         Flash $flash,
-        Session $session
+        FileUploader $fileUploader
     ) {
 
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }
 
-        // GET ID POST
+        // GET ID POST AND ARTICLE
         $articleId = $parameters->getParameters('article_id');
-
-        // GET ARTICLE
         $post = $manager->getPostManager()->read($articleId);
 
-        // IF POST DON'T EXIST
+        // IF $POST DON'T EXIST
         if (!$post) {
             $flash->set('warning', "L'article demandé n'existe pas");
             $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
             return $response->send();
         }
 
-        // IF METHOD = POST ( IF FORM POST IS SEND )
-        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+        // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
             // GET TIME
             $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
 
             // GET $FORM DATA
-            $formData = $appFactory->getRequest()->request->all();
+            $formData = $this->getApp()->getRequest()->request->all();
 
             // CHECK IF TOKENS MATCH
-            if ($formData['myToken'] != $session->get('myToken')) {
+            if ($formData['myToken'] != $this->getSession()->get('myToken')) {
                 $flash->set('warning', 'Erreur de token');
                 $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
@@ -130,15 +126,30 @@ class PostController extends AppController
                 return $response->send();
             }
 
-            // UPDATE MODIFIED
-            $formData['modified'] = $date->format('Y-m-d H:i:s');
+            // IF IMAGE IS SEND
+            $image = $this->getApp()->getRequest()->files->get('file');
+            if ($image) {
+                $name = $fileUploader->upload($image);
 
+                // IF SUCCESS UPLOAD WE PERSIST FILE
+                if ($name) {
+                    $data = new PictureEntity([
+                        'created' => $date->format('Y-m-d H:i:s'),
+                        'name' => $name,
+                    ]);
+                    // PERSIST FILE
+                    if ($manager->getPictureManager()->create($data)) {
+                        $flash->set('success', "Votre image a bien été envoyé");
+                        $post->setIdImage($manager->getPictureManager()->getLastId());
+                    }
+                }
+            }
 
             // UPDATE ENTITY
             $post->setTitle($formData['title']);
             $post->setShortText($formData['short_text']);
             $post->setContent($formData['content']);
-            $post->setModified($formData['modified']);
+            $post->setModified($date->format('Y-m-d H:i:s'));
             $post->setIdStatutPost($formData['id_statut_post']);
 
             // PERSIST
@@ -156,12 +167,10 @@ class PostController extends AppController
             $post = $manager->getPostManager()->read($articleId);
         }
 
-
-
         $reponse = new Response($this->render('/back/Post/update.html.twig', [
                 'active' => "articles",
                 'post' => $post,
-                'myToken' => $session->get('myToken'),
+                'myToken' => $this->getSession()->get('myToken'),
         ]));
         return $reponse->send();
     }
@@ -169,24 +178,22 @@ class PostController extends AppController
     public function delete(
         CheckPermissions $checkPermissions,
         LinkBuilder $linkBuilder,
-        AppFactory $appFactory,
-        Session $session,
         Flash $flash,
         AppManager $appManager
     ) {
 
-
         // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
         if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
             $response = new RedirectResponse($linkBuilder->getLink('Home'));
             return $response->send();
         }
 
         // GET POST DATA
-        $formData = $appFactory->getRequest()->request->all();
+        $formData = $this->getApp()->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
-        if ($formData['myToken'] != $session->get('myToken')) {
+        if ($formData['myToken'] != $this->getSession()->get('myToken')) {
             $flash->set('warning', 'Erreur de token');
             $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
                 'article_id' => $formData['id_post'],
@@ -210,5 +217,27 @@ class PostController extends AppController
         $flash->set("success", "Votre article à bien été supprimé");
         $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
         return $response->send();
+    }
+
+    public function allPost(
+        AppManager $manager,
+        Flash $flash,
+        CheckPermissions $checkPermissions,
+        LinkBuilder $linkBuilder
+    ) {
+
+        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
+        if (!$checkPermissions->isAdmin()) {
+            $flash->set('warning', "vous n'avez pas access à cette partie du site");
+            $response = new RedirectResponse($linkBuilder->getLink('Home'));
+            return $response->send();
+        }
+
+        $posts = $manager->getPostManager()->getAllPost();
+        $reponse = new Response($this->render('/back/Post/allPost.html.twig', [
+            'active' => "articles",
+            'posts' => $posts,
+        ]));
+        return $reponse->send();
     }
 }

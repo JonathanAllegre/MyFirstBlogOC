@@ -60,7 +60,6 @@ class HomeController extends AppController
         // CALL THE MAILER CLASS
         $send = $mailer->sendMail($email, $subject, $text);
 
-
         // IF ERROR IN MAILER
         if ($send) {
             $flash->set('warning', "Un problème est survenue lors de l'envoie du mail");

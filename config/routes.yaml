@@ -51,18 +51,20 @@ UserLogout:
 
 ### POST CONTROLLER ######
 PostRead:
-  method: GET
-  url: /post/read/{id_article}
-  bundle: frontend
-  controller: PostController
-  action: read
+    method:
+        - GET
+        - POST
+    url: /post/read/{id_article}
+    bundle: frontend
+    controller: PostController
+    action: read
 
 PostList:
-  method: GET
-  url: /post/all
-  bundle: frontend
-  controller: PostController
-  action: listPost
+    method: GET
+    url: /post/all
+    bundle: frontend
+    controller: PostController
+    action: listPost
 
 
 ### BACKEND #######################################################################
@@ -107,6 +109,22 @@ PostAdminDelete:
     controller: PostController
     action: delete
 
+PostAdminAll:
+    method: GET
+    url: /admin/post/all
+    bundle: backend
+    controller: PostController
+    action: allPost
+
+### COMMENT CONTROLLER ######
+CommentAdminValidate:
+    method:
+        - GET
+        - POST
+    url: /admin/comment/validate/{id_comment}
+    bundle: backend
+    controller: CommentController
+    action: validate
 
 test:
     method: GET

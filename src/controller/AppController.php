@@ -12,7 +12,6 @@ use App\services\AppFactory;
 
 use App\services\LinkBuilder;
 use App\services\Sessions\Flash;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
@@ -20,15 +19,17 @@ use Twig_Loader_Filesystem;
 class AppController
 {
     private $config;
-    private $http;
+    private $host;
     private $session;
+    private $app;
 
 
-    public function __construct(AppFactory $app, Request $http, Session $session)
+    public function __construct(AppFactory $app, Session $session)
     {
         $this->config = $app->getConfig();
-        $this->http = $http;
+        $this->host = $app->getRequest()->server->get('HTTP_HOST');
         $this->session = $session;
+        $this->app = $app;
     }
 
     public function render($path, $var = null)
@@ -57,12 +58,10 @@ class AppController
             $prefix = $this->config->getPrefix().'/';
         }
 
-        $request = $this->http->createFromGlobals();
-        $httpHost = $request->server->get('HTTP_HOST');
 
         // DEFAULT VARIABLES
         $variables  = array(
-            'publicFolder' => 'http://' . $httpHost  . $prefix . "public",
+            'publicFolder' => 'http://' . $this->host  . $prefix . "public",
             'rootPath' => $this->config->getPrefix()
         );
 
@@ -72,5 +71,16 @@ class AppController
         }
 
         return $twig->render($path, $variables);
+    }
+
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+
+    public function getApp(): AppFactory
+    {
+        return $this->app;
     }
 }

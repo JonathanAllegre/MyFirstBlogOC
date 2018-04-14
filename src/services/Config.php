@@ -23,6 +23,7 @@ class Config
     private $twigTemplates;
     private $rootPath;
     private $mail;
+    private $imgBlogFolder;
 
 
     /**
@@ -59,6 +60,7 @@ class Config
 
         // load var .yaml
         $this->prefix = $config[$this->env]['prefix'];
+        $this->imgBlogFolder = $config[$this->env]['imgBlogFolder'];
         $this->twigCache = $twig[$this->env]['cache'];
         $this->twigTemplates = $twig[$this->env]['templates'];
     }
@@ -141,5 +143,13 @@ class Config
     public function getMail():string
     {
         return $this->mail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImgBlogFolder()
+    {
+        return $this->imgBlogFolder;
     }
 }

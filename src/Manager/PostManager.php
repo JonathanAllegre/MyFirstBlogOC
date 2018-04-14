@@ -11,7 +11,7 @@ namespace App\Manager;
 use App\Entity\PostEntity;
 use \PDO;
 
-class PostManager
+class PostManager extends AppManager
 {
     private $pdo;
 
@@ -49,15 +49,19 @@ class PostManager
         return false;
     }
 
+
     /**
+     * IF $comments true the method return CommentEntities associated to this post
      * @param $postId
-     * @return PostEntity
+     * @param null $comments
+     * @return PostEntity|null
      */
-    public function read($postId)
+    public function read($postId, $comments = null)
     {
         $request = $this->pdo->prepare(
             '	SELECT 
-                          ps.title AS \'statut_post_title\',
+                          ps.title AS statut_post_title,
+                          pic.name AS img_name,
                           p.id_post,
                           p.created,
                           p.modified,
@@ -72,7 +76,8 @@ class PostManager
 					    FROM post p
 					    INNER JOIN user u ON p.id_user = u.id_user
 					    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
-						WHERE id_post = :id'
+					    LEFT JOIN picture pic ON p.id_image = pic.id_image
+						WHERE p.id_post = :id'
         );
 
         $request->bindValue(':id', $postId, PDO::PARAM_INT);
@@ -83,19 +88,28 @@ class PostManager
         if (empty($data)) {
             return null;
         }
+
         $post = new PostEntity($data);
+
+        // IF WE WANT COMMENTS OF POST
+        if ($comments) {
+            $comments = $this->getCommentManager()->getCommentsForPost($postId);
+            $post->setComments($comments);
+        }
+
         return $post;
     }
 
 
+
     public function getAllPost($limit = null)
     {
-
         $limit = (!is_null($limit)) ? " LIMIT 0,".$limit :null;
 
         $sql = "
                 SELECT 
                   ps.title AS 'statut_post_title',
+                  pic.name AS img_name,
                   p.id_post,
                   p.created,
                   p.modified,
@@ -110,6 +124,7 @@ class PostManager
                 FROM post p
                 INNER JOIN user u ON p.id_user = u.id_user
                 INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
+                LEFT JOIN picture pic ON p.id_image = pic.id_image
                 ORDER BY p.id_post DESC";
 
         $sql = $sql.$limit;
