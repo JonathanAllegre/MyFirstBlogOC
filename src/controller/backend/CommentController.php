@@ -40,9 +40,43 @@ class CommentController extends AppController
         // GET COMMENT
         $comment = $manager->getCommentManager()->read($commentId);
 
+        // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
+        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+            $formData = $this->getApp()->getRequest()->request->all();
+
+            // CHECK IF TOKENS MATCH
+            if ($formData['myToken'] != $this->getSession()->get('myToken')) {
+                $flash->set('warning', 'Erreur de token');
+                $response = new RedirectResponse($linkBuilder->getLink('Home'));
+                return $response->send();
+            }
+
+            if (isset($formData['validate'])) {
+                // UPDATE COMMENT SET VALIDATE
+                $comment->setIdCommentStatut(2);
+
+                // PERSIST
+                if ($manager->getCommentManager()->update($comment)) {
+                    $flash->set('success', "Le commentaire est maintenant en ligne");
+                    $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+                    return $response->send();
+                }
+            }
+            if (isset($formData['delete'])) {
+                // DELETE COMMENT
+                if ($manager->getCommentManager()->delete($comment->getIdComment())) {
+                    $flash->set('success', "Le commentaire à été correctement supprimé.");
+                    $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+                    return $response->send();
+                }
+            }
+        }
+
+
         $reponse = new Response($this->render('/back/Comment/validate.html.twig', [
             'active' => 'comments',
-            'comment' => $comment
+            'comment' => $comment,
+            'myToken' => $this->getSession()->get('myToken'),
         ]));
         return $reponse->send();
     }

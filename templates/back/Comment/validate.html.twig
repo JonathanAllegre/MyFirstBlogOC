@@ -18,12 +18,17 @@
             <p class="text-right"><i>posté le {{ comment.created }}</i></p>
         </div>
         <div class="col-12">
+            <form action="{{ LinkBuilder.getLink('CommentAdminValidate', {id_comment: comment.idComment}) }}" method="POST">
             <p class="text-right">
-                <button type="submit" class="btn btn-outline-danger">Supprimer</button>
-                <button type="submit" class="btn btn-outline-success">Valider</button>
+                <input  type="hidden" value="{{ myToken }}" name="myToken">
+                <button type="submit" class="btn btn-outline-danger" id="deleteButtonComm" name="delete" value="1">Supprimer</button>
+                <button type="submit" class="btn btn-outline-success" name="validate" value="1">Valider</button>
             </p>
+            </form>
         </div>
-
     </div>
 </div>
+    {% block script %}
+        <script src="{{ publicFolder }}/js/script.js"></script>
+    {% endblock %}
 {% endblock %}

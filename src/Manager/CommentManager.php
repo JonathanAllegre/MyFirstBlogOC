@@ -173,4 +173,45 @@ class CommentManager extends AppManager
 
         return $comment;
     }
+
+    public function update(CommentEntity $comment)
+    {
+        $request = $this->pdo->prepare('	UPDATE comment
+                            			SET
+											created = :created,
+											modified = :modified,
+											content = :content,
+											id_post = :id_post,
+											id_comment_statut = :id_comment_statut,
+											id_user = :id_user                        		
+                        				WHERE id_comment = :id_comment ');
+
+        $request->bindValue(':id_comment', $comment->getIdComment());
+        $request->bindValue(':created', $comment->getCreated());
+        $request->bindValue(':modified', $comment->getModified());
+        $request->bindValue(':content', $comment->getContent());
+        $request->bindValue(':id_post', $comment->getIdPost());
+        $request->bindValue(':id_comment_statut', $comment->getIdCommentStatut());
+        $request->bindValue(':id_user', $comment->getIdUser());
+
+        if ($request->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function delete($idComment)
+    {
+        $request = $this->pdo->prepare('	DELETE FROM comment
+									WHERE id_comment = :id_comment');
+
+        $request->bindValue(':id_comment', $idComment);
+
+        if ($request->execute()) {
+            return true;
+        }
+
+        return false;
+    }
 }
