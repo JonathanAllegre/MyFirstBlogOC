@@ -9,7 +9,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h5>Commentaire de {{ comment.user.FirstName }} {{ comment.user.lastName }} <small><i>({{ comment.user.mailAdress }})</i></small></h5>
+            <h5>Commentaire de {{ comment.FirstName }} {{ comment.lastName }} <small><i>({{ comment.mailAdress }})</i></small></h5>
             <hr>
             <p>
                 {{ comment.content|nl2br }}

@@ -151,8 +151,19 @@ class CommentManager extends AppManager
     public function read($idComment)
     {
         $request = $this->pdo->prepare(
-            'SELECT *
-                        FROM comment
+            'SELECT
+	                      c.id_comment,
+	                      c.created,
+	                      c.modified,
+	                      c.content,
+	                      c.id_post,
+	                      c.id_comment_statut,
+	                      c.id_user,
+	                      u.last_name,
+	                      u.first_name,
+	                      u.mail_adress
+                        FROM comment c
+                        INNER JOIN user u ON c.id_user = u.id_user
                         WHERE id_comment =:id
             '
         );
@@ -167,9 +178,6 @@ class CommentManager extends AppManager
         }
 
         $comment = new CommentEntity($data);
-        // SET USER
-        $user = $this->getUserManager()->getUserById($data['id_user']);
-        $comment->setUser($user);
 
         return $comment;
     }
