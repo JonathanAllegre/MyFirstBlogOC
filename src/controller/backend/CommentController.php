@@ -10,7 +10,6 @@ namespace App\controller\backend;
 
 use App\controller\AppController;
 use App\Manager\AppManager;
-use App\services\CheckPermissions;
 use App\services\LinkBuilder;
 use App\services\RequestParameters;
 use App\services\Sessions\Flash;
@@ -21,18 +20,10 @@ class CommentController extends AppController
 {
     public function validate(
         AppManager $manager,
-        CheckPermissions $checkPermissions,
         Flash $flash,
         LinkBuilder $linkBuilder,
         RequestParameters $requestParameters
     ) {
-
-        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
-        if (!$checkPermissions->isAdmin()) {
-            $flash->set('warning', "vous n'avez pas access à cette partie du site");
-            $response = new RedirectResponse($linkBuilder->getLink('Home'));
-            return $response->send();
-        }
 
         // GET COMMENT ID
         $commentId = $requestParameters->getParameters('id_comment');
@@ -71,8 +62,7 @@ class CommentController extends AppController
                 }
             }
         }
-
-
+        
         $reponse = new Response($this->render('/back/Comment/validate.html.twig', [
             'active' => 'comments',
             'comment' => $comment,

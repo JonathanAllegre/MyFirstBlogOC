@@ -20,23 +20,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class HomeController extends AppController
 {
-    public function index(
-        LinkBuilder $linkBuilder,
-        CheckPermissions $checkPermissions,
-        AppManager $manager,
-        Flash $flash
-    ) {
+    public function index(AppManager $manager)
+    {
 
-
-
-        // IF USER IS NOT CONNECT OR IF USER DON'T HAVE PERMISION
-        if (!$checkPermissions->isAdmin()) {
-            $flash->set('warning', "vous n'avez pas access à cette partie du site");
-            $response = new RedirectResponse($linkBuilder->getLink('Home'));
-            return $response->send();
-        }
-
-        // IF USER IS CONNECT AND HAVE THE GOOD LEVEL AUTH
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
 
