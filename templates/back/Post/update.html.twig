@@ -68,6 +68,10 @@
                                 <hr>
                                 <h5>Image actuelle:</h5>
                                 <img src="{{ publicFolder }}/img/Blog/{{ post.imgName }}" alt="" style="max-width:100%">
+                                <div class="form-check text-center" style="margin-top:10px;">
+                                    <input type="checkbox" class="form-check-input" name="deleteImg" value="{{ post.idImage }}" id="deleteImgCheckBox">
+                                    <label class="form-check-label" for="exampleCheck1">Supprimer l'image ?</label>
+                                </div>
                             {% endif %}
                             <hr>
                             <h5>Infos:</h5>

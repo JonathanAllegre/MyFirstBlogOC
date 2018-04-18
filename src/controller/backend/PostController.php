@@ -73,8 +73,8 @@ class PostController extends AppController
             $formData = $this->getApp()->getRequest()->request->all();
 
             // WE CALL UPDATEPOST CLASS
-            $updatePost = new UpdatePost();
-            $post = $updatePost->update($formData, $this->getSession(), $post);
+            $updatePost = new UpdatePost($formData, $this->getSession(), $post);
+            $post = $updatePost->update();
 
             // IF ERROR
             if (!$post) {
