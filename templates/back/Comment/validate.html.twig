@@ -9,7 +9,8 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h5>Commentaire de {{ comment.FirstName }} {{ comment.lastName }} <small><i>({{ comment.mailAdress }})</i></small></h5>
+            <h5>Commentaire de {{ comment.FirstName }} {{ comment.lastName }} pour l'article :
+                <small><i><a href="{{ LinkBuilder.getLink("PostRead", {id_article: comment.idPost}) }}" target="_blank" >{{ comment.postTitle }}</a></i></small></h5>
             <hr>
             <p>
                 {{ comment.content|nl2br }}

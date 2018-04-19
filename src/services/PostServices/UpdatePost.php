@@ -13,6 +13,7 @@ use App\Entity\PostEntity;
 use App\Manager\AppManager;
 use App\services\AppFactory;
 use App\services\FileUploader;
+use App\services\PictureService\DeletePicture;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -38,40 +39,6 @@ class UpdatePost
         $this->post = $post;
     }
 
-    private function deleteImg($formData)
-    {
-        // IF IMG EXISTE
-        $img = $this->manager->getPictureManager()->read($formData['deleteImg']);
-
-        if (!$img) {
-            $this->flash->set('warning', "Impossible de lire l'image");
-            return false;
-        }
-
-        // IF DELETE IN BDD OK
-        if (!$this->manager->getPictureManager()->delete($formData['deleteImg'])) {
-            $this->flash->set('warning', "Une erreur est survenue pendant la suppression de l'image en base");
-            return false;
-        }
-
-        $this->post->setIdImage(null);
-
-        // CONSTRUCT URL
-        $root = $this->app->getConfig()->getRootPath();
-        $folder = substr($this->app->getConfig()->getImgBlogFolder(), 1);
-        $nameImg = $img->getName();
-
-        $url = $root . $folder . '/' . $nameImg;
-
-        // DELETE FILE
-        if (!unlink($url)) {
-            $this->flash->set('warning', "Impossible de supprimer le fichier");
-            return false;
-        }
-
-        $this->flash->set('success', "Votre image a bien été supprimée");
-        return true;
-    }
 
     public function update()
     {
@@ -106,9 +73,16 @@ class UpdatePost
 
         // IF DELETE IMG CHECKED
         if (isset($this->formData['deleteImg'])) {
-            if (!$this->deleteImg($this->formData)) {
+            //NEW DELETEPICTURE
+            $deletePicture = new DeletePicture($this->session, $this->post);
+
+            //IF ERROR RETURN FALSE
+            if (!$deletePicture->deleteImg($this->formData['deleteImg'])) {
                 return false;
             }
+
+            // UPDATE ENTITY
+            $this->post->setIdImage(null);
         }
 
         // UPDATE ENTITY

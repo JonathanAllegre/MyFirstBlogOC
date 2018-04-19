@@ -161,9 +161,11 @@ class CommentManager extends AppManager
 	                      c.id_user,
 	                      u.last_name,
 	                      u.first_name,
-	                      u.mail_adress
+	                      u.mail_adress,
+	                      p.title AS post_title
                         FROM comment c
                         INNER JOIN user u ON c.id_user = u.id_user
+                        INNER JOIN post p ON c.id_post = p.id_post
                         WHERE id_comment =:id
             '
         );

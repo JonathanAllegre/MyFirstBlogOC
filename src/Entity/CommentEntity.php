@@ -21,6 +21,8 @@ class CommentEntity
     private $lastName;
     private $firstName;
     private $mailAdress;
+    // INFO POST
+    private $postTitle;
 
 
     public function __construct(array $donnees)
@@ -202,5 +204,21 @@ class CommentEntity
     public function setMailAdress($mailAdress): void
     {
         $this->mailAdress = $mailAdress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostTitle()
+    {
+        return $this->postTitle;
+    }
+
+    /**
+     * @param mixed $postTitle
+     */
+    public function setPostTitle($postTitle): void
+    {
+        $this->postTitle = $postTitle;
     }
 }

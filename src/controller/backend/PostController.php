@@ -11,6 +11,7 @@ namespace App\controller\backend;
 use App\controller\AppController;
 use App\Manager\AppManager;
 use App\services\LinkBuilder;
+use App\services\PictureService\DeletePicture;
 use App\services\PostServices\AddPost;
 use App\services\PostServices\UpdatePost;
 use App\services\RequestParameters;
@@ -112,7 +113,19 @@ class PostController extends AppController
         }
 
         // IF NO ERRORS WE DELETE THE POST
+
+        // GET ID IMAGE
+        $post = $appManager->getPostManager()->read($formData['id_post']);
+        $idImg = $post->getIdImage();
+
+        // DELETE POST
         $manager = $appManager->getPostManager()->delete($formData['id_post']);
+
+        // DELETE IMG
+        if ($idImg) {
+            $deletePicture = new DeletePicture($this->getSession());
+            $deletePicture->deleteImg($idImg);
+        }
 
         // IF ERROR WE REDIRECT TO ADMIN UPDATE
         if (!$manager) {
@@ -122,6 +135,7 @@ class PostController extends AppController
             ]));
             return $response->send();
         }
+
 
         // IF NO ERRORS WE REDIRECT TO HOME ADMIN
         $flash->set("success", "Votre article à bien été supprimé");
