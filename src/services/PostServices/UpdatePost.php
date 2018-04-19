@@ -50,7 +50,7 @@ class UpdatePost
 
         // IF DELETE IN BDD OK
         if (!$this->manager->getPictureManager()->delete($formData['deleteImg'])) {
-            $this->flash->set('warning', "Une erreru est survenue pendant la suppression de l'image en base");
+            $this->flash->set('warning', "Une erreur est survenue pendant la suppression de l'image en base");
             return false;
         }
 

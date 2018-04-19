@@ -39,7 +39,7 @@ class AppController
         $this->app = $app;
 
         // REDIRECT IF USER IS NOT ADMIN
-        if ($requestParameters->getBundle() === "backend") {
+        if ($requestParameters->getBundle() && $requestParameters->getBundle() === "backend") {
             if (!$checkPermissions->isAdmin()) {
                 $response = new RedirectResponse($linkBuilder->getLink('Home'));
                 return $response->send();
