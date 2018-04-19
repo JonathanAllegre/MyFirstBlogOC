@@ -18,6 +18,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommentController extends AppController
 {
+
+    public function allComments(AppManager $manager)
+    {
+
+        $noValidates = $manager->getCommentManager()->getCommentInStatut(1);
+        $validates = $manager->getCommentManager()->getCommentInStatut(2);
+
+
+
+        $reponse = new Response($this->render('/back/Comment/list.html.twig', [
+            'active' => 'comments',
+            'validateComments' => $validates,
+            'noValidateComments' => $noValidates
+        ]));
+        return $reponse->send();
+    }
+
+
     public function validate(
         AppManager $manager,
         Flash $flash,

@@ -6,9 +6,8 @@
  * Time: 16:49
  */
 
-namespace App\services\PictureService;
+namespace App\services\PictureServices;
 
-use App\Entity\PostEntity;
 use App\Manager\AppManager;
 use App\services\AppFactory;
 use App\services\FileUploader;

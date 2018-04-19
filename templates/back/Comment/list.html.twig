@@ -1,0 +1,81 @@
+{% extends '/back/base.html.twig' %}
+{%block head %}
+    <title>MyFirstBlog | Listes de Commentaires</title>
+{% endblock %}
+{% block titleJumboTron %}
+    Tous les Commentaires
+{% endblock %}
+{%block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#validate" role="tab" aria-controls="home" aria-selected="true">Commentaires non validés</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#all" role="tab" aria-controls="profile" aria-selected="false">Commentaires Validés</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="validate" role="tabpanel" aria-labelledby="validate-tab">
+                        <table class="table table-sm table-hover">
+                            <thead class="bg-dark text-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">email</th>
+                                <th scope="col">Création</th>
+                                <th scope="col">Contenu</th>
+                                <th scope="col">Post</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for comment in noValidateComments %}
+                                <tr>
+                                    <th scope="row">{{ comment.idComment }}</th>
+                                    <td>{{ comment.firstName }} {{ comment.lastName }}</td>
+                                    <td>{{ comment.mailAdress }}</td>
+                                    <td>{{ comment.created }}</td>
+                                    <td>{{ comment.content[:40] }}</td>
+                                    <td><a href="{{ LinkBuilder.getLink("PostRead", {id_article: comment.idPost}) }}" target="_blank" >{{ comment.postTitle[:30] }}...</a>.</td>
+                                    <td scope="col"><a href="{{ LinkBuilder.getLink('CommentAdminValidate', {id_comment: comment.idComment}) }}" class="btn btn-sm btn-outline-dark">Modifier</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
+                        <table class="table table-sm table-hover">
+                            <thead class="bg-dark text-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Utilisateur</th>
+                                <th scope="col">email</th>
+                                <th scope="col">Création</th>
+                                <th scope="col">Contenu</th>
+                                <th scope="col">Post</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for comment in validateComments %}
+                                <tr>
+                                    <th scope="row">{{ comment.idComment }}</th>
+                                    <td>{{ comment.firstName }} {{ comment.lastName }}</td>
+                                    <td>{{ comment.mailAdress }}</td>
+                                    <td>{{ comment.created }}</td>
+                                    <td>{{ comment.content[:40] }}</td>
+                                    <td><a href="{{ LinkBuilder.getLink("PostRead", {id_article: comment.idPost}) }}" target="_blank" >{{ comment.postTitle[:30] }}...</a>.</td>
+                                    <td scope="col"><a href="{{ LinkBuilder.getLink('CommentAdminValidate', {id_comment: comment.idComment}) }}" class="btn btn-sm btn-outline-dark">Modifier</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

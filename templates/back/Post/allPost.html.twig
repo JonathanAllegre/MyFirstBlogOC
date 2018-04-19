@@ -1,23 +1,29 @@
 {% extends '/back/base.html.twig' %}
 {%block head %}
-    <title>MyFirstBlog | Accueil</title>
+    <title>MyFirstBlog | Liste des Articles</title>
 {% endblock %}
 {% block titleJumboTron %}
     Tous les articles
 {% endblock %}
 {%block content %}
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <h5 class="card-header bg-dark text-light">Articles</h5>
-                    <div class="card-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#draft" role="tab" aria-controls="home" aria-selected="true">Articles en Brouillon</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#all" role="tab" aria-controls="profile" aria-selected="false">Articles en ligne</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="draft" role="tabpanel" aria-labelledby="validate-tab">
                         <table class="table table-sm table-hover">
-                            <thead class="thead-light">
+                            <thead class="bg-dark text-light">
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Titres</th>
-                                <th scope="col">Chapo</th>
                                 <th scope="col">Création</th>
                                 <th scope="col">Dernière Modification</th>
                                 <th scope="col">Statut</th>
@@ -26,27 +32,49 @@
                             </thead>
                             <tbody>
                             {% for post in posts %}
+                                {% if post.idStatutPost == 2 %}
                                 <tr>
                                     <th scope="row">{{ post.idPost }}</th>
-                                    <td>{{ post.title }}</td>
-                                    <td>{{ post.shortText[:40] }}...</td>
+                                    <td>{{ post.title[:40] }}...</td>
                                     <td>{{ post.created }}</td>
                                     <td>{{ post.modified }}</td>
-                                    {% if post.idStatutPost == 1 %}
-                                        <td><button type="button" class="btn btn-sm btn-info">En Ligne</button></td>
-                                    {% else %}
-                                        <td><button type="button" class="btn btn-sm btn-warning">Brouillon</button></td>
-                                    {% endif %}
+                                    <td><button type="button" class="btn btn-sm btn-warning">Brouillon</button></td>
                                     <td scope="col"><a href="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" class="btn btn-sm btn-outline-dark">Modifier</a></td>
                                 </tr>
+                                {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
-                        <hr/>
-                        <a href="{{ LinkBuilder.getLink('PostAdminAdd') }}" class="btn btn-outline-info">Ajouter un article </a>
+                    </div>
+                    <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
+                        <table class="table table-sm table-hover">
+                            <thead class="bg-dark text-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Titres</th>
+                                <th scope="col">Création</th>
+                                <th scope="col">Dernière Modification</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for post in posts %}
+                                {% if post.idStatutPost == 1 %}
+                                    <tr>
+                                        <th scope="row">{{ post.idPost }}</th>
+                                        <td>{{ post.title[:40] }}...</td>
+                                        <td>{{ post.created }}</td>
+                                        <td>{{ post.modified }}</td>
+                                        <td><button type="button" class="btn btn-sm btn-success">En Ligne</button></td>
+                                        <td scope="col"><a href="{{ LinkBuilder.getLink('PostAdminUpdate', {article_id: post.idPost}) }}" class="btn btn-sm btn-outline-dark">Modifier</a></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 {% endblock %}

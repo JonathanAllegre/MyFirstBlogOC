@@ -23,14 +23,20 @@ class HomeController extends AppController
     public function index(AppManager $manager)
     {
 
+
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
 
         // GET COMMENT LIST NO VALIDATE
         $noValidateComments = $manager->getCommentManager()->getCommentInStatut(1);
+
+        // GET USER LIST
+        $users = $manager->getUserManager()->getAllUsers(10);
+
         $reponse = new Response($this->render('/back/Home/index.html.twig', [
             'active' => 'home',
             'posts' => $listPost,
+            'users' => $users,
             'noValidateComments' => $noValidateComments
         ]));
         return $reponse->send();

@@ -151,4 +151,31 @@ class UserManager
         }
         return $error = 1;
     }
+
+    public function getAllUsers($limit = null)
+    {
+        $limit = (!is_null($limit)) ? " LIMIT 0,".$limit :null;
+
+        $sql = "
+                SELECT id_user,first_name,last_name,registration_date,mail_adress,u.id_role,r.title as role_title
+				FROM user u 
+				INNER JOIN role r ON u.id_role = r.id_role
+				ORDER BY id_user DESC
+				";
+
+        $sql = $sql.$limit;
+
+
+        $request = $this->pdo->prepare($sql);
+        $request->execute();
+
+        while ($donnees = $request->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = new UserEntity($donnees);
+        }
+        if (empty($data)) {
+            return null;
+        }
+
+        return $data;
+    }
 }

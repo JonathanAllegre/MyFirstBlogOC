@@ -126,9 +126,9 @@ CommentAdminValidate:
     controller: CommentController
     action: validate
 
-test:
+CommentAdminList:
     method: GET
-    url: /home/index/{article_id}/{annee}
-    bundle: frontend
-    controller: HomeController
-    action: index
+    url: /admin/comment/list
+    bundle: backend
+    controller: CommentController
+    action: allComments

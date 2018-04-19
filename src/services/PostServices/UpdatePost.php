@@ -13,7 +13,7 @@ use App\Entity\PostEntity;
 use App\Manager\AppManager;
 use App\services\AppFactory;
 use App\services\FileUploader;
-use App\services\PictureService\DeletePicture;
+use App\services\PictureServices\DeletePicture;
 use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Session\Session;
 

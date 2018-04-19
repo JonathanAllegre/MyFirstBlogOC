@@ -11,7 +11,7 @@ namespace App\controller\backend;
 use App\controller\AppController;
 use App\Manager\AppManager;
 use App\services\LinkBuilder;
-use App\services\PictureService\DeletePicture;
+use App\services\PictureServices\DeletePicture;
 use App\services\PostServices\AddPost;
 use App\services\PostServices\UpdatePost;
 use App\services\RequestParameters;
