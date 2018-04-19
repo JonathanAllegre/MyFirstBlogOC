@@ -89,5 +89,4 @@ class Routes extends AppFactory
 
         $cont->call([$class,$action]);
     }
-
 }

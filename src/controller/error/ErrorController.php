@@ -8,7 +8,6 @@
 
 namespace App\controller\error;
 
-
 use App\controller\AppController;
 use Symfony\Component\HttpFoundation\Response;
 
