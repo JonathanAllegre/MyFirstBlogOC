@@ -83,10 +83,10 @@ class Routes extends AppFactory
      */
     public function initController($routeInfo, $bundle, $controller, $action)
     {
-        $container = new Container();
-        $cont = $container->createConfig($routeInfo);
+        $containerObject = new Container();
+        $container = $containerObject->container($routeInfo);
         $class = "App\\controller\\".$bundle."\\".$controller;
 
-        $cont->call([$class,$action]);
+        $container->call([$class,$action]);
     }
 }

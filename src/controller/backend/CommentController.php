@@ -18,10 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommentController extends AppController
 {
-
     public function allComments(AppManager $manager)
     {
-
         $noValidates = $manager->getCommentManager()->getCommentInStatut(1);
         $validates = $manager->getCommentManager()->getCommentInStatut(2);
 
