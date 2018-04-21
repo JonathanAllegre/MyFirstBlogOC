@@ -10,22 +10,28 @@ namespace App\controller\backend;
 
 use App\controller\AppController;
 use App\Manager\AppManager;
-use App\services\LinkBuilder;
+use App\services\AppService;
+use App\services\Container;
 use App\services\PictureServices\DeletePicture;
-use App\services\PostServices\AddPost;
-use App\services\PostServices\UpdatePost;
-use App\services\RequestParameters;
-use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class PostController extends AppController
 {
-    public function add(LinkBuilder $linkBuilder, Flash $flash)
+
+    /**
+     * @param Container $container
+     * @param AppService $service
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function add(Container $container, AppService $service)
     {
 
         // IF METHOD != POST ( IF FORM POST IS NOT SEND )
-        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+        if ($container->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/back/Post/add.html.twig', [
                 'active' => "articles",
                 'myToken' => $this->getSession()->get('myToken'),
@@ -34,52 +40,59 @@ class PostController extends AppController
         }
 
         // IF FORM IS SEND ( IF REQUEST == POST  // GET $POST
-        $post = $this->getApp()->getRequest()->request->all();
-        $addPost = new AddPost();
-        if (!$lastId = $addPost->add($this->getSession(), $post)) {
-            $response = new RedirectResponse($linkBuilder->getLink('PostAdminAdd'));
+        $post = $container->getRequest()->request->all();
+        $addPost = $service->getAddPost();
+
+        if (!$lastId = $addPost->add($post)) {
+            $response = new RedirectResponse($container->getAppServices()
+                ->getLinkBuilder()
+                ->getLink('PostAdminAdd'));
             return $response->send();
         }
 
         // REDIRECT TO POST/UPDATE/{article_id}
-        $flash->set('success', 'Votre article a bien été enregistré. Vous pouvez maintenant le modifier');
-        $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
-            'article_id' => $lastId
-        ]));
+        $service->getFlash()->set('success', 'Votre article a bien été enregistré. Vous pouvez maintenant le modifier');
+        $response = new RedirectResponse(
+            $service->getLinkBuilder()->getLink('PostAdminUpdate', ['article_id' => $lastId])
+        );
         return $response->send();
     }
 
 
-    public function update(
-        LinkBuilder $linkBuilder,
-        RequestParameters $parameters,
-        AppManager $manager,
-        Flash $flash
-    ) {
+    /**
+     * @param AppService $service
+     * @param Container $container
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function update(AppService $service, Container $container)
+    {
 
         // GET ID POST AND ARTICLE
-        $articleId = $parameters->getParameters('article_id');
-        $post = $manager->getPostManager()->read($articleId);
+        $articleId = $container->getRequestParameters()->getParameters('article_id');
+        $post = $container->getManager()->getPostManager()->read($articleId);
 
         // IF $POST DON'T EXIST
         if (!$post) {
-            $flash->set('warning', "L'article demandé n'existe pas");
-            $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+            $service->getFlash()->set('warning', "L'article demandé n'existe pas");
+            $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
             return $response->send();
         }
 
         // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
-        if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
+        if ($container->getRequest()->server->get('REQUEST_METHOD') == "POST") {
             // GET $FORM DATA
-            $formData = $this->getApp()->getRequest()->request->all();
+            $formData = $container->getRequest()->request->all();
 
             // WE CALL UPDATEPOST CLASS
-            $updatePost = new UpdatePost($formData, $this->getSession(), $post);
-            $post = $updatePost->update();
+            $updatePost = $service->getUpdatePost();
+            $post = $updatePost->update($formData, $post);
 
             // IF ERROR
             if (!$post) {
-                $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+                $response = new RedirectResponse($service->getLinkBuilder()->getLink('PostAdminUpdate', [
                     'article_id' => $articleId
                 ]));
                 return $response->send();
@@ -94,19 +107,24 @@ class PostController extends AppController
         return $reponse->send();
     }
 
-    public function delete(
-        LinkBuilder $linkBuilder,
-        Flash $flash,
-        AppManager $appManager
-    ) {
+    /**
+     * @param Container $container
+     * @param AppService $service
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function delete(Container $container, AppService $service)
+    {
 
         // GET POST DATA
         $formData = $this->getApp()->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
         if ($formData['myToken'] != $this->getSession()->get('myToken')) {
-            $flash->set('warning', 'Erreur de token');
-            $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+            $service->getFlash()->set('warning', 'Erreur de token');
+            $response = new RedirectResponse($service->getLinkBuilder()->getLink('PostAdminUpdate', [
                 'article_id' => $formData['id_post'],
             ]));
             return $response->send();
@@ -115,11 +133,11 @@ class PostController extends AppController
         // IF NO ERRORS WE DELETE THE POST
 
         // GET ID IMAGE
-        $post = $appManager->getPostManager()->read($formData['id_post']);
+        $post = $container->getManager()->getPostManager()->read($formData['id_post']);
         $idImg = $post->getIdImage();
 
         // DELETE POST
-        $manager = $appManager->getPostManager()->delete($formData['id_post']);
+        $manager = $container->getManager()->getPostManager()->delete($formData['id_post']);
 
         // DELETE IMG
         if ($idImg) {
@@ -129,8 +147,8 @@ class PostController extends AppController
 
         // IF ERROR WE REDIRECT TO ADMIN UPDATE
         if (!$manager) {
-            $flash->set("warning", "Erreur lors de la supression de l'article");
-            $response = new RedirectResponse($linkBuilder->getLink('PostAdminUpdate', [
+            $service->getFlash()->set("warning", "Erreur lors de la supression de l'article");
+            $response = new RedirectResponse($service->getLinkBuilder()->getLink('PostAdminUpdate', [
                 'article_id' => $formData['id_post'],
             ]));
             return $response->send();
@@ -138,8 +156,8 @@ class PostController extends AppController
 
 
         // IF NO ERRORS WE REDIRECT TO HOME ADMIN
-        $flash->set("success", "Votre article à bien été supprimé");
-        $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+        $service->getFlash()->set("success", "Votre article à bien été supprimé");
+        $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
         return $response->send();
     }
 

@@ -16,15 +16,23 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class AddPost
 {
-    public function add(Session $session, $post)
+    private $session;
+    private $manager;
+    private $flash;
+
+    public function __construct(Session $session, AppManager $manager, Flash $flash)
     {
-        $app = new AppFactory();
-        $manager = new AppManager($app);
-        $flash = new Flash($session);
+        $this->session = $session;
+        $this->manager = $manager;
+        $this->flash = $flash;
+    }
+
+    public function add($post)
+    {
 
         // CHECK IF TOKENS MATCH
-        if ($post['myToken'] != $session->get('myToken')) {
-            $flash->set('warning', 'Erreur de token');
+        if ($post['myToken'] != $this->session->get('myToken')) {
+            $this->flash->set('warning', 'Erreur de token');
             return false;
         }
 
@@ -34,13 +42,13 @@ class AddPost
         // COMPLETE FOR CREATE ENTITY
         $post['created'] = $date->format('Y-m-d H:i:s');
         $post['modified'] = $date->format('Y-m-d H:i:s');
-        $post['id_user'] = $session->get('user')['id'];
+        $post['id_user'] = $this->session->get('user')['id'];
 
         // CREATE ENTITY
         $postEntity = new PostEntity($post);
 
         // PERSIST ENTITY
-        $postManager = $manager->getPostManager();
+        $postManager = $this->manager->getPostManager();
         $postManager->create($postEntity);
 
         // GET LAST ID

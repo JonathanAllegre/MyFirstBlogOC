@@ -17,6 +17,7 @@ class HomeController extends AppController
     public function index(AppManager $manager)
     {
 
+
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
 

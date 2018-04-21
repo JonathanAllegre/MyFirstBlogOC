@@ -8,10 +8,15 @@
 
 namespace App\services;
 
+use App\Manager\AppManager;
 use App\services\Sessions\Flash;
 use DI\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Class Container
+ * @package App\services
+ */
 class Container extends AppFactory
 {
     private static $requestParams;
@@ -62,5 +67,26 @@ class Container extends AppFactory
     public function getRequestParameters():RequestParameters
     {
         return self::$requestParams;
+    }
+
+    /**
+     * @return AppManager|mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function getManager()
+    {
+        return $this->container()->get(AppManager::class);
+    }
+
+
+    /**
+     * @return AppService
+     * @throws \Exception
+     */
+    public function getAppServices():AppService
+    {
+        return new AppService();
     }
 }

@@ -10,9 +10,8 @@ namespace App\controller\backend;
 
 use App\controller\AppController;
 use App\Manager\AppManager;
-use App\services\LinkBuilder;
-use App\services\RequestParameters;
-use App\services\Sessions\Flash;
+use App\services\AppService;
+use App\services\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,8 +22,6 @@ class CommentController extends AppController
         $noValidates = $manager->getCommentManager()->getCommentInStatut(1);
         $validates = $manager->getCommentManager()->getCommentInStatut(2);
 
-
-
         $reponse = new Response($this->render('/back/Comment/list.html.twig', [
             'active' => 'comments',
             'validateComments' => $validates,
@@ -34,18 +31,22 @@ class CommentController extends AppController
     }
 
 
-    public function validate(
-        AppManager $manager,
-        Flash $flash,
-        LinkBuilder $linkBuilder,
-        RequestParameters $requestParameters
-    ) {
+    /**
+     * @param Container $container
+     * @param AppService $service
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function validate(Container $container, AppService $service)
+    {
 
         // GET COMMENT ID
-        $commentId = $requestParameters->getParameters('id_comment');
+        $commentId = $container->getRequestParameters()->getParameters('id_comment');
 
         // GET COMMENT
-        $comment = $manager->getCommentManager()->read($commentId);
+        $comment = $container->getManager()->getCommentManager()->read($commentId);
 
         // ------------- IF METHOD = POST ( IF FORM POST IS SEND ) ---------
         if ($this->getApp()->getRequest()->server->get('REQUEST_METHOD') == "POST") {
@@ -53,8 +54,8 @@ class CommentController extends AppController
 
             // CHECK IF TOKENS MATCH
             if ($formData['myToken'] != $this->getSession()->get('myToken')) {
-                $flash->set('warning', 'Erreur de token');
-                $response = new RedirectResponse($linkBuilder->getLink('Home'));
+                $service->getFlash()->set('warning', 'Erreur de token');
+                $response = new RedirectResponse($service->getLinkBuilder()->getLink('Home'));
                 return $response->send();
             }
 
@@ -63,17 +64,17 @@ class CommentController extends AppController
                 $comment->setIdCommentStatut(2);
 
                 // PERSIST
-                if ($manager->getCommentManager()->update($comment)) {
-                    $flash->set('success', "Le commentaire est maintenant en ligne");
-                    $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+                if ($container->getManager()->getCommentManager()->update($comment)) {
+                    $service->getFlash()->set('success', "Le commentaire est maintenant en ligne");
+                    $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
                     return $response->send();
                 }
             }
             if (isset($formData['delete'])) {
                 // DELETE COMMENT
-                if ($manager->getCommentManager()->delete($comment->getIdComment())) {
-                    $flash->set('success', "Le commentaire à été correctement supprimé.");
-                    $response = new RedirectResponse($linkBuilder->getLink('HomeAdmin'));
+                if ($container->getManager()->getCommentManager()->delete($comment->getIdComment())) {
+                    $service->getFlash()->set('success', "Le commentaire à été correctement supprimé.");
+                    $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
                     return $response->send();
                 }
             }

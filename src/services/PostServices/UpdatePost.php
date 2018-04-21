@@ -23,31 +23,32 @@ class UpdatePost
     private $manager;
     private $flash;
     private $fileUploader;
-    private $formData;
     private $session;
-    private $post;
 
-    public function __construct($formData, Session $session, PostEntity $post)
-    {
-        $this->app = new AppFactory();
-        $this->manager = new AppManager($this->app);
-        $this->flash = new Flash($session);
-        $this->fileUploader = new FileUploader($this->app);
+    public function __construct(
+        Session $session,
+        AppManager $manager,
+        Flash $flash,
+        AppFactory $app,
+        FileUploader $fileUploader
+    ) {
+        $this->app = $app;
+        $this->manager = $manager;
+        $this->flash = $flash;
+        $this->fileUploader = $fileUploader;
 
-        $this->formData = $formData;
         $this->session = $session;
-        $this->post = $post;
     }
 
 
-    public function update()
+    public function update($formData, PostEntity $post)
     {
 
         // GET TIME
         $date = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
 
         // CHECK IF TOKENS MATCH
-        if ($this->formData['myToken'] != $this->session->get('myToken')) {
+        if ($formData['myToken'] != $this->session->get('myToken')) {
             $this->flash->set('warning', 'Erreur de token');
             return false;
         }
@@ -66,41 +67,41 @@ class UpdatePost
                 // PERSIST FILE
                 if ($this->manager->getPictureManager()->create($data)) {
                     $this->flash->set('success', "Votre image a bien été envoyé");
-                    $this->post->setIdImage($this->manager->getPictureManager()->getLastId());
+                    $post->setIdImage($this->manager->getPictureManager()->getLastId());
                 }
             }
         }
 
         // IF DELETE IMG CHECKED
-        if (isset($this->formData['deleteImg'])) {
+        if (isset($formData['deleteImg'])) {
             //NEW DELETEPICTURE
-            $deletePicture = new DeletePicture($this->session, $this->post);
+            $deletePicture = new DeletePicture($this->session, $post);
 
             //IF ERROR RETURN FALSE
-            if (!$deletePicture->deleteImg($this->formData['deleteImg'])) {
+            if (!$deletePicture->deleteImg($formData['deleteImg'])) {
                 return false;
             }
 
             // UPDATE ENTITY
-            $this->post->setIdImage(null);
+            $post->setIdImage(null);
         }
 
         // UPDATE ENTITY
-        $this->post->setTitle($this->formData['title']);
-        $this->post->setShortText($this->formData['short_text']);
-        $this->post->setContent($this->formData['content']);
-        $this->post->setModified($date->format('Y-m-d H:i:s'));
-        $this->post->setIdStatutPost($this->formData['id_statut_post']);
+        $post->setTitle($formData['title']);
+        $post->setShortText($formData['short_text']);
+        $post->setContent($formData['content']);
+        $post->setModified($date->format('Y-m-d H:i:s'));
+        $post->setIdStatutPost($formData['id_statut_post']);
 
         // IF ERROR IN PERSIST
-        if (!$this->manager->getPostManager()->update($this->post)) {
+        if (!$this->manager->getPostManager()->update($post)) {
             $this->flash->set('warning', "Une erreur est survenue lors de l'enregistrement");
             return false;
         }
 
         // IF NO ERROR WE RETURN THE NEW OBJECT
         $this->flash->set('success', "Votre article a bien été sauvegardé");
-        $post = $this->manager->getPostManager()->read($this->formData['id_post']);
+        $post = $this->manager->getPostManager()->read($formData['id_post']);
         return $post;
     }
 }
