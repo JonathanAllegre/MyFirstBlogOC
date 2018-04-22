@@ -23,9 +23,9 @@ class HomeController extends AppController
 
 
         // DEPENDENCY
-        $validator = $this->container->getAppServices()->getFormValidator();
-        $mailer = $this->container->getAppServices()->getMailer();
-        $flash = $this->container->getAppServices()->getFlash();
+        $validator = $this->container->getFormValidator();
+        $mailer = $this->container->getMailer();
+        $flash = $this->container->getFlash();
 
         // IF METHOD != POST ( IF FORM CONTACT NOT SEND )
         if ($this->container->getRequest()->server->get('REQUEST_METHOD') != "POST") {

@@ -11,25 +11,11 @@ namespace App\services;
 use App\services\PostServices\AddPost;
 use App\services\PostServices\UpdatePost;
 use App\services\Sessions\Flash;
-use DI\ContainerBuilder;
+
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class AppService
+class AppService extends Container
 {
-
-    /**
-     * @return \DI\Container
-     * @throws \Exception
-     */
-    private function container()
-    {
-        $definition = __DIR__.'/../../';
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->useAutowiring(true);
-        $containerBuilder->addDefinitions($definition.'config/configServices.php');
-
-        return $containerBuilder->build();
-    }
 
 
     /**
@@ -104,10 +90,6 @@ class AppService
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function getMailer()
-    {
-        return $this->container()->get(Mailer::class);
-    }
 
     /**
      * @return CheckPermissions|mixed

@@ -30,9 +30,9 @@ class UserController extends AppController
 
         // DEPENDENCY
         $flash = $this->container->getFlash();
-        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+        $linkBuilder = $this->container->getLinkBuilder();
         $request = $this->container->getRequest();
-        $validator = $this->container->getAppServices()->getFormValidator();
+        $validator = $this->container->getFormValidator();
         $manager = $this->container->getManager();
 
         $validate = $validator->validateRegisterUser($manager, $request, $flash);
@@ -91,10 +91,10 @@ class UserController extends AppController
     {
 
         //DEPENDENCY
-        $session = $this->container->getAppServices()->getSession();
-        $validator = $this->container->getAppServices()->getFormValidator();
-        $flash = $this->container->getAppServices()->getFlash();
-        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+        $session = $this->container->getSession();
+        $validator = $this->container->getFormValidator();
+        $flash = $this->container->getFlash();
+        $linkBuilder = $this->container->getLinkBuilder();
         $manager = $this->container->getManager();
 
 
@@ -149,8 +149,8 @@ class UserController extends AppController
     {
 
         //DEPENDENCY
-        $session = $this->container->getAppServices()->getSession();
-        $flash = $this->container->getAppServices()->getFlash();
+        $session = $this->container->getSession();
+        $flash = $this->container->getFlash();
         $manager = $this->container->getManager();
 
         // GET $POST
@@ -211,8 +211,8 @@ class UserController extends AppController
     {
 
         //DEPENDENCY
-        $session = $this->container->getAppServices()->getSession();
-        $flash = $this->container->getAppServices()->getFlash();
+        $session = $this->container->getSession();
+        $flash = $this->container->getFlash();
 
         // GET HTTPREFERER
         $ref = $this->container->getRequest()->server->get('HTTP_REFERER');
@@ -239,9 +239,9 @@ class UserController extends AppController
     {
 
         //DEPENDENCY
-        $session = $this->container->getAppServices()->getSession();
+        $session = $this->container->getSession();
         $manager = $this->container->getManager();
-        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+        $linkBuilder = $this->container->getLinkBuilder();
 
         // IF $SESSION.USER DON'T EXIST WE REDIRECT TO HOME
         if (!$session->get('user')) {

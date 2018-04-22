@@ -36,7 +36,6 @@ class UpdatePost
         $this->manager = $manager;
         $this->flash = $flash;
         $this->fileUploader = $fileUploader;
-
         $this->session = $session;
     }
 

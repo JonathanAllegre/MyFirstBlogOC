@@ -47,4 +47,10 @@ class AppFactory
 
         return self::$request;
     }
+
+    public function getMailer()
+    {
+        return new Mailer();
+    }
+
 }

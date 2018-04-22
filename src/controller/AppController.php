@@ -8,7 +8,7 @@
 
 namespace App\controller;
 
-use App\services\Container;
+use App\services\AppService;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
@@ -21,25 +21,25 @@ class AppController
     // DI
     public $container;
 
+
     /**
      * AppController constructor.
-     * @param Container $container
+     * @param AppService $service
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function __construct(Container $container)
+    public function __construct(AppService $service)
     {
 
-        $this->config = $container->getConfig();
-        #$this->config = $app->getConfig();
-        $this->host = $container->getRequest()->server->get('HTTP_HOST');
-        $this->session = $container->getAppServices()->getSession();
-        $this->container = $container;
+        $this->config = $service->getConfig();
+        $this->host = $service->getRequest()->server->get('HTTP_HOST');
+        $this->session = $service->getSession();
+        $this->container = $service;
 
-        $requestParameters = $container->getRequestParameters();
-        $linkBuilder = $container->getAppServices()->getLinkBuilder();
-        $checkPermissions = $container->getAppServices()->getCheckPermission();
+        $requestParameters = $service->getRequestParameters();
+        $linkBuilder = $service->getLinkBuilder();
+        $checkPermissions = $service->getCheckPermission();
 
         // REDIRECT IF USER IS NOT ADMIN
         if ($requestParameters->getBundle() && $requestParameters->getBundle() === "backend") {
@@ -79,8 +79,8 @@ class AppController
         ));
 
         // ADD GLOBAL OBJECT FOR TWIG TEMPLATES
-        $twig->addGlobal('LinkBuilder', $this->container->getAppServices()->getLinkBuilder());
-        $twig->addGlobal('Flash', $this->container->getAppServices()->getFlash());
+        $twig->addGlobal('LinkBuilder', $this->container->getLinkBuilder());
+        $twig->addGlobal('Flash', $this->container->getFlash());
         $twig->addGlobal('Session', $this->session);
 
         $prefix = $this->config->getPrefix();

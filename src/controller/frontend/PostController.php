@@ -16,9 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends AppController
 {
+
     /**
      * @param AppManager $manager
      * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -35,8 +39,8 @@ class PostController extends AppController
         return $reponse->send();
     }
 
-    /**
 
+    /**
      * @return Response
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
@@ -52,9 +56,9 @@ class PostController extends AppController
         $requestParameters = $this->container->getRequestParameters();
         $appManager = $this->container->getManager();
         $flash = $this->container->getFlash();
-        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
-        $checkPermissions = $this->container->getAppServices()->getCheckPermission();
-        $validator = $this->container->getAppServices()->getFormValidator();
+        $linkBuilder = $this->container->getLinkBuilder();
+        $checkPermissions = $this->container->getCheckPermission();
+        $validator = $this->container->getFormValidator();
 
         // GET POST ID
         $postId = $requestParameters->getParameters('id_article');
@@ -78,10 +82,7 @@ class PostController extends AppController
         }
 
         // FOR COMMENT WE CHECK IF THE USER IS CONNECT
-        $userInSession = ($checkPermissions->isConnect()) ? $this->container
-            ->getAppServices()
-            ->getSession()
-            ->get('user') : null;
+        $userInSession = ($checkPermissions->isConnect()) ? $this->container->getSession()->get('user') : null;
 
         // ------------- IF METHOD = POST ( IF FORM COMMENT IS SENT ) ---------
         if ($this->container->getRequest()->server->get('REQUEST_METHOD') == "POST") {
@@ -95,7 +96,7 @@ class PostController extends AppController
                 'content' => $this->container->getRequest()->request->get('message'),
                 'id_post' => $requestParameters->getParameters('id_article'),
                 'id_comment_statut' => 1,
-                'id_user' => $this->container->getAppServices()->getSession()->get('user')['id'],
+                'id_user' => $this->container->getSession()->get('user')['id'],
             );
 
             // FORM VALIDATOR
@@ -104,7 +105,7 @@ class PostController extends AppController
                 $flash,
                 $appManager,
                 $this->container->getRequest()->request->get('token'),
-                $this->container->getAppServices()->getSession()
+                $this->container->getSession()
             );
 
             // IF NO ERROR IN VALIDATION
@@ -133,7 +134,7 @@ class PostController extends AppController
             'post' => $post,
             'allPosts' => $allPosts,
             'userInSession' => $userInSession,
-            'myToken' => $this->container->getAppServices()->getSession()->get('myToken')
+            'myToken' => $this->container->getSession()->get('myToken')
 
         ]));
         return $reponse->send();

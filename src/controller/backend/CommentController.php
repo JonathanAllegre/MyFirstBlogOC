@@ -15,9 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CommentController extends AppController
 {
+
     /**
      * @param AppManager $manager
      * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -47,7 +51,6 @@ class CommentController extends AppController
 
         // DI
         $container = $this->container;
-        $service = $this->container->getAppServices();
 
         // GET COMMENT ID
         $commentId = $container->getRequestParameters()->getParameters('id_comment');
@@ -60,9 +63,9 @@ class CommentController extends AppController
             $formData = $this->container->getRequest()->request->all();
 
             // CHECK IF TOKENS MATCH
-            if ($formData['myToken'] != $this->container->getAppServices()->getSession()->get('myToken')) {
-                $service->getFlash()->set('warning', 'Erreur de token');
-                $response = new RedirectResponse($service->getLinkBuilder()->getLink('Home'));
+            if ($formData['myToken'] != $this->container->getSession()->get('myToken')) {
+                $container->getFlash()->set('warning', 'Erreur de token');
+                $response = new RedirectResponse($container->getLinkBuilder()->getLink('Home'));
                 return $response->send();
             }
 
@@ -72,16 +75,16 @@ class CommentController extends AppController
 
                 // PERSIST
                 if ($container->getManager()->getCommentManager()->update($comment)) {
-                    $service->getFlash()->set('success', "Le commentaire est maintenant en ligne");
-                    $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
+                    $container->getFlash()->set('success', "Le commentaire est maintenant en ligne");
+                    $response = new RedirectResponse($container->getLinkBuilder()->getLink('HomeAdmin'));
                     return $response->send();
                 }
             }
             if (isset($formData['delete'])) {
                 // DELETE COMMENT
                 if ($container->getManager()->getCommentManager()->delete($comment->getIdComment())) {
-                    $service->getFlash()->set('success', "Le commentaire à été correctement supprimé.");
-                    $response = new RedirectResponse($service->getLinkBuilder()->getLink('HomeAdmin'));
+                    $container->getFlash()->set('success', "Le commentaire à été correctement supprimé.");
+                    $response = new RedirectResponse($container->getLinkBuilder()->getLink('HomeAdmin'));
                     return $response->send();
                 }
             }
@@ -90,7 +93,7 @@ class CommentController extends AppController
         $reponse = new Response($this->render('/back/Comment/validate.html.twig', [
             'active' => 'comments',
             'comment' => $comment,
-            'myToken' => $this->container->getAppServices()->getSession()->get('myToken'),
+            'myToken' => $this->container->getSession()->get('myToken'),
         ]));
         return $reponse->send();
     }
