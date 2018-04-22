@@ -14,12 +14,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
 {
+
+    /**
+     * @param AppManager $manager
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function index(AppManager $manager)
     {
 
 
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
+
 
         // GET COMMENT LIST NO VALIDATE
         $noValidateComments = $manager->getCommentManager()->getCommentInStatut(1);

@@ -10,34 +10,31 @@ namespace App\controller\frontend;
 
 use App\controller\AppController;
 use App\Entity\UserEntity;
-use App\Manager\AppManager;
-use App\services\AppFactory;
-use App\services\FormValidator;
-use App\services\LinkBuilder;
-use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class UserController extends AppController
 {
+
     /**
-     * @param Flash $flash
-     * @param LinkBuilder $linkBuilder
-     * @param AppFactory $appFactory
-     * @param FormValidator $validator
-     * @param AppManager $manager
      * @return Response
-     * @return RedirectResponse
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function registerUser(
-        Flash $flash,
-        LinkBuilder $linkBuilder,
-        AppFactory $appFactory,
-        FormValidator $validator,
-        AppManager $manager
-    ) {
-        $request = $appFactory->getRequest();
+    public function registerUser()
+    {
+
+        // DEPENDENCY
+        $flash = $this->container->getFlash();
+        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+        $request = $this->container->getRequest();
+        $validator = $this->container->getAppServices()->getFormValidator();
+        $manager = $this->container->getManager();
+
         $validate = $validator->validateRegisterUser($manager, $request, $flash);
         $error = $validate['error'];
 
@@ -83,26 +80,26 @@ class UserController extends AppController
         return $reponse->send();
     }
 
+
     /**
-     * @param AppFactory $app
-     * @param Session $session
-     * @param FormValidator $validator
-     * @param Flash $flash
-     * @param LinkBuilder $linkBuilder
-     * @param AppManager $manager
-     * @return RedirectResponse
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
-    public function deleteUser(
-        AppFactory $app,
-        Session $session,
-        FormValidator $validator,
-        Flash $flash,
-        LinkBuilder $linkBuilder,
-        AppManager $manager
-    ) {
+    public function deleteUser()
+    {
+
+        //DEPENDENCY
+        $session = $this->container->getAppServices()->getSession();
+        $validator = $this->container->getAppServices()->getFormValidator();
+        $flash = $this->container->getAppServices()->getFlash();
+        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+        $manager = $this->container->getManager();
+
 
         // VALIDATE FORM
-        $request = $app->getRequest();
+        $request = $this->container->getRequest();
         $validate = $validator->validateDeleteUser($request, $session, $flash);
 
         // URL DE REDIRECTION
@@ -141,27 +138,31 @@ class UserController extends AppController
         return $response->send();
     }
 
+
     /**
-     * @param AppFactory $appFactory
-     * @param AppManager $manager
-     * @param Flash $flash
-     * @param Session $session
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \Exception
-     * @return RedirectResponse
      */
-    public function loginUser(AppFactory $appFactory, AppManager $manager, Flash $flash, Session $session)
+    public function loginUser()
     {
 
+        //DEPENDENCY
+        $session = $this->container->getAppServices()->getSession();
+        $flash = $this->container->getAppServices()->getFlash();
+        $manager = $this->container->getManager();
+
         // GET $POST
-        $mail = $appFactory->getRequest()->get('email');
-        $pass = $appFactory->getRequest()->get('password');
+        $mail = $this->container->getRequest()->get('email');
+        $pass = $this->container->getRequest()->get('password');
 
         // GET USER IN DB
         $userManager = $manager->getUserManager();
         $user = $userManager->getUserByMail($mail);
 
         // GET HTTPREFERER
-        $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
+        $ref = $this->container->getRequest()->server->get('HTTP_REFERER');
 
         if ($user === null) {
             $error = 1;
@@ -199,17 +200,22 @@ class UserController extends AppController
         return $response->send();
     }
 
+
     /**
-     * @param Session $session
-     * @param AppFactory $appFactory
-     * @param Flash $flash
-     * @return RedirectResponse
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
      */
-    public function logoutUser(Session $session, AppFactory $appFactory, Flash $flash)
+    public function logoutUser()
     {
 
+        //DEPENDENCY
+        $session = $this->container->getAppServices()->getSession();
+        $flash = $this->container->getAppServices()->getFlash();
+
         // GET HTTPREFERER
-        $ref = $appFactory->getRequest()->server->get('HTTP_REFERER');
+        $ref = $this->container->getRequest()->server->get('HTTP_REFERER');
 
         // REMOVE SESSION USER & TOKEN
         $session->remove('user');
@@ -221,8 +227,22 @@ class UserController extends AppController
         return $response->send();
     }
 
-    public function myAccount(Session $session, LinkBuilder $linkBuilder, AppManager $manager)
+    /**
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function myAccount()
     {
+
+        //DEPENDENCY
+        $session = $this->container->getAppServices()->getSession();
+        $manager = $this->container->getManager();
+        $linkBuilder = $this->container->getAppServices()->getLinkBuilder();
+
         // IF $SESSION.USER DON'T EXIST WE REDIRECT TO HOME
         if (!$session->get('user')) {
             $response = new RedirectResponse($linkBuilder->getLink('Home'));

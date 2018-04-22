@@ -12,6 +12,7 @@ use App\services\PostServices\AddPost;
 use App\services\PostServices\UpdatePost;
 use App\services\Sessions\Flash;
 use DI\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class AppService
 {
@@ -37,7 +38,7 @@ class AppService
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function getAddPost():AddPost
+    public function getAddPost()
     {
         return $this->container()->get(AddPost::class);
     }
@@ -74,4 +75,49 @@ class AppService
     {
         return $this->container()->get(Flash::class);
     }
+
+    /**
+     * @return mixed|Session
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function getSession()
+    {
+        return $this->container()->get(Session::class);
+    }
+
+    /**
+     * @return FormValidator|mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function getFormValidator()
+    {
+        return $this->container()->get(FormValidator::class);
+    }
+
+    /**
+     * @return Mailer|mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function getMailer()
+    {
+        return $this->container()->get(Mailer::class);
+    }
+
+    /**
+     * @return CheckPermissions|mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function getCheckPermission()
+    {
+        return $this->container()->get(CheckPermissions::class);
+    }
+
 }

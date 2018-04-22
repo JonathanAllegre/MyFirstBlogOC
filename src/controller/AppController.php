@@ -8,14 +8,8 @@
 
 namespace App\controller;
 
-use App\services\AppFactory;
-
-use App\services\CheckPermissions;
-use App\services\LinkBuilder;
-use App\services\RequestParameters;
-use App\services\Sessions\Flash;
+use App\services\Container;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
@@ -24,19 +18,28 @@ class AppController
     private $config;
     private $host;
     private $session;
-    private $app;
+    // DI
+    public $container;
 
-    public function __construct(
-        AppFactory $app,
-        Session $session,
-        RequestParameters $requestParameters,
-        CheckPermissions $checkPermissions,
-        LinkBuilder $linkBuilder
-    ) {
-        $this->config = $app->getConfig();
-        $this->host = $app->getRequest()->server->get('HTTP_HOST');
-        $this->session = $session;
-        $this->app = $app;
+    /**
+     * AppController constructor.
+     * @param Container $container
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     */
+    public function __construct(Container $container)
+    {
+
+        $this->config = $container->getConfig();
+        #$this->config = $app->getConfig();
+        $this->host = $container->getRequest()->server->get('HTTP_HOST');
+        $this->session = $container->getAppServices()->getSession();
+        $this->container = $container;
+
+        $requestParameters = $container->getRequestParameters();
+        $linkBuilder = $container->getAppServices()->getLinkBuilder();
+        $checkPermissions = $container->getAppServices()->getCheckPermission();
 
         // REDIRECT IF USER IS NOT ADMIN
         if ($requestParameters->getBundle() && $requestParameters->getBundle() === "backend") {
@@ -47,6 +50,18 @@ class AppController
         }
     }
 
+
+    /**
+     * @param $path
+     * @param null $var
+     * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function render($path, $var = null)
     {
         $templatesFolder = $this->config->getTwigTemplates();
@@ -63,18 +78,17 @@ class AppController
             'cache' => $cache,
         ));
 
-        // Add Global Objet LinkBuilder
-        $twig->addGlobal('LinkBuilder', new LinkBuilder());
-        $twig->addGlobal('Flash', new Flash($this->session));
-        $twig->addGlobal('Session', new Session());
+        // ADD GLOBAL OBJECT FOR TWIG TEMPLATES
+        $twig->addGlobal('LinkBuilder', $this->container->getAppServices()->getLinkBuilder());
+        $twig->addGlobal('Flash', $this->container->getAppServices()->getFlash());
+        $twig->addGlobal('Session', $this->session);
 
         $prefix = $this->config->getPrefix();
         if ($this->config->getPrefix() !== '/') {
             $prefix = $this->config->getPrefix().'/';
         }
 
-
-        // DEFAULT VARIABLES
+        // DEFAULT VARIABLES FOR TEMPLATES
         $variables  = array(
             'publicFolder' => 'http://' . $this->host  . $prefix . "public",
             'rootPath' => $this->config->getPrefix()
@@ -88,13 +102,5 @@ class AppController
         return $twig->render($path, $variables);
     }
 
-    public function getSession()
-    {
-        return $this->session;
-    }
 
-    public function getApp(): AppFactory
-    {
-        return $this->app;
-    }
 }

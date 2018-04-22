@@ -10,8 +10,6 @@ namespace App\controller\backend;
 
 use App\controller\AppController;
 use App\Manager\AppManager;
-use App\services\AppService;
-use App\services\Container;
 use App\services\PictureServices\DeletePicture;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,21 +18,23 @@ class PostController extends AppController
 {
 
     /**
-     * @param Container $container
-     * @param AppService $service
      * @return Response
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function add(Container $container, AppService $service)
+    public function add()
     {
+
+        // DI
+        $container = $this->container;
+        $service = $this->container->getAppServices();
 
         // IF METHOD != POST ( IF FORM POST IS NOT SEND )
         if ($container->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/back/Post/add.html.twig', [
                 'active' => "articles",
-                'myToken' => $this->getSession()->get('myToken'),
+                'myToken' => $this->container->getAppServices()->getSession()->get('myToken'),
             ]));
             return $reponse->send();
         }
@@ -60,15 +60,16 @@ class PostController extends AppController
 
 
     /**
-     * @param AppService $service
-     * @param Container $container
      * @return Response
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function update(AppService $service, Container $container)
+    public function update()
     {
+        // DI
+        $container = $this->container;
+        $service = $this->container->getAppServices();
 
         // GET ID POST AND ARTICLE
         $articleId = $container->getRequestParameters()->getParameters('article_id');
@@ -102,27 +103,28 @@ class PostController extends AppController
         $reponse = new Response($this->render('/back/Post/update.html.twig', [
                 'active' => "articles",
                 'post' => $post,
-                'myToken' => $this->getSession()->get('myToken'),
+                'myToken' => $this->container->getAppServices()->getSession()->get('myToken'),
         ]));
         return $reponse->send();
     }
 
     /**
-     * @param Container $container
-     * @param AppService $service
-     * @return Response
      * @throws \DI\DependencyException
      * @throws \DI\NotFoundException
      * @throws \Exception
      */
-    public function delete(Container $container, AppService $service)
+    public function delete()
     {
 
+        // DI
+        $container = $this->container;
+        $service = $this->container->getAppServices();
+
         // GET POST DATA
-        $formData = $this->getApp()->getRequest()->request->all();
+        $formData = $this->container->getRequest()->request->all();
 
         // CHECK IF TOKENS MATCH
-        if ($formData['myToken'] != $this->getSession()->get('myToken')) {
+        if ($formData['myToken'] != $this->container->getAppServices()->getSession()->get('myToken')) {
             $service->getFlash()->set('warning', 'Erreur de token');
             $response = new RedirectResponse($service->getLinkBuilder()->getLink('PostAdminUpdate', [
                 'article_id' => $formData['id_post'],
@@ -141,7 +143,7 @@ class PostController extends AppController
 
         // DELETE IMG
         if ($idImg) {
-            $deletePicture = new DeletePicture($this->getSession());
+            $deletePicture = new DeletePicture($this->container->getAppServices()->getSession());
             $deletePicture->deleteImg($idImg);
         }
 
@@ -161,6 +163,13 @@ class PostController extends AppController
         return $response->send();
     }
 
+    /**
+     * @param AppManager $manager
+     * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function allPost(AppManager $manager)
     {
         $posts = $manager->getPostManager()->getAllPost();

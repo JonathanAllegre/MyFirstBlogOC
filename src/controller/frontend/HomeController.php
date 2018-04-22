@@ -4,26 +4,31 @@
 namespace App\controller\frontend;
 
 use App\controller\AppController;
-use App\services\AppFactory;
-use App\services\FormValidator;
-use App\services\Mailer;
-use App\services\Sessions\Flash;
 use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
 {
+
     /**
-     * @param AppFactory $appFactory
-     * @param FormValidator $validator
-     * @param Flash $flash
-     * @param Mailer $mailer
      * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function index(AppFactory $appFactory, FormValidator $validator, Flash $flash, Mailer $mailer)
+    public function index()
     {
 
+
+        // DEPENDENCY
+        $validator = $this->container->getAppServices()->getFormValidator();
+        $mailer = $this->container->getAppServices()->getMailer();
+        $flash = $this->container->getAppServices()->getFlash();
+
         // IF METHOD != POST ( IF FORM CONTACT NOT SEND )
-        if ($appFactory->getRequest()->server->get('REQUEST_METHOD') != "POST") {
+        if ($this->container->getRequest()->server->get('REQUEST_METHOD') != "POST") {
             $reponse = new Response($this->render('/front/Home/index.html.twig', [
                 'active' => 'home',
             ]));
@@ -32,7 +37,7 @@ class HomeController extends AppController
 
         // IF FORM CONTACT IS SEND
         // GET REQUEST
-        $request = $appFactory->getRequest();
+        $request = $this->container->getRequest();
 
         // VALIDATE FORM
         $validate = $validator->validateContactForm($request, $flash);
