@@ -10,8 +10,11 @@ namespace App\controller;
 
 use App\services\AppFactory;
 
+use App\services\CheckPermissions;
 use App\services\LinkBuilder;
+use App\services\RequestParameters;
 use App\services\Sessions\Flash;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
@@ -23,13 +26,25 @@ class AppController
     private $session;
     private $app;
 
-
-    public function __construct(AppFactory $app, Session $session)
-    {
+    public function __construct(
+        AppFactory $app,
+        Session $session,
+        RequestParameters $requestParameters,
+        CheckPermissions $checkPermissions,
+        LinkBuilder $linkBuilder
+    ) {
         $this->config = $app->getConfig();
         $this->host = $app->getRequest()->server->get('HTTP_HOST');
         $this->session = $session;
         $this->app = $app;
+
+        // REDIRECT IF USER IS NOT ADMIN
+        if ($requestParameters->getBundle() && $requestParameters->getBundle() === "backend") {
+            if (!$checkPermissions->isAdmin()) {
+                $response = new RedirectResponse($linkBuilder->getLink('Home'));
+                return $response->send();
+            }
+        }
     }
 
     public function render($path, $var = null)
@@ -77,7 +92,6 @@ class AppController
     {
         return $this->session;
     }
-
 
     public function getApp(): AppFactory
     {

@@ -73,6 +73,9 @@ class AppManager
         return new PictureManager($this->getBdd());
     }
 
+    /**
+     * @return CommentManager
+     */
     public function getCommentManager():CommentManager
     {
         return new CommentManager($this->getBdd());

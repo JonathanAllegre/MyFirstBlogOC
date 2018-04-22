@@ -55,14 +55,19 @@ class Routes extends AppFactory
                 $action = "notFound";
                 $bundle = "error";
 
-                $this->initController($routeInfo, $bundle, $controller, $action);
+                // FAKE ROUTE INFO
+                $info[1] = array(
+                    'controller' => $controller,
+                    'action' => $action,
+                    'bundle' =>$bundle,
+                );
+                $this->initController($info, $bundle, $controller, $action);
                 break;
 
             case \FastRoute\Dispatcher::FOUND:
                 $controller = ucwords($routeInfo[1]['controller']);
                 $action = $routeInfo[1]['action'];
                 $bundle = $routeInfo[1]['bundle'];
-
                 $this->initController($routeInfo, $bundle, $controller, $action);
 
                 break;
@@ -78,10 +83,10 @@ class Routes extends AppFactory
      */
     public function initController($routeInfo, $bundle, $controller, $action)
     {
-        $container = new Container();
-        $cont = $container->createConfig($routeInfo);
+        $containerObject = new Container();
+        $container = $containerObject->container($routeInfo);
         $class = "App\\controller\\".$bundle."\\".$controller;
 
-        $cont->call([$class,$action]);
+        $container->call([$class,$action]);
     }
 }

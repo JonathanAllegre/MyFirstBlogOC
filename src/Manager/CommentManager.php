@@ -96,9 +96,12 @@ class CommentManager extends AppManager
 	                      c.id_comment_statut,
 	                      c.id_user,
 	                      u.last_name,
-	                      u.first_name
+	                      u.first_name,
+                          u.mail_adress,
+	                      p.title AS post_title
                         FROM comment c
                         INNER JOIN user u ON c.id_user = u.id_user
+                        INNER JOIN post p ON c.id_post = p.id_post
 						WHERE c.id_comment_statut = :id
 						ORDER BY c.id_comment DESC'
         );
@@ -151,8 +154,21 @@ class CommentManager extends AppManager
     public function read($idComment)
     {
         $request = $this->pdo->prepare(
-            'SELECT *
-                        FROM comment
+            'SELECT
+	                      c.id_comment,
+	                      c.created,
+	                      c.modified,
+	                      c.content,
+	                      c.id_post,
+	                      c.id_comment_statut,
+	                      c.id_user,
+	                      u.last_name,
+	                      u.first_name,
+	                      u.mail_adress,
+	                      p.title AS post_title
+                        FROM comment c
+                        INNER JOIN user u ON c.id_user = u.id_user
+                        INNER JOIN post p ON c.id_post = p.id_post
                         WHERE id_comment =:id
             '
         );
@@ -167,10 +183,48 @@ class CommentManager extends AppManager
         }
 
         $comment = new CommentEntity($data);
-        // SET USER
-        $user = $this->getUserManager()->getUserById($data['id_user']);
-        $comment->setUser($user);
 
         return $comment;
+    }
+
+    public function update(CommentEntity $comment)
+    {
+        $request = $this->pdo->prepare('	UPDATE comment
+                            			SET
+											created = :created,
+											modified = :modified,
+											content = :content,
+											id_post = :id_post,
+											id_comment_statut = :id_comment_statut,
+											id_user = :id_user                        		
+                        				WHERE id_comment = :id_comment ');
+
+        $request->bindValue(':id_comment', $comment->getIdComment());
+        $request->bindValue(':created', $comment->getCreated());
+        $request->bindValue(':modified', $comment->getModified());
+        $request->bindValue(':content', $comment->getContent());
+        $request->bindValue(':id_post', $comment->getIdPost());
+        $request->bindValue(':id_comment_statut', $comment->getIdCommentStatut());
+        $request->bindValue(':id_user', $comment->getIdUser());
+
+        if ($request->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function delete($idComment)
+    {
+        $request = $this->pdo->prepare('	DELETE FROM comment
+									WHERE id_comment = :id_comment');
+
+        $request->bindValue(':id_comment', $idComment);
+
+        if ($request->execute()) {
+            return true;
+        }
+
+        return false;
     }
 }

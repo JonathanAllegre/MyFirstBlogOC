@@ -56,4 +56,47 @@ class PictureManager
 
         return $data['id_image'];
     }
+
+    public function read(int $idImg)
+    {
+        $request = $this->pdo->prepare(
+            '	SELECT *
+                        FROM picture
+						WHERE id_image = :idImg'
+        );
+
+        $request->bindValue(':idImg', $idImg, PDO::PARAM_INT);
+        $request->execute();
+
+        $data = $request->fetch(PDO::FETCH_ASSOC);
+
+        if (empty($data)) {
+            return null;
+        }
+
+        $post = new PictureEntity($data);
+
+        return $post;
+    }
+
+
+    /**
+     * @param int $idImg
+     * @return bool
+     */
+    public function delete(int $idImg):bool
+    {
+        $request = $this->pdo->prepare(
+            'DELETE FROM picture
+					  WHERE id_image = :idImg'
+        );
+
+        $request->bindValue(':idImg', $idImg);
+
+        if ($request->execute()) {
+            return true;
+        }
+
+        return false;
+    }
 }

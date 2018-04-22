@@ -8,13 +8,14 @@
 
 namespace App\controller\error;
 
+use App\controller\AppController;
 use Symfony\Component\HttpFoundation\Response;
 
-class ErrorController
+class ErrorController extends AppController
 {
     public function notFound()
     {
-        $reponse = new Response('page non trouvée');
+        $reponse = new Response($this->render('error/notFound.html.twig'));
 
         $reponse->send();
     }

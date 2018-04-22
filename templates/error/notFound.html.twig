@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="{{ publicFolder }}/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ publicFolder }}/css/style.css">
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+</head>
+<body>
+<div class="jumbotron headerIndex">
+    <h1 class="display-3">Jonathan Allègre</h1>
+    <p class="lead">DÉVELOPPEUR D'APPLICATION - PHP / SYMFONY</p>
+</div>
+<div class="container">
+
+    <div class="row">
+        <div class="col-6">
+            <h1>Page non trouvée...</h1>
+            <hr>
+            <div class="text-center">
+                <li class="list-inline-item socialIcon"><a href="{{ LinkBuilder.getLink("Home") }}"><i class="fas fa-home fa-lg"></i> Accueil</a></li>
+                <li class="list-inline-item socialIcon"><a href="{{ LinkBuilder.getLink("PostList") }}"><i class="fas fa-newspaper fa-lg"></i> Articles</a></li>
+                <li class="list-inline-item socialIcon"><a href="{{ LinkBuilder.getLink("Home") }}#contact"><i class="far fa-envelope fa-lg"></i> Contact</a></li>
+            </div>
+        </div>
+        <div class="col-6">
+            <img src="{{ publicFolder }}/img/banner.png" class="rounded-circle" alt="">
+        </div>
+    </div>
+</div>
+</body>
+</html>

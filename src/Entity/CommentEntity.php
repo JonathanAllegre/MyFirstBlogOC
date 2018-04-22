@@ -20,9 +20,9 @@ class CommentEntity
     // INFO USER
     private $lastName;
     private $firstName;
-    //USEROBJECT
-    private $user;
-
+    private $mailAdress;
+    // INFO POST
+    private $postTitle;
 
 
     public function __construct(array $donnees)
@@ -193,16 +193,32 @@ class CommentEntity
     /**
      * @return mixed
      */
-    public function getUser()
+    public function getMailAdress()
     {
-        return $this->user;
+        return $this->mailAdress;
     }
 
     /**
-     * @param mixed $user
+     * @param mixed $mailAdress
      */
-    public function setUser($user): void
+    public function setMailAdress($mailAdress): void
     {
-        $this->user = $user;
+        $this->mailAdress = $mailAdress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPostTitle()
+    {
+        return $this->postTitle;
+    }
+
+    /**
+     * @param mixed $postTitle
+     */
+    public function setPostTitle($postTitle): void
+    {
+        $this->postTitle = $postTitle;
     }
 }

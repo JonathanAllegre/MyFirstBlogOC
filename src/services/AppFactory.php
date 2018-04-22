@@ -8,6 +8,8 @@
 
 namespace App\services;
 
+use App\services\Sessions\Flash;
+use DI\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 class AppFactory
@@ -42,6 +44,7 @@ class AppFactory
             $http = new Request();
             self::$request = $http->createFromGlobals();
         }
+
         return self::$request;
     }
 }

@@ -5,6 +5,13 @@ $("#deleteButton").click(function() {
     }
 });
 
+// DELETE COMMENTAIRE ALERT
+$("#deleteButtonComm").click(function() {
+    if (!confirm("Attention, si vous continuez, le commentaire sera définitivement supprimé.")){
+        return false;
+    }
+});
+
 // INIT SUMMERNOTE
 $(document).ready(function() {
     $("#summernote").summernote();

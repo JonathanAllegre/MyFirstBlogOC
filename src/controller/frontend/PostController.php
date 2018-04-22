@@ -49,6 +49,11 @@ class PostController extends AppController
         // LOAD POST IN DB
         $post = $appManager->getPostManager()->read($postId, 'true');
 
+        if (!$post) {
+            $flash->set('warning', "Cet article n'existe pas");
+            $response = new RedirectResponse($linkBuilder->getLink('PostList'));
+            return $response->send();
+        }
         // LOAD ALL POST FOR THE SIDEBAR
         $allPosts = $appManager->getPostManager()->getAllPost('10');
 

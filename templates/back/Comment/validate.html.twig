@@ -9,7 +9,8 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h5>Commentaire de {{ comment.user.FirstName }} {{ comment.user.lastName }} <small><i>({{ comment.user.mailAdress }})</i></small></h5>
+            <h5>Commentaire de {{ comment.FirstName }} {{ comment.lastName }} pour l'article :
+                <small><i><a href="{{ LinkBuilder.getLink("PostRead", {id_article: comment.idPost}) }}" target="_blank" >{{ comment.postTitle }}</a></i></small></h5>
             <hr>
             <p>
                 {{ comment.content|nl2br }}
@@ -18,12 +19,17 @@
             <p class="text-right"><i>posté le {{ comment.created }}</i></p>
         </div>
         <div class="col-12">
+            <form action="{{ LinkBuilder.getLink('CommentAdminValidate', {id_comment: comment.idComment}) }}" method="POST">
             <p class="text-right">
-                <button type="submit" class="btn btn-outline-danger">Supprimer</button>
-                <button type="submit" class="btn btn-outline-success">Valider</button>
+                <input  type="hidden" value="{{ myToken }}" name="myToken">
+                <button type="submit" class="btn btn-outline-danger" id="deleteButtonComm" name="delete" value="1">Supprimer</button>
+                <button type="submit" class="btn btn-outline-success" name="validate" value="1">Valider</button>
             </p>
+            </form>
         </div>
-
     </div>
 </div>
+    {% block script %}
+        <script src="{{ publicFolder }}/js/script.js"></script>
+    {% endblock %}
 {% endblock %}

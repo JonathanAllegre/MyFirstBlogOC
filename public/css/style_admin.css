@@ -1,3 +1,13 @@
+a{
+    color:#666;
+    cursor:pointer;
+}
+
+a:hover{
+    color:#721c24;
+    text-decoration: none;
+}
+
 .headerIndex{
     background: url("../img/header/header.jpg") no-repeat;
     background-size: 100%;
