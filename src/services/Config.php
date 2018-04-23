@@ -108,7 +108,7 @@ class Config
     /**
      * @return mixed
      */
-    public function getPrefix():string
+    public function getPrefix()
     {
         return $this->prefix;
     }
