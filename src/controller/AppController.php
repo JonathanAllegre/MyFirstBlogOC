@@ -45,7 +45,8 @@ class AppController
         if ($requestParameters->getBundle() && $requestParameters->getBundle() === "backend") {
             if (!$checkPermissions->isAdmin()) {
                 $response = new RedirectResponse($linkBuilder->getLink('Home'));
-                return $response->send();
+                $response->send();
+                exit();
             }
         }
     }
