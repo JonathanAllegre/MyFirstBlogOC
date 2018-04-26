@@ -8,14 +8,19 @@
     <div class="container">
         <div class="row">
             <div class="col-md-9">
-                <h2 class="h2Accueil">{{ post.title }}</h2>
+                <h2>{{ post.title }}</h2>
+                <hr>
+            </div>
+            <div class="col-md-3 text-right">
+                <h3>Derniers Articles</h3>
                 <hr>
             </div>
         </div>
+
     </div>
     <div class="container">
        <div class="row">
-           <div class="col-md-9 text-center">
+           <div class="col-md-9">
                <p>
                    <img src="{{ publicFolder }}/img/Blog/{{ post.imgName }}" alt="" width="100%">
                </p>
@@ -23,7 +28,7 @@
                <em>{{ post.shortText }}</em>
                </p>
                <hr>
-               <p class="text-justify">
+               <p class="text-left">
                    {{ post.content|raw }}
                </p>
                <hr>
@@ -67,21 +72,15 @@
                    </div>
                </div>
            </div>
-           <div class="col-md-3 text-center">
-               <h2 class="">Derniers Articles</h2>
-               <hr>
+           <div class="col-md-3 text-right" >
                {% for allPost in allPosts %}
                    {% if allPost.idStatutPost == 1 %}
-                       <div class="col-sm-12">
-                           <div class="card">
-                               <div class="card-body">
-                                   <h5 class="card-title">{{ allPost.title }}</h5>
-                                   <p class="card-text">{{ allPost.shortText[:40] }}...</p>
-                                   <a class="btn btn-outline-secondary" href="{{ LinkBuilder.getLink("PostRead", {id_article: allPost.idPost}) }}" role="button">Voir le détail »</a>
-                               </div>
+                       <div class="row" style="border-left:solid 1px lightgrey">
+                           <div class="col-12">
+                                   <h5><a href="{{ LinkBuilder.getLink("PostRead", {id_article: allPost.idPost}) }}">{{ allPost.title }}</a></h5>
                            </div>
                        </div>
-                           <br/>
+                       <hr>
                    {% endif %}
                {% endfor %}
            </div>

@@ -23,7 +23,11 @@
             <p class="text-right">
                 <input  type="hidden" value="{{ myToken }}" name="myToken">
                 <button type="submit" class="btn btn-outline-danger" id="deleteButtonComm" name="delete" value="1">Supprimer</button>
+                {% if comment.idCommentStatut == 2 %}
+                <button type="submit" class="btn btn-outline-success" name="validate" value="1" disabled>Valider</button>
+                {% else %}
                 <button type="submit" class="btn btn-outline-success" name="validate" value="1">Valider</button>
+                {% endif %}
             </p>
             </form>
         </div>

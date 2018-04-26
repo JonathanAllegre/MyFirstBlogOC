@@ -51,33 +51,28 @@ class PostController extends AppController
      */
     public function read()
     {
-
         // DEPENDENCY
-        $requestParameters = $this->container->getRequestParameters();
         $appManager = $this->container->getManager();
         $flash = $this->container->getFlash();
-        $linkBuilder = $this->container->getLinkBuilder();
         $checkPermissions = $this->container->getCheckPermission();
-        $validator = $this->container->getFormValidator();
 
         // GET POST ID
-        $postId = $requestParameters->getParameters('id_article');
-
+        $postId = $this->container->getRequestParameters()->getParameters('id_article');
         // LOAD POST IN DB
         $post = $appManager->getPostManager()->read($postId, 'true');
 
         if (!$post) {
             $flash->set('warning', "Cet article n'existe pas");
-            $response = new RedirectResponse($linkBuilder->getLink('PostList'));
+            $response = new RedirectResponse($this->container->getLinkBuilder()->getLink('PostList'));
             return $response->send();
         }
         // LOAD ALL POST FOR THE SIDEBAR
-        $allPosts = $appManager->getPostManager()->getAllPost('10');
+        $allPosts = $appManager->getPostManager()->getAllPost('5');
 
         // VERIFY IF POST HAVE A ONLINE STATUT
         if ($post->getIdStatutPost() == 2) {
             $flash->set('warning', "Vous n'avez pas accès à cet article");
-            $response = new RedirectResponse($linkBuilder->getLink('PostList'));
+            $response = new RedirectResponse($this->container->getLinkBuilder()->getLink('PostList'));
             return $response->send();
         }
 
@@ -94,13 +89,25 @@ class PostController extends AppController
                 'created' => $date->format('Y-m-d H:i:s'),
                 'modified' => $date->format('Y-m-d H:i:s'),
                 'content' => $this->container->getRequest()->request->get('message'),
-                'id_post' => $requestParameters->getParameters('id_article'),
+                'id_post' => $this->container->getRequestParameters()->getParameters('id_article'),
                 'id_comment_statut' => 1,
                 'id_user' => $this->container->getSession()->get('user')['id'],
             );
 
+            // CHECK IF TOKENS MATCH
+            $token = $this->container->getRequest()->request->get('token');
+            $idPost = $comment['id_post'];
+
+            if ($token != $this->container->getSession()->get('myToken')) {
+                $this->container->getFlash()->set('warning', 'Une erreur est survenue');
+                $response = new RedirectResponse($this->container->getLinkBuilder()->getLink('PostRead', [
+                    'id_article' => $idPost,
+                ]));
+                return $response->send();
+            }
+
             // FORM VALIDATOR
-            $valideComment = $validator->validateCommentForm(
+            $valideComment = $this->container->getFormValidator()->validateCommentForm(
                 $comment,
                 $flash,
                 $appManager,
@@ -123,11 +130,13 @@ class PostController extends AppController
                         "Merci d'avoir commenté cet article. 
                         Une vérification du commentaire sera éffectuée avant d'être publié"
                     );
+                    $response = new RedirectResponse($this->container->getLinkBuilder()->getLink('PostRead', [
+                        'id_article' => $idPost,
+                    ]));
+                    return $response->send();
                 }
             }
         }
-
-
         // WE SEND THE REPONSE
         $reponse = new Response($this->render('/front/Post/read.html.twig', [
             'active' => 'articles',
