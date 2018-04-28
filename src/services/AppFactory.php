@@ -52,5 +52,4 @@ class AppFactory
     {
         return new Mailer();
     }
-
 }

@@ -77,6 +77,10 @@ class PostController extends AppController
         $articleId = $container->getRequestParameters()->getParameters('article_id');
         $post = $container->getManager()->getPostManager()->read($articleId);
 
+        // GET USERS FOR SELECT LIST
+        $users = $container->getManager()->getUserManager()->getAllUsers();
+
+
         // IF $POST DON'T EXIST
         if (!$post) {
             $container->getFlash()->set('warning', "L'article demandé n'existe pas");
@@ -102,9 +106,11 @@ class PostController extends AppController
             }
         }
 
+
         $reponse = new Response($this->render('/back/Post/update.html.twig', [
                 'active' => "articles",
                 'post' => $post,
+                'users' => $users,
                 'myToken' => $this->container->getSession()->get('myToken'),
         ]));
         return $reponse->send();

@@ -37,7 +37,7 @@ class HomeController extends AppController
         $noValidateComments = $manager->getCommentManager()->getCommentInStatut(1);
 
         // GET USER LIST
-        $users = $manager->getUserManager()->getAllUsers(10);
+        $users = $manager->getUserManager()->getAllUsers();
 
         $reponse = new Response($this->render('/back/Home/index.html.twig', [
             'active' => 'home',

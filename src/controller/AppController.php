@@ -31,7 +31,6 @@ class AppController
      */
     public function __construct(AppService $service)
     {
-
         $this->config = $service->getConfig();
         $this->host = $service->getRequest()->server->get('HTTP_HOST');
         $this->session = $service->getSession();
@@ -102,6 +101,4 @@ class AppController
 
         return $twig->render($path, $variables);
     }
-
-
 }

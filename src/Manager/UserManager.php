@@ -160,7 +160,7 @@ class UserManager
                 SELECT id_user,first_name,last_name,registration_date,mail_adress,u.id_role,r.title as role_title
 				FROM user u 
 				INNER JOIN role r ON u.id_role = r.id_role
-				ORDER BY id_user DESC
+				ORDER BY last_name ASC
 				";
 
         $sql = $sql.$limit;

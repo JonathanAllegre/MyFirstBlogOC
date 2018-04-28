@@ -91,6 +91,7 @@ class UpdatePost
         $post->setContent($formData['content']);
         $post->setModified($date->format('Y-m-d H:i:s'));
         $post->setIdStatutPost($formData['id_statut_post']);
+        $post->setIdUser($formData['autor']);
 
         // IF ERROR IN PERSIST
         if (!$this->manager->getPostManager()->update($post)) {

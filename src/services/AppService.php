@@ -101,5 +101,4 @@ class AppService extends Container
     {
         return $this->container()->get(CheckPermissions::class);
     }
-
 }
