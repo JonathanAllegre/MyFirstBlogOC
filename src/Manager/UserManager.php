@@ -47,15 +47,15 @@ class UserManager
         $request->bindValue(':password', $user->getPassword());
         $request->bindValue(':id_role', $user->getIdRole());
 
-        if ($request->execute()) {
-            $error = 0;
-            $errorTitle = "";
-        } else {
-            $error = 1;
+        $status = $request->execute();
+        $errorTitle = "";
+
+        if (!$status) {
             $errorTitle = "Un probleme est survenue lors de l'enregistrmenet";
         }
 
-        return array("error" => $error, "errorTitle" => $errorTitle);
+
+        return array("error" => $status, "errorTitle" => $errorTitle);
     }
 
 
