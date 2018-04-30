@@ -14,6 +14,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HomeController extends AppController
 {
+
+    /**
+     * @param AppManager $manager
+     * @return Response
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Exception
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function index(AppManager $manager)
     {
 
@@ -21,11 +32,12 @@ class HomeController extends AppController
         // GET POST LIST
         $listPost = $manager->getPostManager()->getAllPost(5);
 
+
         // GET COMMENT LIST NO VALIDATE
         $noValidateComments = $manager->getCommentManager()->getCommentInStatut(1);
 
         // GET USER LIST
-        $users = $manager->getUserManager()->getAllUsers(10);
+        $users = $manager->getUserManager()->getAllUsers();
 
         $reponse = new Response($this->render('/back/Home/index.html.twig', [
             'active' => 'home',

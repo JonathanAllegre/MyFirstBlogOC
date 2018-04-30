@@ -74,6 +74,20 @@
                                 </div>
                             {% endif %}
                             <hr>
+                            <h5>Auteur:</h5>
+
+                            <div class="form-group">
+                                <select class="custom-select" name="autor">
+                                    {% for user in users %}
+                                        {% if user.idUser == post.idUser %}
+                                            <option value="{{ user.idUser }}" selected>{{ user.lastName }} {{ user.firstName }}</option>
+                                       {% else %}
+                                           <option value="{{ user.idUser }}">{{ user.lastName }} {{ user.firstName }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <hr>
                             <h5>Infos:</h5>
                             <ul>
                                 <li>Ajouté le {{ post.created|date('d-m-Y à H:i') }}</li>

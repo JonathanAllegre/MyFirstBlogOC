@@ -47,15 +47,15 @@ class UserManager
         $request->bindValue(':password', $user->getPassword());
         $request->bindValue(':id_role', $user->getIdRole());
 
-        if ($request->execute()) {
-            $error = 0;
-            $errorTitle = "";
-        } else {
-            $error = 1;
+        $status = $request->execute();
+        $errorTitle = "";
+
+        if (!$status) {
             $errorTitle = "Un probleme est survenue lors de l'enregistrmenet";
         }
 
-        return array("error" => $error, "errorTitle" => $errorTitle);
+
+        return array("error" => $status, "errorTitle" => $errorTitle);
     }
 
 
@@ -160,7 +160,7 @@ class UserManager
                 SELECT id_user,first_name,last_name,registration_date,mail_adress,u.id_role,r.title as role_title
 				FROM user u 
 				INNER JOIN role r ON u.id_role = r.id_role
-				ORDER BY id_user DESC
+				ORDER BY last_name ASC
 				";
 
         $sql = $sql.$limit;

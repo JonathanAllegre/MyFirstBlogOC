@@ -74,7 +74,7 @@ class PostManager extends AppManager
                           u.first_name,
                           u.last_name
 					    FROM post p
-					    INNER JOIN user u ON p.id_user = u.id_user
+					    LEFT JOIN user u ON p.id_user = u.id_user
 					    INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
 					    LEFT JOIN picture pic ON p.id_image = pic.id_image
 						WHERE p.id_post = :id'
@@ -88,6 +88,11 @@ class PostManager extends AppManager
         if (empty($data)) {
             return null;
         }
+
+        if (empty($data['first_name']) || empty($data['last_name'])) {
+            $data['first_name'] = "NC";
+        }
+
 
         $post = new PostEntity($data);
 
@@ -122,7 +127,7 @@ class PostManager extends AppManager
                   u.first_name,
                   u.last_name
                 FROM post p
-                INNER JOIN user u ON p.id_user = u.id_user
+                LEFT JOIN user u ON p.id_user = u.id_user
                 INNER JOIN post_statut ps ON p.id_statut_post = ps.id_statut_post
                 LEFT JOIN picture pic ON p.id_image = pic.id_image
                 ORDER BY p.id_post DESC";
@@ -133,11 +138,15 @@ class PostManager extends AppManager
         $request->execute();
 
         while ($donnees = $request->fetch(PDO::FETCH_ASSOC)) {
+            if (empty($donnees['first_name']) || empty($donnees['last_name'])) {
+                $donnees['first_name'] = "NC";
+            }
             $data[] = new PostEntity($donnees);
         }
         if (empty($data)) {
             return null;
         }
+
 
         return $data;
     }

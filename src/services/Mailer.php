@@ -21,8 +21,8 @@ class Mailer extends AppFactory
         // GET VAR
         $sendTo = $this->getConfig()->getMail();
         $header = 'From: ' . $from;
-
         // SEND MAIL
+
         if (mail($sendTo, $subject, $message, $header)) {
             return $error = 0;
         }

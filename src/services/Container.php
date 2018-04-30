@@ -32,14 +32,17 @@ class Container extends AppFactory
             self::$requestParams = new RequestParameters($requestParameters);
         }
 
+        $definition = __DIR__ . '/../../';
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->useAutowiring(true);
+        $containerBuilder->addDefinitions($definition . 'config/configServices.php');
         $containerBuilder->addDefinitions([
             Flash::class => \DI\create()->constructor(\DI\get(Session::class)),
             CheckPermissions::class => \DI\create()->constructor(
                 \DI\get(Session::class),
                 \DI\get(Flash::class)
             ),
+
         ]);
         if ($requestParameters) {
             $containerBuilder->addDefinitions([
@@ -58,13 +61,13 @@ class Container extends AppFactory
      */
     public function getFlash()
     {
-        return  $this->container()->get(flash::class);
+        return $this->container()->get(flash::class);
     }
 
     /**
      * @return RequestParameters
      */
-    public function getRequestParameters():RequestParameters
+    public function getRequestParameters(): RequestParameters
     {
         return self::$requestParams;
     }
@@ -78,15 +81,5 @@ class Container extends AppFactory
     public function getManager()
     {
         return $this->container()->get(AppManager::class);
-    }
-
-
-    /**
-     * @return AppService
-     * @throws \Exception
-     */
-    public function getAppServices():AppService
-    {
-        return new AppService();
     }
 }
